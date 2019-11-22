@@ -1,0 +1,18 @@
+.login-bg {
+  height: 100%;
+  background-color: #f2f1f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .login-wrapper {
+    background-color: #fff;
+    width: 320px;
+    .login-title {
+      margin: 20px 0;
+    }
+    .login-input-fix {
+      margin-top: -10px;
+      margin-bottom: 4px;
+    }
+  }
+}

@@ -1,0 +1,5 @@
+const LOGIN_SET_API_URL = "LOGIN_SET_API_URL";
+
+export {
+    LOGIN_SET_API_URL
+};
