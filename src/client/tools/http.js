@@ -1,7 +1,8 @@
 import Axios from "axios";
 import { config } from "../config";
+import { UserAuth } from "./tokenManage";
 
-const { baseURL, GLOBAL_BASE_URL_KEY, GLOBAL_TOKEN_KEY } = config;
+const { baseURL, GLOBAL_BASE_URL_KEY } = config;
 
 const instance = Axios.create({
     baseURL,
@@ -9,9 +10,9 @@ const instance = Axios.create({
 });
 
 instance.interceptors.request.use(function (request) {
-    const Token = sessionStorage.getItem(GLOBAL_TOKEN_KEY);
-    if (Token) {
-        request.headers["Authorzation"] = Token;
+    const userToken = UserAuth.Token;
+    if (userToken) {
+        request.headers["Authorzation"] = userToken;
     }
     // 从sessionStorage中获取token
     const newBaseURL = localStorage.getItem(GLOBAL_BASE_URL_KEY);

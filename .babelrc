@@ -21,6 +21,6 @@
                 "regenerator": true,
                 "useESModules": false
             }
-        ],
+        ]
     ]
 }

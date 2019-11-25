@@ -1,0 +1,24 @@
+.home-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #fff;
+	padding: 0;
+
+	.header-logo {
+		padding-left: 20px;
+	}
+
+	.header-menu-item {
+		padding: 0 20px;
+		border-bottom: 3px solid transparent;
+		transition: border-color 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+		&:hover {
+			border-bottom-color: #1890ff;
+		}
+	}
+}
+
+.home-content {
+	background-color: #fff;
+}

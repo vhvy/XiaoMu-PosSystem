@@ -1,13 +1,17 @@
 import React from "react";
-import { Layout, } from "antd";
+import { Layout, Popover, Avatar, Button, Modal } from "antd";
+import { HeaderCustom } from "./Header";
+import { HomeContent } from "../HomeContent";
 
-const { Header, Content, Footer } = Layout;
 
 function Home() {
+
+
+
     return (
         <Layout>
-            <Header></Header>
-            <Content></Content>
+            <HeaderCustom />
+            <HomeContent />
         </Layout>
     );
 }

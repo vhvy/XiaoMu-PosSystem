@@ -1,15 +1,12 @@
 import React from "react";
 import { message } from "antd";
 import { Route, Redirect } from "react-router-dom";
-import { config } from "../config";
-
-const { GLOBAL_TOKEN_KEY } = config;
+import { UserAuth } from "../tools/tokenManage";
 
 function ProtectRoute({ component: Component, ...rest }) {
-    const token = sessionStorage.getItem(GLOBAL_TOKEN_KEY);
+    const token = UserAuth.Token;
     if (!token) {
         message.info("请先登录!");
-        console.log(config);
         return <Redirect to="/login" />
     } else {
         return (<Route

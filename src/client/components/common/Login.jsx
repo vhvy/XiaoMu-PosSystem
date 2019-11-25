@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Icon, Typography, Checkbox, message as antdMessage } from "antd";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 import style from "../../styles/login.scss";
 import http from "../../tools/http";
 import { ConnectConfig } from "./ConnectConfig";
-import { config } from "../../config";
-
-const { GLOBAL_TOKEN_KEY } = config;
+import { UserAuth } from "../../tools/tokenManage";
+import { setCurrentUserAuthorityAction, setCurrentUsernameAction } from "../../redux/action";
 
 const { Text } = Typography;
 
-function _Login({ form }) {
+function _Login({ form, setCurrentUsername, setCurrentUserAuthority }) {
     const { getFieldDecorator, getFieldsValue, getFieldsError, setFields } = form;
     const history = useHistory();
     const formItemLayout = {
@@ -42,15 +42,16 @@ function _Login({ form }) {
                 password
             });
             if (status === 200) {
-                const { message, token } = data;
-                sessionStorage.setItem(GLOBAL_TOKEN_KEY, token);
+                const { message, token, username, authority } = data;
+                UserAuth.auth(token);
+                setCurrentUsername(username);
+                setCurrentUserAuthority(authority);
                 antdMessage.success(message);
                 setLoading(false);
                 history.replace("/");
             }
         } catch (err) {
             const { data, status } = err;
-            console.log(status);
             if (status && status === 401) {
                 setFields({
                     username: {
@@ -166,4 +167,16 @@ function _Login({ form }) {
     );
 }
 
-export const Login = Form.create()(_Login);
+function loginMapDispatchToProps(dispatch) {
+    return {
+        setCurrentUsername: (username) => dispatch(setCurrentUsernameAction(username)),
+        setCurrentUserAuthority: (authority) => dispatch(setCurrentUserAuthorityAction(authority))
+    }
+}
+
+export const Login = connect(
+    null,
+    loginMapDispatchToProps
+)(
+    Form.create()(_Login)
+);
