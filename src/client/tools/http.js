@@ -18,14 +18,12 @@ instance.interceptors.request.use(function (request) {
     const newBaseURL = localStorage.getItem(GLOBAL_BASE_URL_KEY);
     if (newBaseURL) request.baseURL = newBaseURL;
     // 从localStorage中获取新API地址
-    console.log(request);
     return request;
 }, function (err) {
     return Promise.reject(err.response);
 });
 
 instance.interceptors.response.use(function (response) {
-    console.log(response);
     return response;
 }, function (err) {
     if (!err.response) {

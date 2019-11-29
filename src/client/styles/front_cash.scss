@@ -1,0 +1,80 @@
+.frontcash-wrap {
+	padding: 20px;
+	padding-top: 0px;
+	.frontcash-fn-btn {
+		&:hover {
+			border-color: #40a9ff;
+			color: #40a9ff;
+		}
+		transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+		cursor: pointer;
+		border: 1px solid #d9d9d9;
+		border-radius: 5px;
+		width: 60px;
+		height: 35px;
+		font-size: 12px;
+		font-weight: 400;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.frontcash-top-wrap {
+		display: flex;
+		.frontcash-top-count {
+			flex: 0 0 200px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			p {
+				margin: 0;
+				font-weight: 500;
+				font-size: 16px;
+			}
+			p:nth-child(1) {
+				margin-right: 50px;
+			}
+		}
+
+		.frontcash-barcode-input {
+			width: 300px;
+			margin-right: 30px;
+		}
+	}
+}
+
+.front-check-details {
+	font-size: 16px;
+	&:global(.ant-card-grid) {
+		padding: 0;
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+	&:nth-of-type(odd) {
+		width: 40%;
+		padding-left: 12px;
+	}
+
+	&:nth-of-type(even) {
+		width: 60%;
+		text-align: right;
+		padding-right: 12px;
+	}
+
+	&:nth-child(1n + 5) {
+		color: red;
+	}
+}
+
+.front-check-pay {
+	&:global(.ant-card) {
+		margin-left: 24px;
+	}
+
+	.front-check-pay-input {
+		max-width: 120px;
+		font-weight: 600;
+		font-size: 16px;
+	}
+}

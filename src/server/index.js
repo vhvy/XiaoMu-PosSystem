@@ -2,12 +2,13 @@ import express from "express";
 import config from "./config/index.js";
 import api from "./api/index.js";
 
-const { port } = config;
+const { port, allowOriginList } = config;
 const app = express();
 
 if (process.env.NODE_ENV === "development") {
     app.all("*", (req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "http://127.0.0.1:9000");
+        const { origin } = req.headers;
+        if (allowOriginList.includes(origin)) res.header("Access-Control-Allow-Origin", origin);
         res.header("Access-Control-Allow-Headers", "Authorzation,content-type");
         res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
         next();

@@ -1,8 +1,8 @@
 import { HOME_CLOSE_MODULE, HOME_TOGGLE_CURRENT_MODULE, HOME_OPEN_MODULE } from "../action/actionType";
 
 export function setModule(state = {
-    current: "系统主页",
-    moduleList: ["系统主页"]
+    current: "前台销售",
+    moduleList: ["系统主页", "前台销售"]
 }, action) {
     let newList;
     switch (action.type) {
