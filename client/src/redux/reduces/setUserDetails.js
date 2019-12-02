@@ -2,7 +2,7 @@ import {
     SET_CURRENT_USERNAME,
     SET_CURRENT_USER_AUTHORITY
 } from "../action/actionType";
-import { moduleList } from "../../../config/moduleList";
+import { moduleList } from "../../../../server/config/moduleList";
 
 export function setCurrentUserDetails(state = {
     username: "admin",

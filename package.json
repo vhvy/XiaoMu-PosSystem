@@ -3,14 +3,7 @@
   "version": "1.0.0",
   "description": "小超市收银系统，包含前台和后台。",
   "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev:server": "cross-env NODE_ENV=development nodemon --experimental-modules src/server/index.js",
-    "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
-    "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js",
-    "dev:client": "webpack-dev-server --config webpack/client/webpack.dev.js",
-    "build:client": "cross-env NODE_ENV=production webpack --config webpack/client/webpack.prod.js"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vhvy/XiaoMu-PosSystem.git"
@@ -21,40 +14,8 @@
     "url": "https://github.com/vhvy/XiaoMu-PosSystem/issues"
   },
   "homepage": "https://github.com/vhvy/XiaoMu-PosSystem#readme",
-  "dependencies": {
-    "@babel/runtime": "^7.7.2",
-    "@hapi/joi": "^16.1.7",
-    "antd": "^3.25.1",
-    "axios": "^0.19.0",
-    "express": "^4.17.1",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-redux": "^7.1.3",
-    "react-router-dom": "^5.1.2",
-    "react-transition-group": "^4.3.0",
-    "redux": "^4.0.4",
-    "sqlite3": "^4.1.0"
-  },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/preset-react": "^7.7.0",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-import": "^1.12.2",
-    "cross-env": "^6.0.3",
-    "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
-    "eslint-plugin-react": "^7.16.0",
-    "file-loader": "^4.3.0",
-    "html-webpack-plugin": "^3.2.0",
-    "less-loader": "^5.0.0",
-    "node-sass": "^4.13.0",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0",
-    "webpack-merge": "^4.2.2"
+    "eslint-plugin-react": "^7.16.0"
   }
 }

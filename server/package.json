@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev:server": "cross-env NODE_ENV=development nodemon --experimental-modules src/index.js",
+    "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
+    "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js"
+  },
+  "author": "vhvy",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^16.1.7",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "webpack-merge": "^4.2.2"
+  }
+}

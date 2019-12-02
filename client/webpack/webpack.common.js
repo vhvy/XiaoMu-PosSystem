@@ -2,9 +2,9 @@ const path = require("path");
 const htmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: path.resolve("./", "src/client/index.js"),
+    entry: path.resolve("./", "src/index.js"),
     output: {
-        path: path.resolve("./", "dist/client"),
+        path: path.resolve("./", "dist/"),
         filename: "static/js/client.bundle.js",
         publicPath: "/"
     },
@@ -75,7 +75,7 @@ module.exports = {
     },
     plugins: [
         new htmlWebpackPlugin({
-            template: path.resolve("./", "src/client/public/index.html"),
+            template: path.resolve("./", "src/public/index.html"),
             filename: "./index.html"
         })
     ],
