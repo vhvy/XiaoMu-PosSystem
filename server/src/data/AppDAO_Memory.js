@@ -1,11 +1,8 @@
 import sqlite3 from "sqlite3";
-import config from "../config/index.js";
 
-const { db_path } = config;
-
-class Dao {
-    constructor(path = db_path) {
-        this.db = new sqlite3.Database(path, (err) => {
+class AppDAO {
+    constructor() {
+        this.db = new sqlite3.Database(":memory:", (err) => {
             if (err) {
                 console.log("Could not connect to database", err);
             } else {
@@ -28,15 +25,13 @@ class Dao {
 
     run(sql, param = []) {
         return new Promise((resolve, reject) => {
-            this.db.run(sql, param, function (err) {
+            this.db.run(sql, param, (err) => {
                 if (err) {
                     console.log(err);
                     reject(err);
                 } else {
-                    const { lastID, changes } = this;
                     resolve({
-                        lastID,
-                        changes
+                        id: this.lastID
                     });
                 }
             })
@@ -92,7 +87,5 @@ class Dao {
         });
     }
 }
-
-const AppDAO = new Dao();
 
 export default AppDAO;

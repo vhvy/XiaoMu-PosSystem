@@ -1,26 +1,47 @@
 import express from "express";
-import Joi from "@hapi/joi";
-import { moduleList } from "../../config/moduleList.js";
+import UserTask from "../tasks/users.js";
+import Jwt from "../lib/jwt.js";
+import { userPwdSchema } from "../schema/user.js";
 
-const userSchema = Joi.object({
-    username: Joi.string().min(1).max(13).required(),
-    password: Joi.string().pattern(/^[a-zA-Z0-9]{5,30}$/).required()
-});
 
 const route = express.Router();
 
-route.post("/", async (req, res) => {
+route.post("/", async (req, res, next) => {
     const { username, password } = req.body;
-    const result = userSchema.validate(req.body);
-    if (result.error) return res.status(401).json({
-        message: "请输入合法的用户名和密码!"
-    });
-    res.json({
-        message: "登录成功!",
-        token: "vn287fha8w4r8Q8ERQ89E2EUFH8981U2E1987283",
-        authority: moduleList,
-        username,
-    });
+    const result = userPwdSchema.validate(req.body);
+    if (result.error) {
+        const err = new Error("请输入合法的用户名和密码!");
+        err.status = 401;
+        return next(err);
+    }
+    
+    const UserManage = new UserTask();
+    const { status, message } = await UserManage.validateAccount(username, password);
+    if (status) {
+        const {
+            authorityList,
+            group,
+            group_id
+        } = await UserManage.getUserAuthority(username, true);
+
+        const token = await Jwt.sign({
+            username,
+            authority: authorityList
+        });
+
+        res.json({
+            message: "登录成功!",
+            token,
+            authority: authorityList,
+            username,
+            group,
+            group_id
+        });
+    } else {
+        res.status(401).json({
+            message
+        });
+    }
 });
 
 export default route;

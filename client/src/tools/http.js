@@ -12,7 +12,7 @@ const instance = Axios.create({
 instance.interceptors.request.use(function (request) {
     const userToken = UserAuth.Token;
     if (userToken) {
-        request.headers["Authorzation"] = userToken;
+        request.headers["Authorization"] = userToken;
     }
     // 从sessionStorage中获取token
     const newBaseURL = localStorage.getItem(GLOBAL_BASE_URL_KEY);

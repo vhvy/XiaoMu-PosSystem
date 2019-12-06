@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev:server": "cross-env NODE_ENV=development nodemon --experimental-modules src/index.js",
+    "dev:server": "cross-env NODE_ENV=development JWT_KEY=xiaomupossystem nodemon --experimental-modules src/index.js",
     "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
     "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js"
   },
@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^16.1.7",
+    "bcrypt": "^3.0.7",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "sqlite3": "^4.1.0"
   },
   "devDependencies": {
