@@ -75,6 +75,16 @@ async function init() {
     await UserManage.createUser("admin", hash, group_id);
     // 创建默认管理员
 
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS categories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL,
+        parent_id INTEGER
+    )
+    ;`);
+    // 创建商品分类表
+
     AppDAO.close();
 }
 

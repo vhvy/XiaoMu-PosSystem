@@ -123,3 +123,56 @@
 }
 ```
 
+---
+
+## 商品分类
+
+```
+/api/warehouse/categories
+获取所有商品分类
+
+方法: get
+```
+
+```
+/api/warehouse/create
+创建新的商品分类
+
+方法: post
+参数: {
+    name: "name",
+    parent_name: "parent_name" // 可选
+}
+```
+
+```
+/api/warehouse/updatename
+修改商品分类名称
+
+方法: post
+参数: {
+    old_name: "old_name",
+    new_name: "new_name"
+}
+```
+
+```
+/api/warehouse/updateparent
+修改子分类所属的父分类
+
+方法: post
+参数: {
+    name: "name",
+    parent_name: "parent_name"
+}
+```
+
+```
+/api/warehouse/delete
+删除分类
+
+方法: post
+参数: {
+    name: "name"
+}
+```
