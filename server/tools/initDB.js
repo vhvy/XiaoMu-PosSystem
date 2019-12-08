@@ -85,6 +85,56 @@ async function init() {
     ;`);
     // 创建商品分类表
 
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS commodity (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        barcode TEXT UNIQUE NOT NULL,
+        name TEXT NOT NULL,
+        category_id INTEGER NOT NULL,
+        pinyin TEXT,
+        unit TEXT,
+        size TEXT,
+        vip_points BOOLEAN NOT NULL DEFAULT 1,
+        in_price REAL DEFAULT 0 CHECK (in_price >= 0),
+        sale_price REAL DEFAULT 0 CHECK (sale_price >= 0),
+        count REAL DEFAULT 0,
+        work_date INTEGER NOT NULL,
+        change_date INTERGER NOT NULL,
+        is_delete BOOLEAN NOT NULL DEFAULT 0,
+        FOREIGN KEY (category_id) REFERENCES categories (id)
+    )
+    ;`);
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS custom_barcode (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+    )
+    ;`);
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS commodity_snapshot (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        create_time INTERGER NOT NULL,
+        commodity_id INTEGER NOT NULL,
+        barcode TEXT NOT NULL,
+        name TEXT NOT NULL,
+        category_id INTEGER NOT NULL,
+        pinyin TEXT,
+        unit TEXT,
+        size TEXT,
+        vip_points BOOLEAN NOT NULL DEFAULT 1,
+        in_price REAL DEFAULT 0 CHECK (in_price >= 0),
+        sale_price REAL DEFAULT 0 CHECK (sale_price >= 0),
+        work_date INTEGER NOT NULL,
+        change_date INTERGER NOT NULL,
+        is_delete BOOLEAN NOT NULL DEFAULT 0,
+        FOREIGN KEY (category_id) REFERENCES categories (id),
+        FOREIGN KEY (commodity_ID) REFERENCES commodity 
+        (id)
+    )
+    ;`);
+
     AppDAO.close();
 }
 

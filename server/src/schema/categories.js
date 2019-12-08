@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 
-const categoryName = Joi.string().min(1).max(10);
-const categoryNameReq = categoryName.required();
+export const categoryName = Joi.string().min(1).max(10);
+export const categoryNameReq = categoryName.required();
 
 export const createCategorySchema = Joi.object({
     name: categoryNameReq,

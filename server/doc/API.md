@@ -135,7 +135,7 @@
 ```
 
 ```
-/api/warehouse/create
+/api/warehouse/categories/create
 创建新的商品分类
 
 方法: post
@@ -146,7 +146,7 @@
 ```
 
 ```
-/api/warehouse/updatename
+/api/warehouse/categories/updatename
 修改商品分类名称
 
 方法: post
@@ -157,7 +157,7 @@
 ```
 
 ```
-/api/warehouse/updateparent
+/api/warehouse/categories/updateparent
 修改子分类所属的父分类
 
 方法: post
@@ -168,11 +168,71 @@
 ```
 
 ```
-/api/warehouse/delete
+/api/warehouse/categories/delete
 删除分类
 
 方法: post
 参数: {
     name: "name"
+}
+```
+
+---
+
+## 商品
+
+```
+/api/warehouse/commodity
+获取所有商品的全部详细信息
+
+方法: get
+```
+
+```
+/api/warehouse/commodity/create
+创建新的商品
+
+方法: post
+参数: {
+    barcode: "00000068", // 可选
+    name: "绿箭口香糖",
+    category_name: "糖果",
+    unit: "克", // 可选
+    size: "500", // 可选
+    in_price: 1, // 可选
+    sale_price: 1.5, // 可选
+    vip_points: true, // 可选
+    is_delete: false, //可选
+}
+```
+
+```
+/api/warehouse/commodity/update
+更新商品信息
+
+方法: put
+参数: {
+    current_barcode: "00000068",
+    update_value: {
+        barcode: "00000068", // 可选
+        name: "绿箭口香糖", // 可选
+        category_name: "糖果", // 可选
+        unit: "克", // 可选
+        size: "500", // 可选
+        in_price: 1, // 可选
+        sale_price: 1.5, // 可选
+        vip_points: true, // 可选
+        is_delete: false, //可选
+    } // 至少填写一个属性
+}
+```
+
+```
+/api/warehouse/commodity/delete
+删除商品
+
+方法: delete
+参数: {
+    barcode: "00000068"
 }
 ```

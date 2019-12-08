@@ -1,11 +1,12 @@
 import { throwError } from "./handleError.js";
 
-function validBody(schema, errMessage) {
+function validBody(schema, errMessage, key = "body") {
     return function (req, res, next) {
-        const { body } = req;
-        const validateResult = schema.validate(body);
+        const data = req[key];
+        const validateResult = schema.validate(data);
         if (validateResult.error) {
-            return throwError(next, errMessage);
+            const message = errMessage ? errMessage : validateResult.error;
+            return throwError(next, message);
         }
         next();
     }

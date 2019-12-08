@@ -33,11 +33,22 @@ class Dao {
                     console.log(err);
                     reject(err);
                 } else {
-                    const { lastID, changes } = this;
-                    resolve({
-                        lastID,
-                        changes
-                    });
+                    const { lastID, changes, sql } = this;
+                    if (sql.indexOf("INSERT INTO")) {
+                        resolve({
+                            lastID
+                        });
+                    } else {
+                        resolve({
+                            changes
+                        });
+                    }
+
+                    /**
+                     * BUG 警告！
+                     * 一定要认真看文档
+                     * 当成功执行INSERT操作时，lastID是有效的，而当执行UPDATE、DELETE时changes是有效的，也就是说UPDATE/DELETE时虽然也会返回lastID，但实际上这个lastID是上一个INSERT操作所遗留的lastID
+                     */
                 }
             })
         });
