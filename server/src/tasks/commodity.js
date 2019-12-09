@@ -1,6 +1,10 @@
 import AppDAO from "../data/AppDAO.js";
 import pinyin from "pinyin";
 import CategoriesTask from "./categories.js";
+import config from "../config/index.js";
+import SuppliersTask from "./suppliers.js";
+
+const { default_supplier } = config;
 
 class CommodityTask {
     constructor() {
@@ -31,6 +35,7 @@ class CommodityTask {
         category_id,
         unit,
         size,
+        supplier_name = default_supplier,
         in_price = 0.0,
         sale_price = 0.0,
         vip_points = true,
@@ -43,6 +48,8 @@ class CommodityTask {
             barcode = await this.createCustomBarcode();
         }
 
+        const SupplierManage = new SuppliersTask();
+        const { id: supplier_id } = await SupplierManage.getSupplierDetails(supplier_name);
         const pinyin = this.getCommodityPinyin(name);
         const time = new Date().getTime();
         let query = "";
@@ -56,7 +63,8 @@ class CommodityTask {
             pinyin,
             time,
             time,
-            is_delete ? 1 : 0
+            is_delete ? 1 : 0,
+            supplier_id
         ];
 
         if (unit) {
@@ -75,7 +83,7 @@ class CommodityTask {
 
         return await this.dao.run(`
         INSERT INTO commodity 
-        (barcode, name, category_id, in_price, sale_price, vip_points, pinyin, work_date, change_date, is_delete${query}) 
+        (barcode, name, category_id, in_price, sale_price, vip_points, pinyin, work_date, change_date, is_delete, supplier_id${query}) 
         VALUES 
         ${placeholder}
         ;`, params);
@@ -243,6 +251,17 @@ class CommodityTask {
         ;`, [is_delete ? 1 : 0, barcode]);
     }
 
+    async updateCommoditySupplier(barcode, supplier_name) {
+        const SupplierManage = new SuppliersTask();
+        const { id } = await SupplierManage.getSupplierDetails(supplier_name);
+
+        return await this.dao.run(`
+        UPDATE commodity 
+        SET supplier_id=? 
+        WHERE barcode=?
+        ;`, [id, barcode]);
+    }
+
     async updateCommodityValue(update_value) {
         // 修改商品信息
 
@@ -281,6 +300,10 @@ class CommodityTask {
                 fn: this.updateCommodityIsDelete.bind(this)
             },
             {
+                key: "supplier_name",
+                fn: this.updateCommoditySupplier.bind(this)
+            },
+            {
                 key: "barcode",
                 fn: this.updateCommodityBarcode.bind(this)
             }
@@ -311,7 +334,7 @@ class CommodityTask {
 
 
         const {
-            id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date
+            id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date, supplier_id
         } = snapshot;
 
         await this.createCommoditySnapshot({
@@ -327,7 +350,8 @@ class CommodityTask {
             in_price,
             sale_price,
             work_date,
-            change_date
+            change_date,
+            supplier_id
         });
         return snapshot["id"];
     }
@@ -345,12 +369,13 @@ class CommodityTask {
         in_price,
         sale_price,
         work_date,
-        change_date
+        change_date,
+        supplier_id
     }) {
         return await this.dao.run(`
         INSERT INTO commodity_snapshot 
-        (create_time, commodity_id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date) 
-        VALUES (?${", ?".repeat(12)})
+        (create_time, commodity_id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date, supplier_id) 
+        VALUES (?${", ?".repeat(13)})
         ;`, [
             create_time,
             commodity_id,
@@ -364,7 +389,8 @@ class CommodityTask {
             in_price,
             sale_price,
             work_date,
-            change_date
+            change_date,
+            supplier_id
         ]);
     }
 

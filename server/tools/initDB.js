@@ -5,7 +5,7 @@ import GroupTask from "../src/tasks/groups.js";
 import UserTask from "../src/tasks/users.js";
 import config from "../src/config/index.js";
 
-const { default_admin_group_name } = config;
+const { default_admin_group_name, default_supplier } = config;
 
 async function init() {
     const dao = AppDAO;
@@ -101,9 +101,12 @@ async function init() {
         work_date INTEGER NOT NULL,
         change_date INTERGER NOT NULL,
         is_delete BOOLEAN NOT NULL DEFAULT 0,
+        supplier_id INTEGER NOT NULL,
+        FOREIGN KEY (supplier_id) REFERENCES suppliers (id),
         FOREIGN KEY (category_id) REFERENCES categories (id)
     )
     ;`);
+    // 创建商品表
 
     await dao.run(`
     CREATE TABLE IF NOT EXISTS custom_barcode (
@@ -111,6 +114,7 @@ async function init() {
         name TEXT NOT NULL
     )
     ;`);
+    // 创建自定义条码占位表
 
     await dao.run(`
     CREATE TABLE IF NOT EXISTS commodity_snapshot (
@@ -129,11 +133,30 @@ async function init() {
         work_date INTEGER NOT NULL,
         change_date INTERGER NOT NULL,
         is_delete BOOLEAN NOT NULL DEFAULT 0,
+        supplier_id INTEGER NOT NULL,
+        FOREIGN KEY (supplier_id) REFERENCES suppliers (id),
         FOREIGN KEY (category_id) REFERENCES categories (id),
         FOREIGN KEY (commodity_ID) REFERENCES commodity 
         (id)
     )
     ;`);
+    // 创建商品历史信息表
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS suppliers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        description TEXT
+    )
+    ;`);
+    // 创建供货商信息表
+
+    await dao.run(`
+    INSERT INTO suppliers 
+    (name, phone, description) 
+    VALUES (?, ?, ?)
+    ;`[default_supplier, "", "默认供应商"]);
 
     AppDAO.close();
 }

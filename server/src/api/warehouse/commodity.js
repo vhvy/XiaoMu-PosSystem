@@ -8,6 +8,7 @@ import {
 } from "../../schema/commodity.js";
 import CommodityTask from "../../tasks/commodity.js";
 import CategoriesTask from "../../tasks/categories.js";
+import SuppliersTask from "../../tasks/suppliers.js";
 
 const route = express.Router();
 
@@ -35,7 +36,8 @@ route.post("/create", validBody(
         in_price,
         sale_price,
         vip_points,
-        is_delete
+        is_delete,
+        supplier_name
     } = req.body;
 
     const CommodityManage = new CommodityTask();
@@ -55,6 +57,15 @@ route.post("/create", validBody(
     }
     // 当分类不存在时返回400
 
+    if (supplier_name) {
+        const SuppliersManage = new SuppliersTask();
+        const validSupplierResult = await SuppliersManage.getSupplierDetails(supplier_name);
+        if (!validSupplierResult) {
+            return throwError(next, "供应商不存在!");
+        }
+    }
+    // 当提交的供应商不存在时返回400
+
     const { lastID } = await CommodityManage.createCommodity({
         barcode,
         name,
@@ -64,7 +75,8 @@ route.post("/create", validBody(
         in_price,
         sale_price,
         vip_points,
-        is_delete
+        is_delete,
+        supplier_name
     });
 
     const queryCommodityResult = await CommodityManage.getCommodityDetails(lastID, "id");
@@ -93,7 +105,8 @@ route.put("/update", validBody(
         in_price,
         sale_price,
         vip_points,
-        is_delete
+        is_delete,
+        supplier_name
     } = update_value;
 
     const CommodityManage = new CommodityTask();
@@ -113,6 +126,15 @@ route.put("/update", validBody(
         // 当分类不存在时返回400
     }
 
+    if (supplier_name) {
+        const SuppliersManage = new SuppliersTask();
+        const validSupplierResult = await SuppliersManage.getSupplierDetails(supplier_name);
+        if (!validSupplierResult) {
+            return throwError(next, "供应商不存在!");
+        }
+    }
+    // 当提交的供应商不存在时返回400
+
     if (barcode) {
         const validNewBarcodeResult = await CommodityManage.getCommodityDetails(barcode);
         if (validNewBarcodeResult) {
@@ -130,7 +152,8 @@ route.put("/update", validBody(
         in_price,
         sale_price,
         vip_points,
-        is_delete
+        is_delete,
+        supplier_name
     });
 
     const commodity_value = await CommodityManage.getCommodityDetails(id, "id");

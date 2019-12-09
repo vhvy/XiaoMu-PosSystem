@@ -236,3 +236,50 @@
     barcode: "00000068"
 }
 ```
+---
+
+## 供货商信息
+
+```
+/api/warehouse/suppliers
+获取所有供货商
+
+方法: get
+```
+
+```
+/api/warehouse/suppliers/create
+创建新的供货商
+
+方法: post
+参数: {
+    name: "旺财商贸",
+    phone: "1008611", // 可选
+    description: "主要批发xxxxxxxx" // 可选
+}
+```
+
+```
+/api/warehouse/suppliers/update
+修改供货商信息
+
+方法: put
+参数: {
+    name: "旺财商贸",
+    update_value: {
+        new_name: "大旺财商贸", // 可选
+        new_phone: "10010", // 可选
+        new_description: "主要批发xxxx" // 可选
+    } // 至少填写一个字段
+}
+```
+
+```
+/api/warehouse/suppliers/delete
+删除供货商
+
+方法: delete
+参数: {
+    name: "旺财商贸"
+}
+```

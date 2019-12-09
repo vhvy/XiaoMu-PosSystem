@@ -1,5 +1,6 @@
 import Joi from "@hapi/joi";
 import { categoryNameReq, categoryName } from "./categories.js";
+import { name as supplier_name } from "./suppliers.js";
 
 const barcode = Joi.string().min(5).max(14);
 const name = Joi.string().min(1).max(30);
@@ -19,7 +20,8 @@ export const createCommoditySchema = Joi.object({
     in_price,
     sale_price,
     vip_points,
-    is_delete
+    is_delete,
+    supplier_name,
 });
 
 export const updateCommoditySchema = Joi.object({
@@ -33,7 +35,8 @@ export const updateCommoditySchema = Joi.object({
         in_price,
         sale_price,
         vip_points,
-        is_delete
+        is_delete,
+        supplier_name
     }).or(
         "barcode",
         "name",
@@ -43,7 +46,8 @@ export const updateCommoditySchema = Joi.object({
         "in_price",
         "sale_price",
         "vip_point",
-        "is_delete"
+        "is_delete",
+        "supplier_name"
     ).required()
 });
 

@@ -34,7 +34,7 @@ class Dao {
                     reject(err);
                 } else {
                     const { lastID, changes, sql } = this;
-                    if (sql.indexOf("INSERT INTO")) {
+                    if (sql.trim().slice(0,6) === "INSERT") {
                         resolve({
                             lastID
                         });
