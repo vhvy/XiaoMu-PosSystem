@@ -99,7 +99,7 @@ async function init() {
         sale_price REAL DEFAULT 0 CHECK (sale_price >= 0),
         count REAL DEFAULT 0,
         work_date INTEGER NOT NULL,
-        change_date INTERGER NOT NULL,
+        change_date INTEGER NOT NULL,
         is_delete BOOLEAN NOT NULL DEFAULT 0,
         supplier_id INTEGER NOT NULL,
         FOREIGN KEY (supplier_id) REFERENCES suppliers (id),
@@ -119,7 +119,7 @@ async function init() {
     await dao.run(`
     CREATE TABLE IF NOT EXISTS commodity_snapshot (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        create_time INTERGER NOT NULL,
+        create_time INTEGER NOT NULL,
         commodity_id INTEGER NOT NULL,
         barcode TEXT NOT NULL,
         name TEXT NOT NULL,
@@ -131,7 +131,7 @@ async function init() {
         in_price REAL DEFAULT 0 CHECK (in_price >= 0),
         sale_price REAL DEFAULT 0 CHECK (sale_price >= 0),
         work_date INTEGER NOT NULL,
-        change_date INTERGER NOT NULL,
+        change_date INTEGER NOT NULL,
         is_delete BOOLEAN NOT NULL DEFAULT 0,
         supplier_id INTEGER NOT NULL,
         FOREIGN KEY (supplier_id) REFERENCES suppliers (id),
@@ -157,6 +157,79 @@ async function init() {
     (name, phone, description) 
     VALUES (?, ?, ?)
     ;`[default_supplier, "", "默认供应商"]);
+    // 创建默认供货商
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_type (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL
+    )
+    ;`);
+    // 创建会员卡类型表
+
+    await dao.run(`
+    INSERT INTO vip_type 
+    (name) 
+    VALUES (?)
+    ;`, ["积分卡"]);
+    // 创建积分卡类型
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_score_rules (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        money INTEGER NOT NULL DEFAULT 1 CHECK (money >= 1),
+        scale INTEGER NOT NULL DEFAULT 1 CHECK (scale >= 1)
+    )
+    ;`);
+    // 创建积分卡规则表，设置每多少元消费等于多少积分
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_info (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT NOT NULL UNIQUE,
+        type_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        sex TEXT,
+        phone TEXT UNIQUE,
+        pinyin TEXT,
+        create_date INTEGER NOT NULL,
+        change_date INTEGER NOT NULL,
+        is_disable BOOLEAN NOT NULL DEFAULT 0,
+        work_type TEXT NOT NULL DEFAULT "办理" CHECK (work_type="办理" OR work_type="补换卡"),
+        FOREIGN KEY (type_id) REFERENCES vip_type (id)
+    )
+    ;`);
+    // 创建会员列表
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_info_snapshot (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        vip_member_id INTEGER NOT NULL,
+        code TEXT NOT NULL,
+        type_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        sex TEXT,
+        phone TEXT,
+        pinyin TEXT,
+        create_date INTEGER NOT NULL,
+        change_date INTEGER NOT NULL,
+        is_disable BOOLEAN NOT NULL DEFAULT 0,
+        work_type TEXT NOT NULL DEFAULT "办理" CHECK (work_type="办理" OR work_type="补换卡"),
+        FOREIGN KEY (vip_member_id) REFERENCES vip_info (id)
+    )
+    ;`);
+    // 创建会员信息快照列表
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_value (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        vip_id INTEGER NOT NULL UNIQUE,
+        vip_sum INTEGER NOT NULL DEFAULT 0,
+        sale_sum INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (vip_id) REFERENCES vip_info (id)
+    )
+    ;`);
+    // 记录会员积分等信息
 
     AppDAO.close();
 }

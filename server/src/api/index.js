@@ -6,6 +6,7 @@ import cash from "./cash.js";
 import groups from "./groups.js";
 
 import warehouse from "./warehouse/index.js";
+import vip from "./vip/index.js";
 
 const route = express.Router();
 
@@ -15,6 +16,7 @@ route.use("/users", users);
 route.use("/groups", groups);
 route.use("/cash", cash);
 
+route.use("/vip", vip);
 route.use("/warehouse", warehouse);
 
 export default route;

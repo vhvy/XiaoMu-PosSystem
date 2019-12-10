@@ -3,6 +3,7 @@ import pinyin from "pinyin";
 import CategoriesTask from "./categories.js";
 import config from "../config/index.js";
 import SuppliersTask from "./suppliers.js";
+import { getPinyin } from "../lib/pinyin.js";
 
 const { default_supplier } = config;
 
@@ -50,7 +51,7 @@ class CommodityTask {
 
         const SupplierManage = new SuppliersTask();
         const { id: supplier_id } = await SupplierManage.getSupplierDetails(supplier_name);
-        const pinyin = this.getCommodityPinyin(name);
+        const pinyin = this.getPinyin(name);
         const time = new Date().getTime();
         let query = "";
         let params = [
@@ -118,32 +119,10 @@ class CommodityTask {
         return code;
     }
 
-    getCommodityPinyin(name) {
-        // 获取商品名称的拼音缩写首字母
-
-        function getPinyinFirstLetter(str) {
-            return pinyin(str, {
-                segment: false,
-                style: pinyin["STYLE_NORMAL"]
-            })[0][0][0];
-        }
-
-        let PINYIN = "";
-        for (let i of name) {
-            if (/[\u4e00-\u9fa5]+/.test(i)) {
-                PINYIN += getPinyinFirstLetter(i);
-            } else {
-                PINYIN += i;
-            }
-        }
-
-        return PINYIN.toUpperCase();
-    }
-
     async updateCommodityName(barcode, new_name) {
         // 修改商品名称
 
-        const pinyin = this.getCommodityPinyin(new_name);
+        const pinyin = getPinyin(new_name);
 
         await this.dao.run(`
         UPDATE commodity 
