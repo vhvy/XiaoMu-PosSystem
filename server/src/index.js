@@ -18,6 +18,11 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 app.use("/api", api);
+app.use("*", (req, res) => {
+    res.status(400).send({
+        message: "错误请求!"
+    })
+});
 app.use(handleError);
 
 app.listen(port, () => {

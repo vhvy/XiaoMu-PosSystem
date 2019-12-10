@@ -225,6 +225,7 @@ async function init() {
         vip_id INTEGER NOT NULL UNIQUE,
         vip_sum INTEGER NOT NULL DEFAULT 0,
         sale_sum INTEGER NOT NULL DEFAULT 0,
+        consume_count INTEGER DEFAULT 0,
         FOREIGN KEY (vip_id) REFERENCES vip_info (id)
     )
     ;`);

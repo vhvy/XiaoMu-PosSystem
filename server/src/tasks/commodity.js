@@ -1,5 +1,4 @@
 import AppDAO from "../data/AppDAO.js";
-import pinyin from "pinyin";
 import CategoriesTask from "./categories.js";
 import config from "../config/index.js";
 import SuppliersTask from "./suppliers.js";
@@ -51,7 +50,7 @@ class CommodityTask {
 
         const SupplierManage = new SuppliersTask();
         const { id: supplier_id } = await SupplierManage.getSupplierDetails(supplier_name);
-        const pinyin = this.getPinyin(name);
+        const pinyin = getPinyin(name);
         const time = new Date().getTime();
         let query = "";
         let params = [
