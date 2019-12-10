@@ -62,7 +62,6 @@ async function init() {
     const authorityIDList = (await dao.all(`
     SELECT id FROM authority
     ;`)).map(({ id }) => id);
-    console.log(authorityIDList);
     await GroupManage.createGroup(default_admin_group_name, authorityIDList);
     // 创建默认管理员群组
     // 填充默认管理员群组权限
@@ -156,7 +155,7 @@ async function init() {
     INSERT INTO suppliers 
     (name, phone, description) 
     VALUES (?, ?, ?)
-    ;`[default_supplier, "", "默认供应商"]);
+    ;`, [default_supplier, "", "默认供应商"]);
     // 创建默认供货商
 
     await dao.run(`
@@ -190,7 +189,7 @@ async function init() {
         type_id INTEGER NOT NULL,
         name TEXT NOT NULL,
         sex TEXT,
-        phone TEXT UNIQUE,
+        phone TEXT,
         pinyin TEXT,
         create_date INTEGER NOT NULL,
         change_date INTEGER NOT NULL,
@@ -230,6 +229,18 @@ async function init() {
     )
     ;`);
     // 记录会员积分等信息
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS vip_change (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        old_code_id INTEGER NOT NULL UNIQUE,
+        new_code_id INTEGER NOT NULL UNIQUE,
+        change_date INTERGER NOT NULL,
+        description TEXT,
+        FOREIGN KEY (old_code_id) REFERENCES vip_info (id),
+        FOREIGN KEY (new_code_id) REFERENCES vip_info (id)
+    )
+    ;`);
 
     AppDAO.close();
 }

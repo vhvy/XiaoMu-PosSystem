@@ -283,3 +283,67 @@
     name: "旺财商贸"
 }
 ```
+
+---
+
+## 会员卡
+
+```
+/api/vip/members
+获取所有会员信息
+
+方法: get
+```
+
+```
+/api/vip/members/create
+创建新会员
+
+方法: post
+参数: {
+    code: "0001",
+    name: "马大帅",
+    vip_type: "积分卡", // 可选
+    sex: "男", // 可选
+    phone: "10086", // 可选
+    is_disable: false // 可选
+}
+```
+
+```
+/api/vip/members/update
+修改会员信息
+
+方法: put
+参数: {
+    code: "0001",
+    update_value: {
+        name: "马大虎", // 可选
+        sex: "男", // 可选
+        phone: "10010", // 可选
+        is_disable: true // 可选
+    } // 至少填写一个字段
+}
+```
+
+```
+/api/vip/members/delete
+删除会员
+
+方法: delete
+参数: {
+    code: "0001"
+}
+```
+
+```
+/api/vip/members/change
+会员补换卡
+
+方法: post
+参数: {
+    old_code: "0001",
+    new_code: "0002",
+    description: "测试" // 可选
+}
+```

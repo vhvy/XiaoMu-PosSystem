@@ -36,23 +36,73 @@ class VipTasks {
     }
 
     async createVipScoreMember(id) {
+        // 创建积分卡会员记录
+
         return await this.dao.run(`
         INSERT INTO vip_value (vip_id) 
         VALUES (?)
         ;`, [id]);
     }
 
+    async checkVipMemberIsChange(code) {
+        return await this.dao.get(`
+        SELECT id FROM vip_change WHERE 
+        old_code_id=(
+            SELECT id FROM vip_info WHERE code=?
+        )
+        ;`, [code]);
+    }
+
+    async changeVipMember(old_code, new_code, description = "无") {
+        // 会员补换卡
+
+        await this.updateVipMember({
+            code: old_code,
+            is_disable: true
+        });
+        // 禁用旧卡
+
+        const old_value = await this.getVipDetails(old_code);
+
+        const value = Object.assign({}, old_value, {
+            work_type: "补换卡",
+            code: new_code,
+            is_disable: false,
+
+        });
+        delete value.id;
+
+        const result = await this.createVipMember(value);
+
+        await this.dao.run(`
+        INSERT INTO vip_change 
+        (old_code_id, new_code_id, change_date, description) 
+        VALUES (?, ?, ?, ?)
+        ;`, [old_value.id, result.lastID, new Date().getTime(), description]);
+
+        return result;
+    }
+
+
+
     async createVipMember({
-        code, name, vip_type: vip_type_name, sex, phone, is_disable = false
+        code, name, vip_type: vip_type_name = "积分卡", sex, phone, is_disable = false, work_type = "办理", create_date = new Date().getTime(), change_date, type_id
     }) {
         // 建立新的会员
 
-        const pinyin = getPinyin(name);
-        const time = new Date().getTime();
-        const { id: type_id } = await this.getVipTypeDetails(vip_type_name);
 
-        const fields = ["code", "name", "type_id", "is_disable", "pinyin", "create_date", "change_date"];
-        const args = [code, name, type_id, is_disable ? 1 : 0, pinyin, time, time];
+
+        const pinyin = getPinyin(name);
+
+
+        const _type_id = await (async () => {
+            if (type_id) return type_id;
+            const { id } = await this.getVipTypeDetails(vip_type_name);
+            return id;
+        })();
+
+        const fields = ["code", "name", "type_id", "is_disable", "pinyin", "create_date", "change_date", "work_type"];
+        const args = [code, name, _type_id, is_disable ? 1 : 0, pinyin, create_date, change_date ? change_date : create_date, work_type];
         if (sex) {
             fields.push("sex");
             args.push(sex);
@@ -138,15 +188,38 @@ class VipTasks {
     }
 
     async deleteVipMemberSnapshot(vip_member_id) {
+        // 删除会员卡修改记录
+
         return await this.dao.run(`
         DELETE FROM vip_info_snapshot WHERE vip_member_id=?
         ;`, [vip_member_id]);
     }
 
+    async deleteVipMemberChange(id) {
+        // 删除会员卡补换卡记录
+
+        return await this.dao.run(`
+        DELETE FROM vip_change 
+        WHERE old_code_id=?
+        ;`, [id]);
+    }
+
+    async deleteVipMemberValue(id) {
+        // 删除会员卡积分条目
+
+        return await this.dao.run(`
+        DELETE FROM vip_value 
+        WHERE vip_id=?
+        ;`, [id]);
+    }
+
     async deleteVipMember(code) {
         const { id } = await this.getVipDetails(code);
-
         await this.deleteVipMemberSnapshot(id);
+
+        await this.deleteVipMemberChange(id);
+
+        await this.deleteVipMemberValue(id);
 
         return await this.dao.run(`
         DELETE FROM vip_info WHERE id=?

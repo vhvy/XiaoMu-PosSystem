@@ -31,3 +31,9 @@ export const updateVipMemberSchema = Joi.object({
 export const deleteVipMemberSchema = Joi.object({
     code: code.required()
 });
+
+export const changeVipMemberSchema = Joi.object({
+    old_code: code.required(),
+    new_code: code.invalid(Joi.ref("old_code")).required(),
+    description: Joi.string()
+});
