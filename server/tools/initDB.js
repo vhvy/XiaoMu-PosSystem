@@ -242,6 +242,59 @@ async function init() {
         FOREIGN KEY (new_code_id) REFERENCES vip_info (id)
     )
     ;`);
+    // 记录会员补换卡记录
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS promotion (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE,
+        start_date INTEGER NOT NULL,
+        end_date INTEGER NOT NULL CHECK (end_date > start_date),
+        is_disable BOOLEAN NOT NULL DEFAULT 0,
+        description TEXT
+    )
+    ;`);
+    // 促销活动表
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS promotion_type (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE,
+        key TEXT NOT NULL UNIQUE
+    )
+    ;`);
+
+    const type_list = {
+        "单品特价": "single_off_price",
+        "单品打折": "single_discount",
+        "满几件减多少": "fill_off_price",
+        "满几件打几折": "fill_discount"
+    }
+    const type_list_keys = Object.keys(type_list);
+
+    await Promise.all(type_list_keys.map(async key =>
+        await dao.run(`
+        INSERT INTO promotion_type 
+        (name, key) 
+        VALUES (?, ?)
+        ;`, [key, type_list[key]])
+    ))
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS promotion_details (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        promotion_id INTEGER NOT NULL,
+        commodity_id INTEGER NOT NULL,
+        promotion_type_id INTEGER NOT NULL,
+        single_off_price REAL,
+        single_discount REAL,
+        fill_off_price REAL,
+        fill_discount REAL,
+        FOREIGN KEY (commodity_id) REFERENCES commodity (id),
+        FOREIGN KEY (promotion_type_id) REFERENCES promotion_type (id)
+    )
+    ;`);
+    // 参加促销活动的商品详情
 
     AppDAO.close();
 }

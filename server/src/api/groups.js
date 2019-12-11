@@ -1,5 +1,4 @@
 import express from "express";
-import admin from "../middleware/admin.js";
 import { throwError } from "../middleware/handleError.js";
 import GroupTask from "../tasks/groups.js";
 import AuthorityTask from "../tasks/authority.js";
@@ -14,8 +13,6 @@ import { validBody } from "../middleware/validBody.js";
 const { default_admin_group_name } = config;
 
 const route = express.Router();
-
-route.use(admin);
 
 route.get("/", async (req, res) => {
     // 获取所有用户组以及权限详情

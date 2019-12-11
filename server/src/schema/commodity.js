@@ -2,11 +2,11 @@ import Joi from "@hapi/joi";
 import { categoryNameReq, categoryName } from "./categories.js";
 import { name as supplier_name } from "./suppliers.js";
 
-const barcode = Joi.string().min(5).max(14);
+export const barcode = Joi.string().min(5).max(14);
 const name = Joi.string().min(1).max(30);
 const unit = Joi.string().min(1).max(10);
 const size = Joi.string().min(1).max(30);
-const in_price = Joi.number().min(0).max(1000000);
+export const in_price = Joi.number().min(0).max(1000000);
 const sale_price = Joi.number().min(0).max(1000000);
 const vip_points = Joi.boolean();
 const is_delete = Joi.boolean();

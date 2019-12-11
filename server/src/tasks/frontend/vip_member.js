@@ -16,6 +16,7 @@ class VipMemberTask {
             ;`, query);
 
             if (result.length !== 0) return result;
+            // 当精准匹配到结果时返回结果
 
             const result_fuzzy = await AppDAO.all(`
             SELECT ${need_fields} FROM vip_info 
@@ -23,9 +24,11 @@ class VipMemberTask {
             ;`, `%${query}%`);
 
             if (result_fuzzy.length !== 0) return result_fuzzy;
+            // 当模糊匹配到结果时返回结果
         }
 
         return [];
+        // 没有匹配到任何结果时返回空数组
     }
 }
 

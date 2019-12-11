@@ -7,6 +7,8 @@ import groups from "./groups.js";
 import warehouse from "./warehouse/index.js";
 import vip from "./vip/index.js";
 import front from "./front/index.js";
+import market from "./market/index.js";
+import admin from "../middleware/admin.js";
 
 const route = express.Router();
 
@@ -14,7 +16,10 @@ route.use("/login", login);
 route.use(auth);
 route.use("/front", front);
 route.use("/users", users);
+
+route.use(admin);
 route.use("/groups", groups);
+route.use("/market", market);
 
 route.use("/vip", vip);
 route.use("/warehouse", warehouse);

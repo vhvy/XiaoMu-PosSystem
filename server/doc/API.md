@@ -347,3 +347,93 @@
     description: "测试" // 可选
 }
 ```
+
+---
+
+## 促销活动
+
+```
+/api/market/promotion
+获取所有促销活动
+
+方法: get
+```
+
+```
+/api/market/promotion/type
+获取所有促销类型
+
+方法: get
+```
+
+```
+/api/market/promotion/create
+创建促销活动
+
+方法: post
+参数: {
+    name: "春节促销活动",
+    start_date: 1576030345903,
+    end_date: 1576030345904,
+    description: "值此新春佳节来临之际....", // 可选
+    is_disable: false // 可选
+}
+```
+
+```
+/api/market/promotion/update
+修改促销活动时间、名称简介等
+
+方法: put
+参数: {
+    name: "春节促销活动",
+    update_value: {
+        new_name: "国庆促销活动", // 可选
+        start_date: 1576030345906, // 可选
+        end_date: 1576030345909, // 可选
+        description: "促销的一些简介xxxx", // 可选
+        is_disable: true // 可选
+    } // 至少填写任意一个字段
+}
+```
+
+```
+/api/market/promotion/delete
+删除促销活动
+
+方法: delete
+参数: {
+    name: "春节促销活动"
+}
+```
+
+```
+/api/market/promotion/details
+设置参加促销活动的商品详情
+
+方法: post
+参数: {
+    promotion_name: "春节促销活动",
+    commodity_list: [
+        {
+            barcode: "69019388",
+            promotion_type: 下方说明里的键,
+            下方说明里的值: value
+        }
+    ]
+}
+说明: {
+        "单品特价": "single_off_price",
+        "单品打折": "single_discount",
+        "满几件减多少": "fill_off_price",
+        "满几件打几折": "fill_discount"
+    }
+```
+
+```
+/api/market/promotion/details/:query
+获取促销活动的详情
+
+方法: get
+参数: query = 活动名称
+```
