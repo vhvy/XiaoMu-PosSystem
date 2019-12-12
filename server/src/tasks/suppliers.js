@@ -17,7 +17,7 @@ class SuppliersTask {
         const query = (typeof arg === "number") ? "id" : "name";
         return await this.dao.get(`
         SELECT * FROM suppliers WHERE ${query}=?
-        ;`, [arg]);
+        ;`, arg);
     }
 
     async createSupplier(name, phone, description) {

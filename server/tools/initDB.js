@@ -296,6 +296,29 @@ async function init() {
     ;`);
     // 参加促销活动的商品详情
 
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS stock (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        supplier_id INTERGER NOT NULL,
+        date INTEGER NOT NULL UNIQUE,
+        description TEXT,
+        FOREIGN KEY (supplier_id) REFERENCES suppliers (id)
+    )
+    ;`);
+    // 创建进货记录
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS stock_details (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        stock_id INTEGER NOT NULL,
+        commodity_id INTEGER NOT NULL,
+        in_price REAL NOT NULL DEFAULT 0.0,
+        count TEXT NOT NULL,
+        FOREIGN KEY (stock_id) REFERENCES stock (id),
+        FOREIGN KEY (commodity_id) REFERENCES commodity (id)
+    )
+    ;`);
+
     AppDAO.close();
 }
 

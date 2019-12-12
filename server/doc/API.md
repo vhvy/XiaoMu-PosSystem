@@ -437,3 +437,45 @@
 方法: get
 参数: query = 活动名称
 ```
+
+---
+
+## 仓库-进货单
+
+```
+/api/warehouse/stock
+获取所有的进货单
+
+方法: get
+```
+
+```
+/api/warehouse/stock/:query
+获取进货单详细信息
+
+方法: get
+参数: query = 进货单编号(时间戳)
+```
+
+```
+/api/warehouse/stock/create
+创建进货单
+
+方法: post
+参数: {
+    supplier_name: "默认供货商",
+    description: "年过时节囤货", // 可选
+    commodity_list: [
+        {
+            barcode: "69019388",
+            count: "12板*10条",
+            in_price: 12
+        },
+        {
+            barcode: "6954432710645",
+            count: "1箱*10瓶",
+            in_price: 80
+        }
+    ]
+}
+```
