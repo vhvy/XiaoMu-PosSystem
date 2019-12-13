@@ -250,7 +250,6 @@ async function init() {
         name TEXT NOT NULL UNIQUE,
         start_date INTEGER NOT NULL,
         end_date INTEGER NOT NULL CHECK (end_date > start_date),
-        is_disable BOOLEAN NOT NULL DEFAULT 0,
         description TEXT
     )
     ;`);
@@ -290,6 +289,10 @@ async function init() {
         single_discount REAL,
         fill_off_price REAL,
         fill_discount REAL,
+        start_date INTEGER NOT NULL,
+        end_date INTEGER NOT NULL CHECK (end_date > start_date),
+        FOREIGN KEY (start_date) REFERENCES promotion (start_date),
+        FOREIGN KEY (end_date) REFERENCES promotion (end_date),
         FOREIGN KEY (commodity_id) REFERENCES commodity (id),
         FOREIGN KEY (promotion_type_id) REFERENCES promotion_type (id)
     )
@@ -318,6 +321,7 @@ async function init() {
         FOREIGN KEY (commodity_id) REFERENCES commodity (id)
     )
     ;`);
+    // 进货单详情
 
     AppDAO.close();
 }

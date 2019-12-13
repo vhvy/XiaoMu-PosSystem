@@ -10,12 +10,7 @@ const route = express.Router();
 route.get("/", async (req, res) => {
     // 获取所有促销活动
 
-    const result = (await PromotionTask.getPromotion()).map(
-        i => Object.assign({}, i, {
-            is_disable: i.is_disable === 1
-        }
-        )
-    );
+    const result = await PromotionTask.getPromotion()
 
     res.json(result);
 });
@@ -33,7 +28,7 @@ route.post("/create", validBody(
 ), async (req, res, next) => {
     // 创建促销活动
 
-    const { name, start_date, end_date, description, is_disable } = req.body;
+    const { name, start_date, end_date, description } = req.body;
     if (end_date <= start_date) {
         return throwError(next, "活动结束时间必须迟于开始时间!");
     }
@@ -45,7 +40,7 @@ route.post("/create", validBody(
     }
     // 当活动名称已存在时返回400
 
-    await PromotionTask.createPromotion(name, start_date, end_date, description, is_disable);
+    await PromotionTask.createPromotion(name, start_date, end_date, description);
 
     res.json({
         name, start_date, end_date, description
@@ -66,7 +61,7 @@ route.put("/update", validBody(
     }
     // 当活动名称不存在时返回400
 
-    const { new_name, start_date, end_date, description, is_disable } = update_value;
+    const { new_name, start_date, end_date, description } = update_value;
 
     if (new_name) {
         const queryNewNameResult = await PromotionTask.getPromotion(new_name);
@@ -92,8 +87,10 @@ route.put("/update", validBody(
     // 在更新结束时间不更新开始时间的情况下，结束时间大于等于当前促销活动开始时间时返回400
 
     await PromotionTask.updatePromotion({
-        current_name: name, name: new_name, start_date, end_date, description, is_disable: is_disable ? 1 : 0
+        current_name: name, name: new_name, start_date, end_date, description
     });
+
+    await PromotionTask.updatePromotionCommodity(queryNameResult.id, start_date, end_date);
 
     res.json({
         message: "更新成功!"
@@ -134,14 +131,14 @@ route.post("/details", validBody(
     }
     // 当促销活动不存在时返回400
 
-    const { id } = queryPromotionResult;
+    const { id, start_date, end_date } = queryPromotionResult;
     const { status, data } = await PromotionTask.validCommodityList(id, commodity_list);
     if (!status) {
         return throwError(next, data);
     }
     // 检查参加促销的商品是否合法
 
-    await PromotionTask.updatePromotionDetails(id, data);
+    await PromotionTask.updatePromotionDetails(id, start_date, end_date, data);
 
     res.json({
         message: "促销活动商品更新完成!"
@@ -149,33 +146,40 @@ route.post("/details", validBody(
 });
 
 
-route.get("/details/:query", async (req, res) => {
+route.get("/details/:query", async (req, res, next) => {
     // 获取促销活动详情
 
     const { query } = req.params;
 
+    const queryPromotionResult = await PromotionTask.getPromotion(query);
+    if (!queryPromotionResult) {
+        return throwError(next, "此活动不存在!");
+    }
+
+    let data = [];
     const list = await PromotionTask.getPromotionDetails(query);
+    const { name: promotion_name } = queryPromotionResult;
     const CommodityManage = new CommodityTask();
 
-    const { name: promotion_name } = await PromotionTask.getPromotion(list[0].promotion_id);
-    const promotion_type_key = await PromotionTask.getPromotionKey(true);
-    const data = await Promise.all(
-        list.map(
-            async ({ id, commodity_id, promotion_type_id, ...args }) => {
-                const { name: commodity_name, barcode } = await CommodityManage.getCommodityDetails(commodity_id, "id");
-                const { key, name: promotion_type_name } = promotion_type_key[promotion_type_id];
+    if (list.length !== 0) {
+        const promotion_type_key = await PromotionTask.getPromotionKey(true);
+        data = await Promise.all(
+            list.map(
+                async ({ id, commodity_id, promotion_type_id, ...args }) => {
+                    const { name: commodity_name, barcode } = await CommodityManage.getCommodityDetails(commodity_id, "id");
+                    const { key, name: promotion_type_name } = promotion_type_key[promotion_type_id];
 
-                return {
-                    id,
-                    barcode,
-                    commodity_name,
-                    promotion_type_name,
-                    [key]: args[key]
+                    return {
+                        id,
+                        barcode,
+                        commodity_name,
+                        promotion_type_name,
+                        [key]: args[key]
+                    }
                 }
-            }
-        )
-    );
-
+            )
+        );
+    }
     res.json({
         promotion_name,
         data

@@ -2,17 +2,15 @@ import Joi from "@hapi/joi";
 import { barcode, in_price as price } from "./commodity.js";
 
 export const name = Joi.string().min(1).max(20);
-export const start_date = Joi.date().timestamp().min(1576033133614);
+export const start_date = Joi.date().timestamp();
 export const end_date = Joi.date().timestamp();
 export const description = Joi.string().min(1).max(30);
-export const is_disable = Joi.boolean();
 
 export const createPromotionSchema = Joi.object({
     name: name.required(),
     start_date: start_date.required(),
     end_date: end_date.min(Joi.ref("start_date")).required(),
-    description,
-    is_disable
+    description
 });
 
 export const updatePromotionSchema = Joi.object({
@@ -21,14 +19,12 @@ export const updatePromotionSchema = Joi.object({
         new_name: name,
         start_date: start_date,
         end_date: end_date,
-        description,
-        is_disable
+        description
     }).or(
         "new_name",
         "start_date",
         "end_date",
-        "description",
-        "is_disable"
+        "description"
     ).required()
 });
 

@@ -2,6 +2,16 @@ import AppDAO from "../../data/AppDAO.js";
 import CommodityTask from "../commodity.js";
 
 class PromotionTask {
+
+    static async checkHasPromotion(nowTime) {
+        // 检查提供的时间内是否有促销活动
+
+        return await AppDAO.get(`
+        SELECT id FROM promotion 
+        WHERE (start_date < ? AND end_date > ?)
+        ;`, [nowTime, nowTime]);
+    }
+
     static async getPromotion(args) {
         // 获取所有促销活动
 
@@ -43,10 +53,10 @@ class PromotionTask {
         ;`, args);
     }
 
-    static async createPromotion(name, start_date, end_date, description, is_disable = false) {
+    static async createPromotion(name, start_date, end_date, description) {
         // 创建新的促销活动
         let fields = "";
-        const args = [name, start_date, end_date, is_disable ? 1 : 0];
+        const args = [name, start_date, end_date];
         if (description) {
             fields = ", description";
             args.push(description);
@@ -54,7 +64,7 @@ class PromotionTask {
 
         return await AppDAO.run(`
         INSERT INTO promotion 
-        (name, start_date, end_date, is_disable${fields}) 
+        (name, start_date, end_date${fields}) 
         VALUES (?${", ?".repeat(args.length - 1)})
         ;`, args);
     }
@@ -84,6 +94,14 @@ class PromotionTask {
         ;`, args);
     }
 
+    static async updatePromotionCommodity(id, start_date, end_date) {
+        return await AppDAO.run(`
+        UPDATE promotion_details 
+        SET start_date=?, end_date=? 
+        WHERE promotion_id=?
+        ;`, [start_date, end_date, id]);
+    }
+
     static async deletePromotion(id) {
         // 删除指定ID的促销活动
 
@@ -93,15 +111,6 @@ class PromotionTask {
         DELETE FROM promotion 
         WHERE id=?
         ;`, id);
-    }
-
-    static async checkCommodityInPromotion(pro_id, com_id) {
-        // 检查某个活动中某个商品是否参加了活动
-
-        return await AppDAO.get(`
-        SELECT * FROM promotion_details 
-        WHERE promotion_id=? commodity_id=?
-        ;`, [pro_id, com_id]);
     }
 
     static async getPromotionKey(id = false) {
@@ -192,7 +201,7 @@ class PromotionTask {
         ;`, id);
     }
 
-    static async updatePromotionDetails(promotion_id, list) {
+    static async updatePromotionDetails(promotion_id, start_date, end_date, list) {
         // 设置参加促销活动的商品信息
 
         await this.clearPromotion(promotion_id);
@@ -202,15 +211,32 @@ class PromotionTask {
 
             return await AppDAO.run(`
             INSERT INTO promotion_details 
-            (promotion_id, commodity_id, promotion_type_id, ${field}) 
-            VALUES (?, ?, ?, ?)
+            (promotion_id, commodity_id, promotion_type_id, start_date, end_date, ${field}) 
+            VALUES (?, ?, ?, ?, ?, ?)
             ;`, [
                 promotion_id,
                 commodity_id,
                 promotion_type_id,
+                start_date,
+                end_date,
                 value
             ]);
         }));
+    }
+
+    static async getPromotionCommodity(time, commodity_id) {
+        // 获取某个时间段内参加活动的商品信息
+
+        const result = await AppDAO.all(`
+        SELECT start_date, promotion_type_id, single_off_price, single_discount, fill_off_price, fill_discount 
+        FROM promotion_details 
+        WHERE (commodity_id = ? AND start_date < ? AND end_date > ?)
+        ;`, [commodity_id, time, time]);
+
+        if (result.length === 0) return undefined;
+        result.sort(({ start_date }, { start_date: start_date2 }) => start_date - start_date2);
+
+        return result[0];
     }
 }
 
