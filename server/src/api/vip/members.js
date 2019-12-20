@@ -9,11 +9,10 @@ const route = express.Router();
 route.get("/", async (req, res) => {
     // 获取所有的会员信息
 
-    const VipManage = new VipTasks();
-    const result = await VipManage.getVipDetails();
+    const result = await VipTasks.getVipDetails();
 
     const data = await Promise.all(result.map(async item => {
-        const { name: vip_type } = await VipManage.getVipTypeDetails(item["type_id"]);
+        const { name: vip_type } = await VipTasks.getVipTypeDetails(item["type_id"]);
         const obj = Object.assign({}, item, {
             vip_type
         });
@@ -31,25 +30,24 @@ route.post("/create", validBody(
     // 创建新会员
 
     const { code, name, vip_type, sex, phone, is_disable } = req.body;
-    const VipManage = new VipTasks();
 
-    const queryCodeResult = await VipManage.getVipDetails(code);
+    const queryCodeResult = await VipTasks.getVipDetails(code);
     if (queryCodeResult) {
         return throwError(next, "此会员卡号已存在!");
     }
     // 当会员卡号已存在时返回400
 
-    const queryTypeResult = await VipManage.getVipTypeDetails(vip_type);
+    const queryTypeResult = await VipTasks.getVipTypeDetails(vip_type);
     if (!queryTypeResult) {
         return throwError(next, "此会员类型不存在!");
     }
     // 当此会员卡类型不存在时返回400
 
-    const { lastID } = await VipManage.createVipMember({
+    const { lastID } = await VipTasks.createVipMember({
         code, name, vip_type, sex, phone, is_disable
     });
 
-    const result = await VipManage.getVipDetails(lastID, "id");
+    const result = await VipTasks.getVipDetails(lastID, "id");
     res.json(result);
 });
 
@@ -60,23 +58,22 @@ route.put("/update", validBody(
     // 更新会员信息
 
     const { code, update_value } = req.body;
-    const VipManage = new VipTasks();
 
-    const queryCodeResult = await VipManage.getVipDetails(code);
+    const queryCodeResult = await VipTasks.getVipDetails(code);
     if (!queryCodeResult) {
         return throwError(next, "此会员卡号不存在!");
     }
     // 当会员卡号不存在时返回400
 
     if (update_value.is_disable !== undefined) {
-        const checkOldIsChangeResult = await VipManage.checkVipMemberIsChange(code);
+        const checkOldIsChangeResult = await VipTasks.checkVipMemberIsChange(code);
         if (checkOldIsChangeResult) {
             return throwError(next, "此卡已补换过卡!");
         }
         // 会员卡已经补换卡时返回400
     }
 
-    await VipManage.updateVipMember({ ...update_value, code });
+    await VipTasks.updateVipMember({ ...update_value, code });
 
     res.json(
         { ...update_value, code }
@@ -90,21 +87,20 @@ route.delete("/delete", validBody(
     // 删除会员
 
     const { code } = req.body;
-    const VipManage = new VipTasks();
 
-    const queryCodeResult = await VipManage.getVipDetails(code);
+    const queryCodeResult = await VipTasks.getVipDetails(code);
     if (!queryCodeResult) {
         return throwError(next, "此会员卡号不存在!");
     }
     // 当会员卡号不存在时返回400
 
-    const checkUsedResult = await VipManage.checkVipMemberUsed(code);
+    const checkUsedResult = await VipTasks.checkVipMemberUsed(code);
     if (checkUsedResult) {
         return throwError(next, "会员卡已被使用过，无法删除!");
     }
     // 当会员卡已经发生过交易时拒绝删除返回400
 
-    await VipManage.deleteVipMember(code);
+    await VipTasks.deleteVipMember(code);
 
     res.json({
         message: "删除成功!",
@@ -119,9 +115,8 @@ route.post("/change", validBody(
     // 会员补换卡
 
     const { old_code, new_code, description } = req.body;
-    const VipManage = new VipTasks();
 
-    const queryCodeResult = await VipManage.getVipDetails(old_code);
+    const queryCodeResult = await VipTasks.getVipDetails(old_code);
     if (!queryCodeResult) {
         return throwError(next, "此会员卡号不存在!");
     }
@@ -132,19 +127,19 @@ route.post("/change", validBody(
     }
     // 会员卡被禁用时返回400
 
-    const checkOldIsChangeResult = await VipManage.checkVipMemberIsChange(old_code);
+    const checkOldIsChangeResult = await VipTasks.checkVipMemberIsChange(old_code);
     if (checkOldIsChangeResult) {
         return throwError(next, "此卡已补换过卡!");
     }
     // 会员卡已经补换卡时返回400
 
-    const queryNewCodeResult = await VipManage.getVipDetails(new_code);
+    const queryNewCodeResult = await VipTasks.getVipDetails(new_code);
     if (queryNewCodeResult) {
         return throwError(next, "新的会员卡号已存在!");
     }
     // 当新的会员卡号已存在时返回400
 
-    await VipManage.changeVipMember(old_code, new_code, description);
+    await VipTasks.changeVipMember(old_code, new_code, description);
 
     res.json({
         old_code,

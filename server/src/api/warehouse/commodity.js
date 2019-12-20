@@ -15,8 +15,7 @@ const route = express.Router();
 route.get("/", async (req, res) => {
     // 获取所有商品信息
 
-    const CommodityManage = new CommodityTask();
-    const result = await CommodityManage.getAllCommodityDetailsByLimit();
+    const result = await CommodityTask.getAllCommodityDetailsByLimit();
 
     res.send(result);
 });
@@ -40,33 +39,30 @@ route.post("/create", validBody(
         supplier_name
     } = req.body;
 
-    const CommodityManage = new CommodityTask();
 
     if (barcode) {
-        const validBarcodeResult = await CommodityManage.getCommodityDetails(barcode);
+        const validBarcodeResult = await CommodityTask.getCommodityDetails(barcode);
         if (validBarcodeResult) {
             return throwError(next, "此条码已存在!");
         }
         // 条码存在时返回400
     }
 
-    const CategoriesManage = new CategoriesTask();
-    const validCategoryResult = await CategoriesManage.getCategoryDetails(category_name);
+    const validCategoryResult = await CategoriesTask.getCategoryDetails(category_name);
     if (!validCategoryResult) {
         return throwError(next, "分类不存在!");
     }
     // 当分类不存在时返回400
 
     if (supplier_name) {
-        const SuppliersManage = new SuppliersTask();
-        const validSupplierResult = await SuppliersManage.getSupplierDetails(supplier_name);
+        const validSupplierResult = await SuppliersTask.getSupplierDetails(supplier_name);
         if (!validSupplierResult) {
             return throwError(next, "供应商不存在!");
         }
     }
     // 当提交的供应商不存在时返回400
 
-    const { lastID } = await CommodityManage.createCommodity({
+    const { lastID } = await CommodityTask.createCommodity({
         barcode,
         name,
         category_id: validCategoryResult.id,
@@ -79,7 +75,7 @@ route.post("/create", validBody(
         supplier_name
     });
 
-    const queryCommodityResult = await CommodityManage.getCommodityDetails(lastID, "id");
+    const queryCommodityResult = await CommodityTask.getCommodityDetails(lastID, "id");
 
     const endResult = Object.assign({}, queryCommodityResult, {
         vip_points: queryCommodityResult.vip_points === 1,
@@ -109,17 +105,15 @@ route.put("/update", validBody(
         supplier_name
     } = update_value;
 
-    const CommodityManage = new CommodityTask();
 
-    const validBarcodeResult = await CommodityManage.getCommodityDetails(current_barcode);
+    const validBarcodeResult = await CommodityTask.getCommodityDetails(current_barcode);
     if (!validBarcodeResult) {
         return throwError(next, "此条码不存在!");
     }
     // 需要修改的商品条码不存在时返回400
 
     if (category_name) {
-        const CategoriesManage = new CategoriesTask();
-        const validCategoryResult = await CategoriesManage.getCategoryDetails(category_name);
+        const validCategoryResult = await CategoriesTask.getCategoryDetails(category_name);
         if (!validCategoryResult) {
             return throwError(next, "分类不存在!");
         }
@@ -127,8 +121,7 @@ route.put("/update", validBody(
     }
 
     if (supplier_name) {
-        const SuppliersManage = new SuppliersTask();
-        const validSupplierResult = await SuppliersManage.getSupplierDetails(supplier_name);
+        const validSupplierResult = await SuppliersTask.getSupplierDetails(supplier_name);
         if (!validSupplierResult) {
             return throwError(next, "供应商不存在!");
         }
@@ -136,13 +129,13 @@ route.put("/update", validBody(
     // 当提交的供应商不存在时返回400
 
     if (barcode) {
-        const validNewBarcodeResult = await CommodityManage.getCommodityDetails(barcode);
+        const validNewBarcodeResult = await CommodityTask.getCommodityDetails(barcode);
         if (validNewBarcodeResult) {
             return throwError(next, "新条码已存在!");
         }
     }
 
-    const id = await CommodityManage.updateCommodityValue({
+    const id = await CommodityTask.updateCommodityValue({
         current_barcode,
         barcode,
         name,
@@ -156,7 +149,7 @@ route.put("/update", validBody(
         supplier_name
     });
 
-    const commodity_value = await CommodityManage.getCommodityDetails(id, "id");
+    const commodity_value = await CommodityTask.getCommodityDetails(id, "id");
     commodity_value["vip_points"] = commodity_value["vip_points"] === 1;
 
 
@@ -174,8 +167,7 @@ route.delete("/delete", validBody(
 
     const { barcode } = req.body;
 
-    const CommodityManage = new CommodityTask();
-    const validBarcodeResult = await CommodityManage.getCommodityDetails(barcode);
+    const validBarcodeResult = await CommodityTask.getCommodityDetails(barcode);
     if (!validBarcodeResult) {
         return throwError(next, "此条码不存在!");
     }
@@ -193,7 +185,7 @@ route.delete("/delete", validBody(
         return throwError(next, "商品已被出售过，无法删除!");
     }
 
-    await CommodityManage.deleteCommodity(barcode);
+    await CommodityTask.deleteCommodity(barcode);
 
     res.json({
         message: "删除成功!",

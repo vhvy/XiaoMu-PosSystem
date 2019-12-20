@@ -3,60 +3,57 @@ import { getPinyin } from "../lib/pinyin.js";
 import { math } from "../lib/mathc.js";
 
 class VipTasks {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async getVipDetails(vip, type = "code") {
+    static async getVipDetails(vip, type = "code") {
         // 获取会员详细信息
 
         if (!vip) {
-            return await this.dao.all(`
+            return await AppDAO.all(`
             SELECT * FROM vip_info
             ;`);
         }
 
         if (type === "name") {
-            return await this.dao.all(`
+            return await AppDAO.all(`
             SELECT * FROM vip_info WHERE ${type}=?
             ;`, [vip]);
         }
 
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT * FROM vip_info WHERE ${type}=?
         ;`, [vip]);
     }
 
-    async getVipCurrentValue(vip) {
+    static async getVipCurrentValue(vip) {
         // 获取会员卡当前积分值
 
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT * FROM vip_value WHERE vip_id=(
             SELECT id FROM vip_info WHERE code=?
         )
         ;`, vip);
     }
 
-    async getVipTypeDetails(type) {
+    static async getVipTypeDetails(type) {
         // 获取会员卡类型详情
 
         const query = (typeof type === "number") ? "id" : "name";
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT * FROM vip_type WHERE ${query}=?
         ;`, [type]);
     }
 
-    async createVipScoreMember(id) {
+    static async createVipScoreMember(id) {
         // 创建积分卡会员记录
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO vip_value (vip_id) 
         VALUES (?)
         ;`, [id]);
     }
 
-    async checkVipMemberIsChange(code) {
-        return await this.dao.get(`
+    static async checkVipMemberIsChange(code) {
+        return await AppDAO.get(`
         SELECT id FROM vip_change WHERE 
         old_code_id=(
             SELECT id FROM vip_info WHERE code=?
@@ -64,7 +61,7 @@ class VipTasks {
         ;`, [code]);
     }
 
-    async changeVipMember(old_code, new_code, description = "无") {
+    static async changeVipMember(old_code, new_code, description = "无") {
         // 会员补换卡
 
         await this.updateVipMember({
@@ -85,7 +82,7 @@ class VipTasks {
 
         const result = await this.createVipMember(value);
 
-        await this.dao.run(`
+        await AppDAO.run(`
         INSERT INTO vip_change 
         (old_code_id, new_code_id, change_date, description) 
         VALUES (?, ?, ?, ?)
@@ -96,7 +93,7 @@ class VipTasks {
 
 
 
-    async createVipMember({
+    static async createVipMember({
         code, name, vip_type: vip_type_name = "积分卡", sex, phone, is_disable = false, work_type = "办理", create_date = new Date().getTime(), change_date, type_id
     }) {
         // 建立新的会员
@@ -124,7 +121,7 @@ class VipTasks {
             args.push(phone);
         }
 
-        const result = await this.dao.run(`
+        const result = await AppDAO.run(`
         INSERT INTO vip_info 
         (${fields.join(", ")}) 
         VALUES (?${", ?".repeat(fields.length - 1)})
@@ -140,7 +137,7 @@ class VipTasks {
         return result;
     }
 
-    async createVipMemberSnapshot(params) {
+    static async createVipMemberSnapshot(params) {
         const fields = [];
         const args = [];
         const keys = Object.keys(params);
@@ -149,14 +146,14 @@ class VipTasks {
             args.push(params[key]);
         }
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO vip_info_snapshot 
         (${fields.join(", ")}) 
         VALUES (?${", ?".repeat(args.length - 1)})
         ;`, args);
     }
 
-    async updateVipMember(params) {
+    static async updateVipMember(params) {
         // 更新会员信息
 
         const { code } = params;
@@ -174,7 +171,7 @@ class VipTasks {
             }
         }
 
-        const result = await this.dao.run(`
+        const result = await AppDAO.run(`
         UPDATE vip_info SET
         ${fields.join(", ")} 
         WHERE code=?
@@ -191,40 +188,40 @@ class VipTasks {
         return result;
     }
 
-    async checkVipMemberUsed(code) {
+    static async checkVipMemberUsed(code) {
         // 检查会员卡是否已经发生过交易
         // 待完成前台销售API后再来完善
 
         return false;
     }
 
-    async deleteVipMemberSnapshot(vip_member_id) {
+    static async deleteVipMemberSnapshot(vip_member_id) {
         // 删除会员卡修改记录
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         DELETE FROM vip_info_snapshot WHERE vip_member_id=?
         ;`, [vip_member_id]);
     }
 
-    async deleteVipMemberChange(id) {
+    static async deleteVipMemberChange(id) {
         // 删除会员卡补换卡记录
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         DELETE FROM vip_change 
         WHERE old_code_id=?
         ;`, [id]);
     }
 
-    async deleteVipMemberValue(id) {
+    static async deleteVipMemberValue(id) {
         // 删除会员卡积分条目
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         DELETE FROM vip_value 
         WHERE vip_id=?
         ;`, [id]);
     }
 
-    async deleteVipMember(code) {
+    static async deleteVipMember(code) {
         const { id } = await this.getVipDetails(code);
         await this.deleteVipMemberSnapshot(id);
 
@@ -232,22 +229,22 @@ class VipTasks {
 
         await this.deleteVipMemberValue(id);
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         DELETE FROM vip_info WHERE id=?
         ;`, [id]);
     }
 
-    async addVipPoints(id, point) {
+    static async addVipPoints(id, point) {
         // 增加会员积分
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE vip_value 
         SET vip_sum=vip_sum+? 
         WHERE vip_id=?
         ;`, [point, id]);
     }
 
-    async undoOrderMinusVipPoints(code, point, price) {
+    static async undoOrderMinusVipPoints(code, point, price) {
         // 撤销订单时减少会员积分
 
         const { vip_id, vip_sum, sale_sum } = await this.getVipCurrentValue(code);
@@ -255,42 +252,42 @@ class VipTasks {
         const new_vip_sum = math.subtract(vip_sum, point);
         const new_sale_sum = math.subtract(sale_sum, price);
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE vip_value 
         SET vip_sum=?, sale_sum=?, consume_count=consume_count-1
         WHERE vip_id=?
         ;`, [new_vip_sum, new_sale_sum, vip_id]);
     }
 
-    async minusVipPoints(code, point) {
+    static async minusVipPoints(code, point) {
         // 减少会员积分
 
         const { vip_id, vip_sum } = await this.getVipCurrentValue(code);
 
         const new_vip_sum = math.subtract(vip_sum, point);
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE vip_value 
         SET vip_sum=? 
         WHERE vip_id=?
         ;`, [new_vip_sum, vip_id]);
     }
 
-    async vipConsumeAddPoints(code, point, sum) {
+    static async vipConsumeAddPoints(code, point, sum) {
         // 会员购物后增加积分、消费次数、总的消费金额
 
-        const { id } = await this.dao.get(`
+        const { id } = await AppDAO.get(`
             SELECT id FROM vip_info WHERE code=?
         ;`, code);
 
-        const { vip_sum: c_vip_sum, sale_sum: c_sale_sum } = await this.dao.get(`
+        const { vip_sum: c_vip_sum, sale_sum: c_sale_sum } = await AppDAO.get(`
         SELECT vip_sum, sale_sum FROM vip_value WHERE vip_id=?
         ;`, id);
 
         const vip_sum = math.add(point, c_vip_sum);
         const sale_sum = math.add(sum, c_sale_sum);
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE vip_value 
         SET vip_sum=?, sale_sum=?, consume_count=consume_count+1 
         WHERE vip_id=?

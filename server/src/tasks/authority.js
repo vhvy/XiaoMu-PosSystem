@@ -1,13 +1,10 @@
 import AppDAO from "../data/AppDAO.js";
 
 class AuthorityTask {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async getAuthorityDetails(auth) {
+    static async getAuthorityDetails(auth) {
         const query = (typeof auth === "number") ? "id" : "authority";
-        const result = await this.dao.get(`
+        const result = await AppDAO.get(`
         SELECT id, authority FROM authority WHERE ${query}=?
         ;`, [
             auth
@@ -15,15 +12,15 @@ class AuthorityTask {
         return result;
     }
 
-    getAllAuthority() {
-        return this.dao.all(`
+    static async getAllAuthority() {
+        return await AppDAO.all(`
         SELECT id, authority FROM authority
         ;`);
     }
 
-    async mapAuthorityNameToID(name) {
+    static async mapAuthorityNameToID(name) {
         const getID = (name) => {
-            return this.dao.get(`
+            return AppDAO.get(`
             SELECT id FROM authority WHERE authority=?
             ;`, [name]);
         }
@@ -37,12 +34,12 @@ class AuthorityTask {
         return getID(name);
     }
 
-    async validateAuthority(auth) {
+    static async validateAuthority(auth) {
         // 判断权限是否合法
 
         const valid = async (auth) => {
             const query = (typeof auth === "number") ? "id" : "authority";
-            return Boolean(await this.dao.get(`
+            return Boolean(await AppDAO.get(`
             SELECT id FROM authority WHERE ${query}=?
             ;`, [
                 auth

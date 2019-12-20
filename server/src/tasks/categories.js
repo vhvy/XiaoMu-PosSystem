@@ -1,25 +1,22 @@
 import AppDAO from "../data/AppDAO.js";
 
 class CategoriesTask {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async createCategory(category, parent_name) {
+    static async createCategory(category, parent_name) {
         // 创建新商品分类
 
         if (parent_name) {
-            const { id: parent_id } = await this.dao.get(`
+            const { id: parent_id } = await AppDAO.get(`
             SELECT id FROM categories WHERE name=?
             ;`, [parent_name]);
-            return this.dao.run(`
+            return AppDAO.run(`
             INSERT INTO categories 
             (name, parent_id) 
             VALUES (?, ?)
             ;`, [category, parent_id]);
         }
 
-        return this.dao.run(`
+        return AppDAO.run(`
         INSERT INTO categories 
         (name) 
         VALUES (?)
@@ -28,15 +25,15 @@ class CategoriesTask {
         ]);
     }
 
-    getCategoryDetails(name) {
+    static async getCategoryDetails(name) {
         const query = (typeof name === "number") ? "id" : "name";
-        return this.dao.get(`
+        return await AppDAO.get(`
             SELECT id, name, parent_id FROM categories WHERE ${query}=?
             ;`, [name]);
     }
 
-    updateCategoryName(old_name, new_name) {
-        return this.dao.run(`
+    static async updateCategoryName(old_name, new_name) {
+        return await AppDAO.run(`
         UPDATE categories SET name=? 
         WHERE name=?
         ;`, [
@@ -45,11 +42,11 @@ class CategoriesTask {
         ]);
     }
 
-    async deleteCategory(category) {
+    static async deleteCategory(category) {
         // 删除分类
 
         const del = (id) => {
-            return this.dao.run(`
+            return AppDAO.run(`
             DELETE FROM categories WHERE id=?
             ;`, [id]);
         }
@@ -57,7 +54,7 @@ class CategoriesTask {
         const { id, parent_id } = await this.getCategoryDetails(category);
         if (!parent_id) {
             // 如果没有父分类，那么它可能是一个父分类，需要将子分类一同删除
-            const child_id_list = await this.dao.all(`
+            const child_id_list = await AppDAO.all(`
             SELECT id FROM categories WHERE parent_id=?
             ;`, [id]);
 
@@ -72,24 +69,24 @@ class CategoriesTask {
         return await del(id);
     }
 
-    async getChildCategory(parent_name) {
+    static async getChildCategory(parent_name) {
         const { id } = await this.getCategoryDetails(parent_name);
-        return this.dao.all(`
+        return AppDAO.all(`
         SELECT id, name, parent_id FROM categories WHERE parent_id=?
         ;`, [id]);
     }
 
-    async updateCategoryParent(name, parent_name) {
+    static async updateCategoryParent(name, parent_name) {
         const { id } = await this.getCategoryDetails(parent_name);
-        return this.dao.run(`
+        return AppDAO.run(`
         UPDATE categories 
         SET parent_id=? 
         WHERE name=?
         ;`, [id, name]);
     }
 
-    async getCategoriesDetails() {
-        return await this.dao.all(`
+    static async getCategoriesDetails() {
+        return await AppDAO.all(`
         SELECT id, name, parent_id FROM categories
         ;`);
     }

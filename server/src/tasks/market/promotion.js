@@ -139,7 +139,6 @@ class PromotionTask {
 
         const promotion_type_key = await this.getPromotionKey();
 
-        const CommodityManage = new CommodityTask();
         let result = [];
         let barcode_list = [];
         for (let i of list) {
@@ -153,7 +152,7 @@ class PromotionTask {
                 }
             }
 
-            const commodity = await CommodityManage.getCommodityDetails(barcode);
+            const commodity = await CommodityTask.getCommodityDetails(barcode);
             if (!commodity) {
                 return {
                     status: false,

@@ -11,9 +11,8 @@ route.get("/", async (req, res) => {
     // 获取所有进货记录
 
     const list = await StockTask.getStock();
-    const SuppliersManage = new SuppliersTask();
     const data = await Promise.all(list.map(async ({ id, supplier_id, date, description }) => {
-        const { name: supplier_name } = await SuppliersManage.getSupplierDetails(supplier_id);
+        const { name: supplier_name } = await SuppliersTask.getSupplierDetails(supplier_id);
         return {
             id,
             supplier_name,
@@ -47,8 +46,7 @@ route.post("/create", validBody(
     // 创建进货单
 
     const { supplier_name, description, commodity_list } = req.body;
-    const SuppliersManage = new SuppliersTask();
-    const querySupplierResult = await SuppliersManage.getSupplierDetails(supplier_name);
+    const querySupplierResult = await SuppliersTask.getSupplierDetails(supplier_name);
     if (!querySupplierResult) {
         return throwError(next, "此供应商不存在!");
     }

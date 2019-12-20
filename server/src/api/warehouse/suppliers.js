@@ -16,8 +16,7 @@ const route = express.Router();
 route.get("/", async (req, res) => {
     // 获取所有的供应商信息
 
-    const SuppliersManage = new SuppliersTask();
-    const result = await SuppliersManage.getSupplierDetails();
+    const result = await SuppliersTask.getSupplierDetails();
 
     res.json(result);
 });
@@ -30,13 +29,12 @@ route.post("/create", validBody(
 
     const { name, phone, description } = req.body;
 
-    const SuppliersManage = new SuppliersTask();
-    const querySupplierNameResult = await SuppliersManage.getSupplierDetails(name);
+    const querySupplierNameResult = await SuppliersTask.getSupplierDetails(name);
     if (querySupplierNameResult) {
         return throwError(next, "此供货商名称已存在!");
     }
 
-    await SuppliersManage.createSupplier(name, phone, description);
+    await SuppliersTask.createSupplier(name, phone, description);
 
     res.json({
         name,
@@ -54,8 +52,7 @@ route.put("/update", validBody(
 
     if (name === default_supplier) return throwError(next, "不能修改默认供货商!")
 
-    const SuppliersManage = new SuppliersTask();
-    const querySupplierNameResult = await SuppliersManage.getSupplierDetails(name);
+    const querySupplierNameResult = await SuppliersTask.getSupplierDetails(name);
     if (!querySupplierNameResult) {
         return throwError(next, "此供货商不存在,无法更新!");
     }
@@ -64,14 +61,14 @@ route.put("/update", validBody(
     const { new_name, new_phone, new_description } = update_value;
 
     if (new_name) {
-        const queryNewSupplierNameResult = await SuppliersManage.getSupplierDetails(new_name);
+        const queryNewSupplierNameResult = await SuppliersTask.getSupplierDetails(new_name);
         if (queryNewSupplierNameResult) {
             return throwError(next, "此供货商已存在!");
         }
         // 当新的供货商名字存在时返回400
     }
 
-    await SuppliersManage.updateSupplier({
+    await SuppliersTask.updateSupplier({
         name, new_name, new_phone, new_description
     });
 
@@ -91,20 +88,19 @@ route.delete("/delete", validBody(
 
     if (name === default_supplier) return throwError(next, "不能删除默认供货商!")
 
-    const SuppliersManage = new SuppliersTask();
-    const querySupplierResult = await SuppliersManage.getSupplierDetails(name);
+    const querySupplierResult = await SuppliersTask.getSupplierDetails(name);
     if (!querySupplierResult) {
         return throwError(next, "供货商不存在!");
     }
     // 当供货商不存在时返回400
 
-    const quertSupplierIsUseResult = await SuppliersManage.checkSupplierIsUse(name);
+    const quertSupplierIsUseResult = await SuppliersTask.checkSupplierIsUse(name);
     if (quertSupplierIsUseResult) {
         return throwError(next, "供货商已被使用，无法删除!");
     }
     // 当供货商已被商品使用时返回400
 
-    await SuppliersManage.deleteSupplier(name);
+    await SuppliersTask.deleteSupplier(name);
 
     res.json({
         message: "删除成功!",

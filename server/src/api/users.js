@@ -30,15 +30,14 @@ route.post("/updatepwd", validBody(
     }
     // 如果用户不是管理员，修改别的用户密码时返回403
 
-    const UsersManage = new UsersTask();
-    const queryUserResult = await UsersManage.getUserDetails(username);
+    const queryUserResult = await UsersTask.getUserDetails(username);
     if (!queryUserResult) {
         return throwError(next, "此用户不存在!");
     }
     // 如果被修改密码的用户不存在返回400
 
     const hash = await genHash(new_password);
-    await UsersManage.changeUserPwd(username, hash);
+    await UsersTask.changeUserPwd(username, hash);
     res.json({
         message: "修改成功!",
         username
@@ -61,22 +60,20 @@ route.post("/updateusergroup", validBody(
     // 修改用户所属的用户组
 
     const { username, new_group } = req.body;
-    const UsersManage = new UsersTask();
 
-    const queryUserResult = await UsersManage.validateUsername(username);
+    const queryUserResult = await UsersTask.validateUsername(username);
     if (!queryUserResult) {
         return throwError(next, "此用户不存在!");
     }
     // 当用户名不存在时返回400
 
-    const GroupManage = new GroupTask();
-    const queryGroupResult = await GroupManage.getGroupDetails(new_group);
+    const queryGroupResult = await GroupTask.getGroupDetails(new_group);
     if (!queryGroupResult) {
         return throwError(next, "此用户组不存在!");
     }
     // 当用户组不存在时返回400
 
-    await UsersManage.changeUserGroup(username, new_group);
+    await UsersTask.changeUserGroup(username, new_group);
 
     res.json({
         message: "修改成功!",
@@ -93,9 +90,8 @@ route.post("/updateusername", validBody(
 
     const { old_username, new_username } = req.body;
 
-    const UsersManage = new UsersTask();
 
-    const queryOldUserResult = await UsersManage.validateUsername(old_username);
+    const queryOldUserResult = await UsersTask.validateUsername(old_username);
     if (!queryOldUserResult) {
         return throwError(
             next,
@@ -103,13 +99,13 @@ route.post("/updateusername", validBody(
     }
     // 如果被修改用户名的用户不存在返回400
 
-    const queryNewUserResult = await UsersManage.validateUsername(new_username);
+    const queryNewUserResult = await UsersTask.validateUsername(new_username);
     if (queryNewUserResult) {
         return throwError(next, "此账户已存在，无法修改!");
     }
     // 如果新的用户名已存在返回400
 
-    await UsersManage.changeUserName(old_username, new_username);
+    await UsersTask.changeUserName(old_username, new_username);
 
     res.json({
         message: "修改成功!",
@@ -126,22 +122,20 @@ route.post("/createuser", validBody(
 
     const { new_username, password, group } = req.body;
 
-    const UsersManage = new UsersTask();
-    const queryUserResult = await UsersManage.validateUsername(new_username);
+    const queryUserResult = await UsersTask.validateUsername(new_username);
     if (queryUserResult) {
         return throwError(next, "此账户已存在!");
     }
     // 当用户名已存在时返回400
 
-    const GroupManage = new GroupTask();
-    const queryGroupResult = await GroupManage.getGroupDetails(group);
+    const queryGroupResult = await GroupTask.getGroupDetails(group);
     if (!queryGroupResult) {
         return throwError(next, "此用户组不存在!");
     }
     // 当用户组不存在时返回400
 
     const hash = await genHash(password);
-    await UsersManage.createUser(new_username, hash, queryGroupResult.id);
+    await GroupTask.createUser(new_username, hash, queryGroupResult.id);
     res.json({
         message: "创建成功!",
         username: new_username,
@@ -156,16 +150,14 @@ route.post("/updateuserstatus", validBody(
     // 设置用户是否被禁用
 
     const { username, status } = req.body;
-    const UsersManage = new UsersTask();
-
-    const queryUserResult = await UsersManage.validateUsername(username);
+    const queryUserResult = await UsersTask.validateUsername(username);
     if (!queryUserResult) {
         return throwError(next, "此用户不存在!"
         );
     }
     // 当用户不存在时返回400
 
-    await UsersManage.updateUserStatus(username, status);
+    await UsersTask.updateUserStatus(username, status);
     res.json({
         message: "修改成功!"
     })

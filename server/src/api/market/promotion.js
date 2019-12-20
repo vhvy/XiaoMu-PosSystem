@@ -159,14 +159,13 @@ route.get("/details/:query", async (req, res, next) => {
     let data = [];
     const list = await PromotionTask.getPromotionDetails(query);
     const { name: promotion_name } = queryPromotionResult;
-    const CommodityManage = new CommodityTask();
 
     if (list.length !== 0) {
         const promotion_type_key = await PromotionTask.getPromotionKey(true);
         data = await Promise.all(
             list.map(
                 async ({ id, commodity_id, promotion_type_id, ...args }) => {
-                    const { name: commodity_name, barcode } = await CommodityManage.getCommodityDetails(commodity_id, "id");
+                    const { name: commodity_name, barcode } = await CommodityTask.getCommodityDetails(commodity_id, "id");
                     const { key, name: promotion_type_name } = promotion_type_key[promotion_type_id];
 
                     return {

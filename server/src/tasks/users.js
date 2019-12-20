@@ -4,18 +4,14 @@ import AuthorityTask from "./authority.js";
 import GroupTask from "./groups.js";
 
 class UsersTask {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async getAllUser() {
-        const GroupManage = new GroupTask();
-        const all_user_list = await this.dao.all(`
+    static async getAllUser() {
+        const all_user_list = await AppDAO.all(`
         SELECT id, username, group_id, disabled FROM users
         ;`);
         const result = await Promise.all(all_user_list
             .map(async ({ group_id, id, username, disabled }) => {
-                const { usergroup } = await GroupManage.getGroupDetails(group_id);
+                const { usergroup } = await GroupTask.getGroupDetails(group_id);
                 return {
                     id,
                     username,
@@ -27,12 +23,12 @@ class UsersTask {
         return result;
     }
 
-    createUser(
+    static async createUser(
         username,
         hash,
         group_id
     ) {
-        return this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO users 
         (username, password, group_id)
         VALUES (?, ?, ?)
@@ -43,11 +39,10 @@ class UsersTask {
         ]);
     }
 
-    async changeUserGroup(user, new_group) {
+    static async changeUserGroup(user, new_group) {
         const user_query = (typeof user === "number") ? "id" : "username";
-        const GroupManage = new GroupTask();
-        const { id } = await GroupManage.getGroupDetails(new_group);
-        return this.dao.run(`
+        const { id } = await GroupTask.getGroupDetails(new_group);
+        return AppDAO.run(`
         UPDATE users SET group_id=? WHERE ${user_query}=?
         ;`, [
             id,
@@ -55,16 +50,16 @@ class UsersTask {
         ]);
     }
 
-    changeUserPwd(queryUser, newPwd) {
+    static async changeUserPwd(queryUser, newPwd) {
         if (typeof queryUser === "number") {
-            return this.dao.run(`
+            return await AppDAO.run(`
         UPDATE users SET password=? WHERE id=?
         ;`, [
                 newPwd,
                 queryUser
             ]);
         } else {
-            return this.dao.run(`
+            return await AppDAO.run(`
         UPDATE users SET password=? WHERE username=?
         ;`, [
                 newPwd,
@@ -73,17 +68,17 @@ class UsersTask {
         }
     }
 
-    changeUserName(query, newUsername) {
+    static async changeUserName(query, newUsername) {
         // query是老用户名
         if (typeof query === "number") {
-            return this.dao.run(`
+            return await AppDAO.run(`
             UPDATE users SET username=? WHERE id=?
             ;`, [
                 newUsername,
                 query
             ]);
         } else {
-            return this.dao.run(`
+            return await AppDAO.run(`
             UPDATE users SET username=? WHERE username=?
             ;`, [
                 newUsername,
@@ -92,12 +87,12 @@ class UsersTask {
         }
     }
 
-    updateUserStatus(query, status) {
+    static async updateUserStatus(query, status) {
         const bool = status === false ? 1 : 0;
         // status为true时账户为启用状态，数据库内为0
         // status为false时账户为禁用状态，数据库内为1
         if (typeof query === "number") {
-            return this.dao.run(`
+            return await AppDAO.run(`
             UPDATE users SET disabled=? WHERE id=?
             ;`, [
                 bool,
@@ -105,7 +100,7 @@ class UsersTask {
             ]);
         } else {
 
-            return this.dao.run(`
+            return await AppDAO.run(`
             UPDATE users SET disabled=? WHERE username=?
             ;`, [
                 bool,
@@ -114,16 +109,16 @@ class UsersTask {
         }
     }
 
-    deleteUser(user_id) {
-        return this.dao.run(`
+    static async deleteUser(user_id) {
+        return await AppDAO.run(`
         DELETE FROM users WHERE id=?
         ;`, [
             user_id
         ]);
     }
 
-    async validateUsername(username) {
-        const queryResult = await this.dao.get(`
+    static async validateUsername(username) {
+        const queryResult = await AppDAO.get(`
         SELECT username, password, disabled FROM users WHERE username=?
         ;`, [
             username
@@ -131,7 +126,7 @@ class UsersTask {
         return queryResult;
     }
 
-    async validateAccount(input_username, input_password, ) {
+    static async validateAccount(input_username, input_password, ) {
         const queryResult = await this.validateUsername(input_username);
         if (!queryResult) return {
             status: false,
@@ -150,13 +145,13 @@ class UsersTask {
         };
     }
 
-    async getUserGroup(username) {
-        const { group_id } = await this.dao.get(`
+    static async getUserGroup(username) {
+        const { group_id } = await AppDAO.get(`
         SELECT group_id FROM users WHERE username=?
         ;`, [
             username
         ]);
-        const { usergroup: group } = await this.dao.get(`
+        const { usergroup: group } = await AppDAO.get(`
         SELECT usergroup FROM groups WHERE id=?
         ;`, [
             group_id
@@ -167,15 +162,14 @@ class UsersTask {
         }
     }
 
-    async getUserAuthority(username, needGroup = false) {
+    static async getUserAuthority(username, needGroup = false) {
         const { group_id, group } = await this.getUserGroup(username);
-        const AuthorityManage = new AuthorityTask();
-        const authorityList = await Promise.all((await this.dao.all(`
+        const authorityList = await Promise.all((await AppDAO.all(`
         SELECT authority_id FROM groups_authority WHERE usergroup_id=?
         ;`, [
             group_id
         ]))
-            .map(({ authority_id }) => AuthorityManage.getAuthorityDetails(authority_id)));
+            .map(({ authority_id }) => AuthorityTask.getAuthorityDetails(authority_id)));
         const result = {
             authorityList
         }
@@ -186,8 +180,8 @@ class UsersTask {
         return result;
     }
 
-    getUserDetails(username) {
-        return this.dao.get(`
+    static async getUserDetails(username) {
+        return await AppDAO.get(`
         SELECT id, username, group_id, disabled FROM users WHERE username=?
         ;`, [
             username

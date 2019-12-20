@@ -58,11 +58,10 @@ async function init() {
     // 填充权限表
 
 
-    const GroupManage = new GroupTask();
     const authorityIDList = (await dao.all(`
     SELECT id FROM authority
     ;`)).map(({ id }) => id);
-    await GroupManage.createGroup(default_admin_group_name, authorityIDList);
+    await GroupTask.createGroup(default_admin_group_name, authorityIDList);
     // 创建默认管理员群组
     // 填充默认管理员群组权限
 
@@ -70,8 +69,7 @@ async function init() {
     const { id: group_id } = await dao.get(`
     SELECT id FROM groups WHERE usergroup="${default_admin_group_name}"
     ;`);
-    const UserManage = new UserTask();
-    await UserManage.createUser("admin", hash, group_id);
+    await UserTask.createUser("admin", hash, group_id);
     // 创建默认管理员
 
 

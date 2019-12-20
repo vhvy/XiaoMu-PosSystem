@@ -7,17 +7,14 @@ import { getPinyin } from "../lib/pinyin.js";
 const { default_supplier } = config;
 
 class CommodityTask {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async getAllCommodityDetailsByLimit() {
-        return await this.dao.all(`
+    static async getAllCommodityDetailsByLimit() {
+        return await AppDAO.all(`
         SELECT * FROM commodity 
         ;`);
     }
 
-    async getCommodityDetailsByTimestamp(
+    static async getCommodityDetailsByTimestamp(
         timestamp,
         query,
         type = "barcode"
@@ -26,7 +23,7 @@ class CommodityTask {
 
         const result = await this.getCommodityDetails(query, type);
         if (result.change_date >= timestamp) {
-            const result_snapshot = await this.dao.get(`
+            const result_snapshot = await AppDAO.get(`
             SELECT * FROM commodity_snapshot WHERE (commodity_id=? AND change_date <?) ORDER BY change_date DESC
             ;`, [result.id, timestamp]);
             if (result_snapshot) return result_snapshot;
@@ -35,18 +32,18 @@ class CommodityTask {
         return result;
     }
 
-    async getCommodityDetails(
+    static async getCommodityDetails(
         query,
         type = "barcode",
     ) {
         // 查看商品信息
 
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT * FROM commodity WHERE ${type}=?
         ;`, [query]);
     }
 
-    async createCommodity({
+    static async createCommodity({
         barcode: _barcode,
         name,
         category_id,
@@ -65,8 +62,7 @@ class CommodityTask {
             barcode = await this.createCustomBarcode();
         }
 
-        const SupplierManage = new SuppliersTask();
-        const { id: supplier_id } = await SupplierManage.getSupplierDetails(supplier_name);
+        const { id: supplier_id } = await SuppliersTask.getSupplierDetails(supplier_name);
         const pinyin = getPinyin(name);
         const time = new Date().getTime();
         let query = "";
@@ -98,7 +94,7 @@ class CommodityTask {
             return `(${list.join(", ")})`;
         })();
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO commodity 
         (barcode, name, category_id, in_price, sale_price, vip_points, pinyin, work_date, change_date, is_delete, supplier_id${query}) 
         VALUES 
@@ -106,11 +102,11 @@ class CommodityTask {
         ;`, params);
     }
 
-    async createCustomBarcode() {
+    static async createCustomBarcode() {
         // 暂时没想到更好的解决办法，需要递增且不能重复的八位自定义条码，暂时写这么写着.
 
 
-        const { lastID } = await this.dao.run(`
+        const { lastID } = await AppDAO.run(`
         INSERT INTO custom_barcode (name) 
         VALUES (?)
         ;`, "占位");
@@ -120,11 +116,11 @@ class CommodityTask {
             code = "0" + code;
         }
 
-        await this.dao.run(`
+        await AppDAO.run(`
         DELETE FROM custom_barcode WHERE id=?
         ;`, [lastID]);
 
-        const result = await this.dao.get(`
+        const result = await AppDAO.get(`
         SELECT id FROM commodity WHERE barcode=?
         ;`, [code]);
 
@@ -135,129 +131,127 @@ class CommodityTask {
         return code;
     }
 
-    async updateCommodityName(barcode, new_name) {
+    static async updateCommodityName(barcode, new_name) {
         // 修改商品名称
 
         const pinyin = getPinyin(new_name);
 
-        await this.dao.run(`
+        await AppDAO.run(`
         UPDATE commodity 
         SET pinyin=?
         WHERE barcode=?
         ;`, [pinyin, barcode]);
         // 更新商品缩写
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET name=? 
         WHERE barcode=?
         ;`, [new_name, barcode]);
     }
 
-    async updateCommodityCategoryID(barcode, new_category_name) {
+    static async updateCommodityCategoryID(barcode, new_category_name) {
         // 修改商品分类
 
-        const CategoriesManage = new CategoriesTask();
-        const { id: category_id } = await CategoriesManage.getCategoryDetails(new_category_name);
-        return await this.dao.run(`
+        const { id: category_id } = await CategoriesTask.getCategoryDetails(new_category_name);
+        return await AppDAO.run(`
         UPDATE commodity 
         SET category_id=? 
         WHERE barcode=?
         ;`, [category_id, barcode]);
     }
 
-    async updateCommodityUnit(barcode, unit) {
+    static async updateCommodityUnit(barcode, unit) {
         // 修改商品计量单位
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET unit=? 
         WHERE barcode=?
         ;`, [unit, barcode]);
     }
 
-    async updateCommoditySize(barcode, size) {
+    static async updateCommoditySize(barcode, size) {
         // 修改商品规格
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET size=? 
         WHERE barcode=?
         ;`, [size, barcode]);
     }
 
-    async updateCommodityInPrice(barcode, in_price) {
+    static async updateCommodityInPrice(barcode, in_price) {
         // 修改商品进价
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET in_price=? 
         WHERE barcode=?
         ;`, [in_price, barcode]);
     }
 
-    async updateCommoditySalePrice(barcode, sale_price) {
+    static async updateCommoditySalePrice(barcode, sale_price) {
         // 修改商品售价
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET sale_price=? 
         WHERE barcode=?
         ;`, [sale_price, barcode]);
     }
 
-    async updateCommodityVipPoints(barcode, vip_points) {
+    static async updateCommodityVipPoints(barcode, vip_points) {
         // 修改商品是否积分
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET vip_points=? 
         WHERE barcode=?
         ;`, [vip_points ? 1 : 0, barcode]);
     }
 
-    async updateCommodityBarcode(current_barcode, barcode) {
+    static async updateCommodityBarcode(current_barcode, barcode) {
         // 修改商品条码
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET barcode=? 
         WHERE barcode=?
         ;`, [barcode, current_barcode]);
     }
 
-    async updateCommodityChangedate(id, time) {
+    static async updateCommodityChangedate(id, time) {
         // 修改商品修改时间 
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET change_date=? 
         WHERE id=?
         ;`, [time, id]);
     }
 
-    async updateCommodityIsDelete(barcode, is_delete = false) {
+    static async updateCommodityIsDelete(barcode, is_delete = false) {
         // 修改商品是否处于禁用状态
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET is_delete=? 
         WHERE barcode=?
         ;`, [is_delete ? 1 : 0, barcode]);
     }
 
-    async updateCommoditySupplier(barcode, supplier_name) {
-        const SupplierManage = new SuppliersTask();
-        const { id } = await SupplierManage.getSupplierDetails(supplier_name);
+    static async updateCommoditySupplier(barcode, supplier_name) {
+        const { id } = await SuppliersTask.getSupplierDetails(supplier_name);
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE commodity 
         SET supplier_id=? 
         WHERE barcode=?
         ;`, [id, barcode]);
     }
 
-    async updateCommodityValue(update_value) {
+    static async updateCommodityValue(update_value) {
         // 修改商品信息
 
         const { current_barcode } = update_value;
@@ -351,7 +345,7 @@ class CommodityTask {
         return snapshot["id"];
     }
 
-    async createCommoditySnapshot({
+    static async createCommoditySnapshot({
         create_time,
         commodity_id,
         barcode,
@@ -367,7 +361,7 @@ class CommodityTask {
         change_date,
         supplier_id
     }) {
-        return await this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO commodity_snapshot 
         (create_time, commodity_id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date, supplier_id) 
         VALUES (?${", ?".repeat(13)})
@@ -389,17 +383,17 @@ class CommodityTask {
         ]);
     }
 
-    async deleteCommodity(barcode) {
+    static async deleteCommodity(barcode) {
         // 删除商品
 
         const { id } = await this.getCommodityDetails(barcode);
 
-        await this.dao.run(`
+        await AppDAO.run(`
         DELETE FROM commodity_snapshot WHERE commodity_id=?
         ;`, [id]);
         // 删除商品历史信息镜像
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         DELETE FROM commodity WHERE id=?
         ;`, [id]);
     }

@@ -20,9 +20,8 @@ class StockTask {
     static async mapStockDetailsIDToText(list) {
         // 将订货单详情从数据库ID转换到前端需要的文字
 
-        const CommodityManage = new CommodityTask();
         return await Promise.all(list.map(async ({ id, commodity_id, in_price, count }) => {
-            const { name: commodity_name, barcode } = await CommodityManage.getCommodityDetails(commodity_id, "id");
+            const { name: commodity_name, barcode } = await CommodityTask.getCommodityDetails(commodity_id, "id");
             return {
                 id,
                 barcode,
@@ -44,12 +43,10 @@ class StockTask {
     static async checkCommodityList(list) {
         // 检查进货单里的商品是否为有效商品
 
-        const CommodityManage = new CommodityTask();
-
         const data = [];
 
         for (let { barcode, count, in_price } of list) {
-            const result = await CommodityManage.getCommodityDetails(barcode);
+            const result = await CommodityTask.getCommodityDetails(barcode);
             if (!result) return {
                 status: false,
                 data: `条码为${barcode}的商品不存在!`

@@ -15,14 +15,13 @@ route.post("/", async (req, res, next) => {
         return next(err);
     }
     
-    const UserManage = new UserTask();
-    const { status, message } = await UserManage.validateAccount(username, password);
+    const { status, message } = await UserTask.validateAccount(username, password);
     if (status) {
         const {
             authorityList,
             group,
             group_id
-        } = await UserManage.getUserAuthority(username, true);
+        } = await UserTask.getUserAuthority(username, true);
 
         const token = await Jwt.sign({
             username,

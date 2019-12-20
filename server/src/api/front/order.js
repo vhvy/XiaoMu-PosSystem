@@ -89,8 +89,7 @@ route.put("/addvip", validBody(
     }
     // 当此订单已使用了会员卡时返回400
 
-    const VipManage = new VipTask();
-    const queryVipResult = await VipManage.getVipDetails(vip_code);
+    const queryVipResult = await VipTask.getVipDetails(vip_code);
     if (!queryVipResult) {
         return throwError(next, `会员卡${vip_code}不存在!`);
     }

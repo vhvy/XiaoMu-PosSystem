@@ -1,26 +1,23 @@
 import AppDAO from "../data/AppDAO.js";
 
 class SuppliersTask {
-    constructor() {
-        this.dao = AppDAO;
-    }
 
-    async getSupplierDetails(arg) {
+    static async getSupplierDetails(arg) {
         // 获取供应商详情
 
         if (!arg) {
-            return await this.dao.all(`
+            return await AppDAO.all(`
             SELECT * FROM suppliers
             ;`);
         }
 
         const query = (typeof arg === "number") ? "id" : "name";
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT * FROM suppliers WHERE ${query}=?
         ;`, arg);
     }
 
-    async createSupplier(name, phone, description) {
+    static async createSupplier(name, phone, description) {
         const fields = ["name"];
         const args = [name];
         let placeholder = "?";
@@ -37,14 +34,14 @@ class SuppliersTask {
             placeholder += ", ?"
         }
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         INSERT INTO suppliers 
         (${fields.join(", ")})
         VALUES (${placeholder})
         ;`, args);
     }
 
-    async updateSupplier({
+    static async updateSupplier({
         name,
         new_name,
         new_phone,
@@ -66,22 +63,22 @@ class SuppliersTask {
             args.unshift(new_description);
         }
 
-        return await this.dao.run(`
+        return await AppDAO.run(`
         UPDATE suppliers SET ${fields.join(", ")} 
         WHERE name=?
         ;`, args);
     }
 
-    async checkSupplierIsUse(name) {
+    static async checkSupplierIsUse(name) {
         const { id } = await this.getSupplierDetails(name);
 
-        return await this.dao.get(`
+        return await AppDAO.get(`
         SELECT id FROM commodity WHERE supplier_id=?
         ;`, [id]);
     }
 
-    async deleteSupplier(name) {
-        return await this.dao.run(`
+    static async deleteSupplier(name) {
+        return await AppDAO.run(`
         DELETE FROM suppliers WHERE name=?
         ;`, [name]);
     }

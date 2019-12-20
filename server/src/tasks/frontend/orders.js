@@ -107,7 +107,6 @@ class OrdersTask {
         change }) {
         // 保存订单信息
 
-        const CommodityManage = new CommodityTask();
 
         let in_price_list = [], point_money_list = [];
         let commodity_list_details = [];
@@ -116,7 +115,7 @@ class OrdersTask {
         const isAdmin = await validateAdmin(username);
 
         for (let { barcode, sale_price, count, ...args } of commodity_list) {
-            const result = await CommodityManage.getCommodityDetails(barcode);
+            const result = await CommodityTask.getCommodityDetails(barcode);
             if (!result) return {
                 status: false,
                 data: `条码为${barcode}的商品不存在!`
@@ -169,14 +168,12 @@ class OrdersTask {
         const [order_id, timestamp] = await this.createOrderID();
         // 订单号和时间戳
 
-        const UserManage = new UserTask();
 
-        const { id: user_id } = await UserManage.getUserDetails(username);
+        const { id: user_id } = await UserTask.getUserDetails(username);
 
 
         if (vip_code) {
-            const VipManage = new VipTask();
-            await VipManage.vipConsumeAddPoints(vip_code, points, sale_price);
+            await VipTask.vipConsumeAddPoints(vip_code, points, sale_price);
         }
 
 
@@ -208,14 +205,13 @@ class OrdersTask {
     static async getOrderAllDetails(order_id) {
         // 获取订单的所有信息
 
-        const CommodityManage = new CommodityTask();
         const result = await this.getTodayOrders(null, order_id);
 
         if (!result) return undefined;
 
         const commodity_data = await Promise.all((await this.getOrderDetails(order_id))
             .map(async ({ id, order_id, commodity_id, ...args }) => {
-                const { name } = await CommodityManage.getCommodityDetailsByTimestamp(result.check_date, commodity_id, "id");
+                const { name } = await CommodityTask.getCommodityDetailsByTimestamp(result.check_date, commodity_id, "id");
                 return {
                     name,
                     ...args
@@ -292,8 +288,7 @@ class OrdersTask {
         ];
 
         if (vip_code) {
-            const VipManage = new VipTask();
-            const { vip_sum } = await VipManage.getVipCurrentValue(vip_code);
+            const { vip_sum } = await VipTask.getVipCurrentValue(vip_code);
             fields.push("vip_code");
             fields.push("current_point");
             args.push(vip_code);
@@ -321,8 +316,7 @@ class OrdersTask {
         }
 
 
-        const UserManage = new UserTask();
-        const { id } = await UserManage.getUserDetails(username);
+        const { id } = await UserTask.getUserDetails(username);
         const timestamp = getNightTimeStrap();
         return await AppDAO.all(`
         SELECT order_id, check_date, sale_origin_price, sale_price, vip_code, client_pay, change, user_id, is_undo, pay_type, points, current_point 
@@ -341,8 +335,7 @@ class OrdersTask {
         // 撤销订单
 
         if (vip_code) {
-            const VipManage = new VipTask();
-            await VipManage.undoOrderMinusVipPoints(vip_code, points, sale_price);
+            await VipTask.undoOrderMinusVipPoints(vip_code, points, sale_price);
 
         }
         return await AppDAO.run(`
@@ -356,9 +349,8 @@ class OrdersTask {
     static async addVipToOrder(order_id, vip_code, points, sale_price) {
         // 向订单追加积分
 
-        const VipManage = new VipTask();
-        await VipManage.vipConsumeAddPoints(vip_code, points, sale_price);
-        const { vip_sum } = await VipManage.getVipCurrentValue(vip_code);
+        await VipTask.vipConsumeAddPoints(vip_code, points, sale_price);
+        const { vip_sum } = await VipTask.getVipCurrentValue(vip_code);
 
         return await AppDAO.run(`
         UPDATE orders SET
