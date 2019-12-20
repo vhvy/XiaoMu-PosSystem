@@ -7,7 +7,7 @@ const name = Joi.string().min(1).max(30);
 const unit = Joi.string().min(1).max(10);
 const size = Joi.string().min(1).max(30);
 export const in_price = Joi.number().min(0).max(1000000);
-const sale_price = Joi.number().min(0).max(1000000);
+export const sale_price = Joi.number().min(0).max(1000000);
 const vip_points = Joi.boolean();
 const is_delete = Joi.boolean();
 

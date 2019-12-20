@@ -90,39 +90,6 @@
 方法: get
 ```
 
-```
-/api/groups/create
-创建新的用户组
-
-方法: post
-参数: {
-    name: "name",
-    authority: ["系统主页"]
-}
-```
-
-```
-/api/groups/updatename
-修改用户组名称
-
-方法: post
-参数: {
-    name: "name",
-    new_name: "new_name"
-}
-```
-
-```
-/api/groups/updateauthority
-修改用户组权限
-
-方法: post
-参数: {
-    name: "name",
-    new_authority: ["系统主页"]
-}
-```
-
 ---
 
 ## 商品分类
@@ -475,6 +442,42 @@
             barcode: "6954432710645",
             count: "1箱*10瓶",
             in_price: 80
+        }
+    ]
+}
+```
+
+---
+
+## 前台-提交订单
+
+```
+/api/front/order/:id
+获取订单详细信息
+
+方法: get
+参数: id, 订单编号
+```
+
+```
+/api/front/order/submit
+提交订单
+
+方法: post
+参数: {
+    vip_code: "0001", // 可选
+    pay_type: "现金",
+    origin_price: 1.5,
+    sale_price: 1.2,
+    client_pay: 2,
+    change: 0.8,
+    commodity_list: [
+        {
+            barcode: "000001",
+            sale_price: 1.2,
+            origin_price: 1.5,
+            count: 1,
+            status: "销售"
         }
     ]
 }

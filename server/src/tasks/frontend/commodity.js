@@ -70,7 +70,6 @@ class CommodityTask {
                 const value = args[key];
                 let price = 0;
 
-                console.log(key);
                 switch (key) {
                     case "single_discount":
                         price = sale_price * value;

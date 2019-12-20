@@ -7,7 +7,7 @@ class GroupTask {
     }
 
     async getAllGroup() {
-        // 过去所有权限详情
+        // 获取所有权限详情
 
         const groupList = await this.dao.all(`
         SELECT usergroup, id FROM groups
@@ -65,108 +65,7 @@ class GroupTask {
         ]);
     }
 
-    async deleteGroup(group) {
-        // 删除一个用户组
-
-        return group;
-    }
-
-    async createGroup(
-        group,
-        authorityIDList
-    ) {
-        // 创建一个新的用户组
-
-        const { lastID } = await this.dao.run(`
-        INSERT INTO groups (usergroup) VALUES (
-            ?
-        )
-        ;`, [
-            group
-        ]);
-        await Promise.all(authorityIDList.map(
-            id => this.setGroupAuthority(lastID, id)
-        ));
-    }
-
-    async setGroupAuthority(group_id, authority) {
-        // 设置一个用户组的权限
-
-        const addID = (id) => {
-            return this.dao.run(`
-        INSERT INTO groups_authority 
-        (usergroup_id, authority_id) 
-        VALUES (?, ?)
-        ;`, [
-                group_id, id
-            ]);
-        }
-
-        if (Array.isArray(authority)) {
-            return Promise.all(authority.map(
-                async id => await addID(id)
-            ));
-        }
-
-        return addID(authority);
-    }
-
-    async deleteGroupAuthority(group_id, authority) {
-        // 删除一个用户组的权限
-
-        const removeID = (id) => {
-            return this.dao.run(`
-        DELETE FROM groups_authority 
-        WHERE (usergroup_id=?) AND (authority_id=?)
-        ;`, [
-                group_id, id
-            ]);
-        }
-
-        if (Array.isArray(authority)) {
-            return Promise.all(authority.map(
-                async id => await removeID(id)
-            ));
-        }
-
-        return removeID(authority);
-    }
-
-    async updateGroupAuthority(group, new_authority) {
-        // 修改一个用户组的权限
-        let group_id = group;
-        if (typeof group === "string") {
-            group_id = (await this.dao.get(`
-            SELECT id FROM groups WHERE usergroup=?
-            ;`, [group]))["id"];
-        }
-
-        const current_authority = (await this.getGroupAuthority(group, true))
-            .map(({ authority_id }) => authority_id);
-        // 用户组当前拥有的所有权限ID
-
-        const need_add_authority = new_authority.filter(auth => !current_authority.includes(auth));
-        // 需要添加的权限ID列表
-
-        const need_remove_authority = current_authority.filter(auth => !new_authority.includes(auth));
-        // 需要移除的权限ID列表
-
-        await this.setGroupAuthority(group_id, need_add_authority);
-
-        await this.deleteGroupAuthority(group_id, need_remove_authority);
-    }
-
-    updateGroupName(group, new_name) {
-        // 修改一个用户组的名称
-
-        const query = (typeof group === "number") ? "id" : "usergroup";
-        return this.dao.run(`
-        UPDATE groups SET usergroup=? WHERE ${query}=?
-        ;`, [
-            new_name,
-            group
-        ]);
-    }
+    
 }
 
 export default GroupTask;

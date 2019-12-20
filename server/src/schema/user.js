@@ -1,6 +1,7 @@
 import Joi from "@hapi/joi";
-import { group } from "./group.js";
+// import { group } from "./group.js";
 
+export const group = Joi.string().min(2).max(10).required();
 const username = Joi.string().min(1).max(13).required();
 const password = Joi.string().pattern(/^[a-zA-Z0-9]{5,30}$/).required();
 

@@ -11,16 +11,33 @@ class CommodityTask {
         this.dao = AppDAO;
     }
 
-
     async getAllCommodityDetailsByLimit() {
         return await this.dao.all(`
         SELECT * FROM commodity 
         ;`);
     }
 
-    async getCommodityDetails(
+    async getCommodityDetailsByTimestamp(
+        timestamp,
         query,
         type = "barcode"
+    ) {
+        // 查看某个时间的商品信息
+
+        const result = await this.getCommodityDetails(query, type);
+        if (result.change_date >= timestamp) {
+            const result_snapshot = await this.dao.get(`
+            SELECT * FROM commodity_snapshot WHERE (commodity_id=? AND change_date <?) ORDER BY change_date DESC
+            ;`, [result.id, timestamp]);
+            if (result_snapshot) return result_snapshot;
+        }
+
+        return result;
+    }
+
+    async getCommodityDetails(
+        query,
+        type = "barcode",
     ) {
         // 查看商品信息
 
@@ -99,7 +116,7 @@ class CommodityTask {
         ;`, "占位");
 
         let code = String(lastID);
-        while (code.length < 8) {
+        while (code.length < 5) {
             code = "0" + code;
         }
 

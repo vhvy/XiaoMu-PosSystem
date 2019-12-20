@@ -1,5 +1,6 @@
 import AppDAO from "../data/AppDAO.js";
 import { getPinyin } from "../lib/pinyin.js";
+import { math } from "../lib/mathc.js";
 
 class VipTasks {
     constructor() {
@@ -24,6 +25,16 @@ class VipTasks {
         return await this.dao.get(`
         SELECT * FROM vip_info WHERE ${type}=?
         ;`, [vip]);
+    }
+
+    async getVipCurrentValue(vip) {
+        // 获取会员卡当前积分值
+
+        return await this.dao.get(`
+        SELECT * FROM vip_value WHERE vip_id=(
+            SELECT id FROM vip_info WHERE code=?
+        )
+        ;`, vip);
     }
 
     async getVipTypeDetails(type) {
@@ -224,6 +235,66 @@ class VipTasks {
         return await this.dao.run(`
         DELETE FROM vip_info WHERE id=?
         ;`, [id]);
+    }
+
+    async addVipPoints(id, point) {
+        // 增加会员积分
+
+        return await this.dao.run(`
+        UPDATE vip_value 
+        SET vip_sum=vip_sum+? 
+        WHERE vip_id=?
+        ;`, [point, id]);
+    }
+
+    async undoOrderMinusVipPoints(code, point, price) {
+        // 撤销订单时减少会员积分
+
+        const { vip_id, vip_sum, sale_sum } = await this.getVipCurrentValue(code);
+
+        const new_vip_sum = math.subtract(vip_sum, point);
+        const new_sale_sum = math.subtract(sale_sum, price);
+
+        return await this.dao.run(`
+        UPDATE vip_value 
+        SET vip_sum=?, sale_sum=?, consume_count=consume_count-1
+        WHERE vip_id=?
+        ;`, [new_vip_sum, new_sale_sum, vip_id]);
+    }
+
+    async minusVipPoints(code, point) {
+        // 减少会员积分
+
+        const { vip_id, vip_sum } = await this.getVipCurrentValue(code);
+
+        const new_vip_sum = math.subtract(vip_sum, point);
+
+        return await this.dao.run(`
+        UPDATE vip_value 
+        SET vip_sum=? 
+        WHERE vip_id=?
+        ;`, [new_vip_sum, vip_id]);
+    }
+
+    async vipConsumeAddPoints(code, point, sum) {
+        // 会员购物后增加积分、消费次数、总的消费金额
+
+        const { id } = await this.dao.get(`
+            SELECT id FROM vip_info WHERE code=?
+        ;`, code);
+
+        const { vip_sum: c_vip_sum, sale_sum: c_sale_sum } = await this.dao.get(`
+        SELECT vip_sum, sale_sum FROM vip_value WHERE vip_id=?
+        ;`, id);
+
+        const vip_sum = math.add(point, c_vip_sum);
+        const sale_sum = math.add(sum, c_sale_sum);
+
+        return await this.dao.run(`
+        UPDATE vip_value 
+        SET vip_sum=?, sale_sum=?, consume_count=consume_count+1 
+        WHERE vip_id=?
+        ;`, [vip_sum, sale_sum, id]);
     }
 }
 

@@ -177,10 +177,16 @@ async function init() {
     CREATE TABLE IF NOT EXISTS vip_score_rules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         money INTEGER NOT NULL DEFAULT 1 CHECK (money >= 1),
-        scale INTEGER NOT NULL DEFAULT 1 CHECK (scale >= 1)
+        point INTEGER NOT NULL DEFAULT 1 CHECK (point >= 1)
     )
     ;`);
     // 创建积分卡规则表，设置每多少元消费等于多少积分
+
+    await dao.run(`
+    INSERT INTO vip_score_rules 
+    (money, point) 
+    VALUES (?, ?)
+    ;`, [1, 10]);
 
     await dao.run(`
     CREATE TABLE IF NOT EXISTS vip_info (
@@ -223,8 +229,8 @@ async function init() {
     CREATE TABLE IF NOT EXISTS vip_value (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         vip_id INTEGER NOT NULL UNIQUE,
-        vip_sum INTEGER NOT NULL DEFAULT 0,
-        sale_sum INTEGER NOT NULL DEFAULT 0,
+        vip_sum REAL NOT NULL DEFAULT 0,
+        sale_sum REAL NOT NULL DEFAULT 0,
         consume_count INTEGER DEFAULT 0,
         FOREIGN KEY (vip_id) REFERENCES vip_info (id)
     )
@@ -322,6 +328,52 @@ async function init() {
     )
     ;`);
     // 进货单详情
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER NOT NULL UNIQUE,
+        check_date INTEGER NOT NULL,
+        sale_origin_price REAL NOT NULL,
+        sale_price REAL NOT NULL,
+        in_price REAL NOT NULL,
+        profit REAL NOT NULL,
+        vip_code TEXT,
+        client_pay REAL NOT NULL,
+        change REAL,
+        user_id INTEGER NOT NULL,
+        is_undo BOOLEAN NOT NULL DEFAULT 0,
+        pay_type TEXT NOT NULL DEFAULT "现金",
+        points REAL,
+        current_point REAL,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+    ;`);
+    // 创建订单表
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS order_details (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER NOT NULL,
+        commodity_id INTEGER NOT NULL,
+        barcode TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT "销售",
+        count REAL NOT NULL,
+        origin_price REAL NOT NULL,
+        sale_price REAL NOT NULL,
+        FOREIGN KEY (commodity_id) REFERENCES commodity (id),
+        FOREIGN KEY (order_id) REFERENCES orders (order_id)
+    )
+    ;`);
+    // 订单详情
+
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS serial_number (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp INTEGER NOT NULL UNIQUE
+    )
+    ;`);
+    // 每日的临时流水号生成
 
     AppDAO.close();
 }
