@@ -1,9 +1,9 @@
-import { Login } from "../components/common/Login";
-import Home from "../components/common/Home";
+import { Login } from "../views/Login";
+import Home from "../views/Home";
 
 export const routes = [
     {
-        path: "/",
+        path: "/home",
         component: Home,
         isPrivate: true
     },

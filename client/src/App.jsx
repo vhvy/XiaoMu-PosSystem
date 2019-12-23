@@ -1,38 +1,36 @@
 import React from "react";
-import zhCN from "antd/es/locale/zh_CN";
 import "antd/dist/antd.css";
 import "./styles/master.css";
-import { ConfigProvider } from "antd";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "./redux/store";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { routes } from "./routes";
 import { ProtectRoute } from "./routes/ProtectRoute";
+import { Loading } from "./views/Common/Loading";
 
-export default function App() {
+function App() {
+
     return (
-        <ConfigProvider locale={zhCN}>
-            <Provider store={store}>
-                <BrowserRouter>
-                    <Switch>
-                        {
-                            routes.map(({ path, component, isPrivate, exact = true }, i) => (
-                                isPrivate ? <ProtectRoute
-                                    key={i}
-                                    path={path}
-                                    component={component}
-                                    exact={exact}
-                                /> :
-                                    <Route
-                                        key={i}
-                                        path={path}
-                                        component={component}
-                                        exact
-                                    />
-                            ))}
-                    </Switch>
-                </BrowserRouter>
-            </Provider>
-        </ConfigProvider >
+        <BrowserRouter>
+            <Loading />
+            <Switch>
+                {
+                    routes.map(({ path, component, isPrivate, exact = true }, i) => (
+                        isPrivate ? <ProtectRoute
+                            key={i}
+                            path={path}
+                            component={component}
+                            exact={exact}
+                        /> :
+                            <Route
+                                key={i}
+                                path={path}
+                                component={component}
+                                exact
+                            />
+                    ))}
+                <Redirect from="/" exact to="/home" />
+            </Switch>
+        </BrowserRouter>
     );
 }
+
+export default App;

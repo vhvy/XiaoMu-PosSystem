@@ -1,9 +1,10 @@
 import { config } from "../config";
 import { message } from "antd";
+import http from "../tools/http";
 
 const { GLOBAL_TOKEN_KEY } = config;
 
-export class UserAuth {
+export class TokenManage {
     static set Token(t) {
         if (t) {
             sessionStorage.setItem(GLOBAL_TOKEN_KEY, t);
@@ -13,12 +14,21 @@ export class UserAuth {
     }
 
     static get Token() {
-        return sessionStorage.getItem(GLOBAL_TOKEN_KEY);
+        const token = sessionStorage.getItem(GLOBAL_TOKEN_KEY);
+        return (token || token !== "") ? token : undefined;
     }
 
-    static auth(t) {
+    static async validToken() {
+        try {
+            const result = await http.get("/api/token/auth");
+            return result.data;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    static save(t) {
         this.Token = t;
-        // message.success("登录成功!");
     }
 
     static logout() {

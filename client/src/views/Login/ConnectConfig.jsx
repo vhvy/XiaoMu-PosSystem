@@ -3,7 +3,7 @@ import { Form, Input, Button, Icon, Modal } from "antd";
 import { connect } from "react-redux";
 import { config } from "../../config";
 import { setApiUrlAction } from "../../redux/action";
-import { setConnectConfig } from "../../tools/setConnectConfig";
+import { setConnectConfig } from "../../tasks/setConnectConfig";
 
 const { baseURL } = config;
 

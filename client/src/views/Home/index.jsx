@@ -1,17 +1,16 @@
 import React from "react";
 import { Layout, Popover, Avatar, Button, Modal } from "antd";
-import { HeaderCustom } from "./Header";
-import { HomeContent } from "../HomeContent";
 
 
-function Home() {
+function Home({ history }) {
 
-
+    function test() {
+        history.push("/login");
+    }
 
     return (
         <Layout>
-            <HeaderCustom />
-            <HomeContent />
+            <Button onClick={test}>Login</Button>
         </Layout>
     );
 }

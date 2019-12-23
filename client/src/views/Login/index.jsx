@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Icon, Typography, Checkbox, message as antdMessage } from "antd";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import style from "../../styles/login.scss";
 import http from "../../tools/http";
 import { ConnectConfig } from "./ConnectConfig";
-import { UserAuth } from "../../tools/tokenManage";
-import { setCurrentUserAuthorityAction, setCurrentUsernameAction } from "../../redux/action";
+import { TokenManage } from "../../tasks/tokenManage";
+import {
+    setCurrentUserAuthorityAction,
+    setCurrentUsernameAction,
+    setUserIsLoginAction
+} from "../../redux/action";
 
 const { Text } = Typography;
 
-function _Login({ form, setCurrentUsername, setCurrentUserAuthority }) {
+function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLogin, isLogin, location }) {
+    if (isLogin) {
+        return <Redirect to={location.state && location.state.from || "/"} />
+    }
+
     const { getFieldDecorator, getFieldsValue, getFieldsError, setFields } = form;
-    const history = useHistory();
     const formItemLayout = {
         wrapperCol: {
             xs: { span: 18 },
@@ -33,45 +40,66 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority }) {
     }
 
     async function handleSubmit(e) {
-        setLoading(true);
         e.preventDefault();
+        setLoading(true);
         const { username, password } = getFieldsValue();
         try {
             const { data, status } = await http.post("/api/login", {
                 username,
                 password
             });
+
             if (status === 200) {
                 const { message, token, username, authority } = data;
-                UserAuth.auth(token);
+                TokenManage.save(token);
                 setCurrentUsername(username);
                 setCurrentUserAuthority(authority);
                 antdMessage.success(message);
                 setLoading(false);
-                history.replace("/");
+                setUserIsLogin(true);
             }
         } catch (err) {
-            const { data, status } = err;
+            const { status, data } = err;
+            const userValue = {
+                value: username,
+                errors: [
+                    new Error("请输入正确的用户名!")
+                ]
+            };
+
+            const passValue = {
+                value: password,
+                errors: [
+                    new Error("请输入正确的密码!")
+                ]
+            };
+
+
+            let obj = {};
+
+
             if (status && status === 401) {
-                setFields({
-                    username: {
-                        value: username,
-                        errors: [
-                            new Error("请输入正确的用户名!")
-                        ]
-                    },
-                    password: {
-                        value: password,
-                        errors: [
-                            new Error("请输入正确的密码!")
-                        ]
-                    }
-                })
+                const { type } = data.value;
+                if (type === "username") {
+                    obj.username = userValue;
+                }
+                if (type === "password") {
+                    obj.password = passValue;
+                }
+
+            } else {
+                obj = {
+                    username: userValue,
+                    password: passValue
+                }
             }
-            antdMessage.error(data.message ? data.message : "未知错误");
+
+            setFields(obj);
             setLoading(false);
+
         }
     }
+
 
     return (
         <div className={style["login-bg"]}>
@@ -167,15 +195,22 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority }) {
     );
 }
 
+function loginMapStateToProps(state) {
+    return {
+        isLogin: state.isLogin
+    }
+}
+
 function loginMapDispatchToProps(dispatch) {
     return {
         setCurrentUsername: (username) => dispatch(setCurrentUsernameAction(username)),
-        setCurrentUserAuthority: (authority) => dispatch(setCurrentUserAuthorityAction(authority))
+        setCurrentUserAuthority: (authority) => dispatch(setCurrentUserAuthorityAction(authority)),
+        setUserIsLogin: (login) => dispatch(setUserIsLoginAction(login))
     }
 }
 
 export const Login = connect(
-    null,
+    loginMapStateToProps,
     loginMapDispatchToProps
 )(
     Form.create()(_Login)

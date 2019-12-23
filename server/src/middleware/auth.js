@@ -1,5 +1,9 @@
 import Jwt from "../lib/jwt.js";
 
+export function validToken(token) {
+    return Jwt.verify(token);
+}
+
 async function auth(req, res, next) {
     const token = req.headers["authorization"];
     if (!token) {
@@ -8,7 +12,7 @@ async function auth(req, res, next) {
         });
     }
     try {
-        const result = await Jwt.verify(token);
+        const result = await validToken(token);
         req["jwt_value"] = result;
         next();
     } catch (error) {

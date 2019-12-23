@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { config } from "../config";
-import { UserAuth } from "./tokenManage";
+import { TokenManage } from "../tasks/tokenManage";
+import { message as antdMessage } from "antd";
 
 const { baseURL, GLOBAL_BASE_URL_KEY } = config;
 
@@ -10,7 +11,7 @@ const instance = Axios.create({
 });
 
 instance.interceptors.request.use(function (request) {
-    const userToken = UserAuth.Token;
+    const userToken = TokenManage.Token;
     if (userToken) {
         request.headers["Authorization"] = userToken;
     }
@@ -26,14 +27,24 @@ instance.interceptors.request.use(function (request) {
 instance.interceptors.response.use(function (response) {
     return response;
 }, function (err) {
-    if (!err.response) {
+
+    const { response } = err;
+    if (!response) {
+        antdMessage.error("未知错误!");
         return Promise.reject({
             data: {
                 message: "未知错误!"
             }
         });
     }
-    return Promise.reject(err.response);
+    
+    const { status, data } = response;
+    const { message } = data;
+    
+    if (status >= 400 && status < 500) {
+        antdMessage.error(message ? message : "未知错误!");
+    }
+    return Promise.reject(response);
 })
 
 const http = {

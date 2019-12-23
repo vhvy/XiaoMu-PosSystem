@@ -1,22 +1,24 @@
 import express from "express";
 import UserTask from "../tasks/users.js";
 import Jwt from "../lib/jwt.js";
+import { validBody } from "../middleware/validBody.js";
 import { userPwdSchema } from "../schema/user.js";
-
+import { throwError } from "../middleware/handleError.js";
 
 const route = express.Router();
 
-route.post("/", async (req, res, next) => {
-    const { username, password } = req.body;
-    const result = userPwdSchema.validate(req.body);
-    if (result.error) {
-        const err = new Error("请输入合法的用户名和密码!");
-        err.status = 401;
-        return next(err);
-    }
-    
-    const { status, message } = await UserTask.validateAccount(username, password);
-    if (status) {
+route.post("/",
+    validBody(userPwdSchema, "请输入合法的用户名和密码!"),
+    async (req, res, next) => {
+        const { username, password } = req.body;
+
+        const { status, message, type } = await UserTask.validateAccount(username, password);
+        if (!status) {
+            req.custom_error_data = { type };
+            return throwError(next, message, 401);
+        }
+        // 当认证失败时返回401
+
         const {
             authorityList,
             group,
@@ -28,7 +30,7 @@ route.post("/", async (req, res, next) => {
             authority: authorityList
         });
 
-        res.json({
+        return res.json({
             message: "登录成功!",
             token,
             authority: authorityList,
@@ -36,11 +38,7 @@ route.post("/", async (req, res, next) => {
             group,
             group_id
         });
-    } else {
-        res.status(401).json({
-            message
-        });
-    }
-});
+
+    });
 
 export default route;

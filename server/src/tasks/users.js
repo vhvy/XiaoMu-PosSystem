@@ -130,18 +130,21 @@ class UsersTask {
         const queryResult = await this.validateUsername(input_username);
         if (!queryResult) return {
             status: false,
-            message: "账号不存在!"
+            message: "账号不存在!",
+            type: "username"
         };
         const { username, password, disabled } = queryResult;
         if (disabled === 1) return {
             status: false,
-            message: "账户已被禁用!"
+            message: "账户已被禁用!",
+            type: "username"
         }
-        
+
         const status = await validateData(input_password, password);
         return {
             status,
-            message: status ? "验证成功!" : "密码错误!"
+            message: status ? "验证成功!" : "密码错误!",
+            type: "password"
         };
     }
 

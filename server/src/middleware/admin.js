@@ -4,7 +4,7 @@ import UserTask from "../tasks/users.js";
 const { default_admin_group_name } = config;
 
 async function validateAdmin(username) {
-    const { group } = await (new UserTask()).getUserGroup(username);
+    const { group } = await UserTask.getUserGroup(username);
     return group === default_admin_group_name;
 }
 
