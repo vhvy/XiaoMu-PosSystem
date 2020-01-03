@@ -5,7 +5,8 @@ export const routes = [
     {
         path: "/home",
         component: Home,
-        isPrivate: true
+        isPrivate: true,
+        exact: false
     },
     {
         path: "/login",

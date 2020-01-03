@@ -1,6 +1,6 @@
 import { LOGIN_SET_API_URL } from "../action/actionType";
 
-export function setApiUrl(state = {
+export function apiUrl(state = {
     url: "",
     errors: undefined
 }, action) {

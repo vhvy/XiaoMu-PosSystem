@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Icon, Typography, Checkbox, message as antdMessage } from "antd";
-import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import { Redirect, useLocation } from "react-router-dom";
+import { useAuth } from "../AuthProvider";
+import { useAjax } from "../AjaxProvider";
 import style from "../../styles/login.scss";
-import http from "../../tools/http";
 import { ConnectConfig } from "./ConnectConfig";
-import { TokenManage } from "../../tasks/tokenManage";
-import {
-    setCurrentUserAuthorityAction,
-    setCurrentUsernameAction,
-    setUserIsLoginAction
-} from "../../redux/action";
 
 const { Text } = Typography;
 
-function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLogin, isLogin, location }) {
+function _Login({ form }) {
+
+    const http = useAjax();
+    const location = useLocation();
+    const { isLogin, login } = useAuth();
+
     if (isLogin) {
-        return <Redirect to={location.state && location.state.from || "/"} />
+        return <Redirect to={location.state && location.state.from || "/home"} />
     }
 
     const { getFieldDecorator, getFieldsValue, getFieldsError, setFields } = form;
@@ -50,13 +49,16 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLo
             });
 
             if (status === 200) {
-                const { message, token, username, authority } = data;
-                TokenManage.save(token);
-                setCurrentUsername(username);
-                setCurrentUserAuthority(authority);
-                antdMessage.success(message);
+                const { message, token, username, authority, isAdmin } = data;
+
                 setLoading(false);
-                setUserIsLogin(true);
+                login(token, {
+                    username,
+                    authority,
+                    isAdmin
+                });
+
+                antdMessage.success(message);
             }
         } catch (err) {
             const { status, data } = err;
@@ -77,7 +79,6 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLo
 
             let obj = {};
 
-
             if (status && status === 401) {
                 const { type } = data.value;
                 if (type === "username") {
@@ -86,7 +87,6 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLo
                 if (type === "password") {
                     obj.password = passValue;
                 }
-
             } else {
                 obj = {
                     username: userValue,
@@ -195,23 +195,5 @@ function _Login({ form, setCurrentUsername, setCurrentUserAuthority, setUserIsLo
     );
 }
 
-function loginMapStateToProps(state) {
-    return {
-        isLogin: state.isLogin
-    }
-}
 
-function loginMapDispatchToProps(dispatch) {
-    return {
-        setCurrentUsername: (username) => dispatch(setCurrentUsernameAction(username)),
-        setCurrentUserAuthority: (authority) => dispatch(setCurrentUserAuthorityAction(authority)),
-        setUserIsLogin: (login) => dispatch(setUserIsLoginAction(login))
-    }
-}
-
-export const Login = connect(
-    loginMapStateToProps,
-    loginMapDispatchToProps
-)(
-    Form.create()(_Login)
-);
+export const Login = Form.create()(_Login);

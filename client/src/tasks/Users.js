@@ -1,10 +1,8 @@
-import { http } from "../tools/http";
-
 class Users {
-    static async changePwd(args) {
+    static async changePwd(http, args) {
         // 修改用户密码
         try {
-            const { data, status } = await http.post("/api/users/changepwd", args);
+            const { data, status } = await http.post("/api/users/updatepwd", args);
             return {
                 status: status === 200 ? true : false,
                 message: data.message

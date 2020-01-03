@@ -1,10 +1,11 @@
 import { combineReducers } from "redux";
-import { setApiUrl } from "./setApiUrl";
-import { setCurrentUserDetails } from "./setUserDetails";
-import { setUserIsLogin } from "./setUserIsLogin";
+import { apiUrl } from "./apiUrl";
+import { tabs, showTabs } from "./tabs";
+import { userDetails } from "./userDetails";
 
 export const reduces = combineReducers({
-    apiUrl: setApiUrl,
-    userDetails: setCurrentUserDetails,
-    isLogin: setUserIsLogin
+    apiUrl,
+    userDetails,
+    tabs,
+    showTabs
 });

@@ -117,6 +117,4 @@ function ConnectConfigMapStateToProps({ apiUrl }) {
     };
 }
 
-const ConnectConfig = connect(ConnectConfigMapStateToProps)(_ConnectConfig);
-
-export { ConnectConfig };
+export const ConnectConfig = connect(ConnectConfigMapStateToProps)(_ConnectConfig);

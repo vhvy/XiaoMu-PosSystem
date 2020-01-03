@@ -4,6 +4,9 @@ import Jwt from "../lib/jwt.js";
 import { validBody } from "../middleware/validBody.js";
 import { userPwdSchema } from "../schema/user.js";
 import { throwError } from "../middleware/handleError.js";
+import config from "../config/index.js";
+
+const { default_admin_group_name } = config;
 
 const route = express.Router();
 
@@ -27,7 +30,8 @@ route.post("/",
 
         const token = await Jwt.sign({
             username,
-            authority: authorityList
+            authority: authorityList,
+            isAdmin: default_admin_group_name === group
         });
 
         return res.json({
@@ -36,7 +40,8 @@ route.post("/",
             authority: authorityList,
             username,
             group,
-            group_id
+            group_id,
+            isAdmin: default_admin_group_name === group
         });
 
     });

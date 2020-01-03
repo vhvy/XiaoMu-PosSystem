@@ -1,33 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Spin } from "antd";
 import styled from "../../styles/loading.scss";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { TokenManage } from "../../tasks/tokenManage";
-import {
-    setCurrentUserAuthorityAction,
-    setCurrentUsernameAction,
-    setUserIsLoginAction
-} from "../../redux/action";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../AuthProvider";
+import { useAjax } from "../AjaxProvider";
 
-export function _Loading({ setUserAuthority, setUserIsLogin, setUserName }) {
+export function Loading() {
 
-
-
+    const { login } = useAuth();
+    const ajax = useAjax();
     const hasToken = TokenManage.Token;
     const [isLoading, setIsLoading] = useState(Boolean(hasToken));
     let history = useHistory();
-
     useEffect(() => {
         async function validToken() {
-            const result = await TokenManage.validToken();
+            const result = await TokenManage.validToken(ajax);
             if (!result) {
                 history.replace("/login");
             } else {
-                const { username, authority } = result;
-                setUserIsLogin(true);
-                setUserAuthority(authority);
-                setUserName(username);
+                const { username, authority, isAdmin } = result;
+                login(null, {
+                    username, authority, isAdmin
+                });
             }
 
             setIsLoading(false);
@@ -39,17 +34,9 @@ export function _Loading({ setUserAuthority, setUserIsLogin, setUserName }) {
     const classNameList = [[styled["loading-wrap"]]];
     if (!isLoading) classNameList.push(styled["hide"]);
 
-    return (<Layout className={classNameList}>
-        <Spin size="large" spinning={isLoading} />
-    </Layout>);
+    return (
+        <Layout className={classNameList}>
+            <Spin size="large" spinning={isLoading} />
+        </Layout>
+    );
 }
-
-function mapDispatchToProps(dispatch) {
-    return {
-        setUserIsLogin: (bool) => dispatch(setUserIsLoginAction(bool)),
-        setUserName: (name) => dispatch(setCurrentUsernameAction(name)),
-        setUserAuthority: (list) => dispatch(setCurrentUserAuthorityAction(list))
-    }
-}
-
-export const Loading = connect(null, mapDispatchToProps)(_Loading);
