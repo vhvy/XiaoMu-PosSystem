@@ -61,6 +61,45 @@ class GroupTask {
         ]);
     }
 
+    static async createGroup(
+        group,
+        authorityIDList
+    ) {
+        // 创建一个新的用户组
+
+        const { lastID } = await AppDAO.run(`
+        INSERT INTO groups (usergroup) VALUES (
+            ?
+        )
+        ;`, [
+            group
+        ]);
+        await Promise.all(authorityIDList.map(
+            id => this.setGroupAuthority(lastID, id)
+        ));
+    }
+
+    static async setGroupAuthority(group_id, authority) {
+        // 设置一个用户组的权限
+
+        const addID = (id) => {
+            return AppDAO.run(`
+        INSERT INTO groups_authority 
+        (usergroup_id, authority_id) 
+        VALUES (?, ?)
+        ;`, [
+                group_id, id
+            ]);
+        }
+
+        if (Array.isArray(authority)) {
+            return Promise.all(authority.map(
+                async id => await addID(id)
+            ));
+        }
+
+        return addID(authority);
+    }
 
 }
 

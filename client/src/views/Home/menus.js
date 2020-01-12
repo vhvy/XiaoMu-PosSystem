@@ -1,3 +1,5 @@
+import { Cash } from "./Main/market/Cash";
+
 export const menus = [
     {
         title: "系统主页",
@@ -14,7 +16,8 @@ export const menus = [
             {
                 title: "前台销售",
                 path: "/home/market/cash",
-                permission: false
+                permission: false,
+                component: Cash
             },
             {
                 title: "标签打印",
@@ -124,19 +127,29 @@ export const menus = [
 
 export const menuValue = (() => {
     const menuMap = {};
-    const menuPath = menus.reduce((result, { path, children, title }) => {
+    const router = [];
+    const menuPath = menus.reduce((result, { path, children, title, component }) => {
         if (children) {
-            children.map(child => {
-                result.push([child.path, path]);
-                menuMap[child.path] = child.title;
+            let parentPath = path;
+            children.map(({ path, title, component }) => {
+                result.push([path, parentPath]);
+                menuMap[path] = title;
+                router.push({
+                    path,
+                    component
+                });
             });
         } else {
             result.push([path]);
             menuMap[path] = title;
+            router.push({
+                path,
+                component
+            });
         }
         return result;
     }, []);
     return {
-        menuMap, menuPath
+        menuMap, menuPath, router
     }
 })();

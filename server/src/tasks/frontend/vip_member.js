@@ -7,7 +7,7 @@ class VipMemberTask {
         const query_fields = ["code", "pinyin", "name", "phone"];
         // 根据查询字段分别进行精准和模糊匹配
 
-        const need_fields = "code, name, phone";
+        const need_fields = "id, code, name, phone";
 
         for (let key of query_fields) {
             const result = await AppDAO.all(`
@@ -29,6 +29,13 @@ class VipMemberTask {
 
         return [];
         // 没有匹配到任何结果时返回空数组
+    }
+
+    static async mapValueToVipDetails(id) {
+        return await AppDAO.get(`
+        SELECT vip_sum, consume_count FROM vip_value 
+        WHERE vip_id=?
+        ;`, id);
     }
 }
 

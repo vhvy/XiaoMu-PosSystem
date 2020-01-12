@@ -9,8 +9,13 @@ route.get("/:query", async (req, res) => {
 
     const { query } = req.params;
     const result = await VipMemberTask.getVipMemberDetails(query.toUpperCase());
-
-    res.send(result);
+    const details = await Promise.all(result.map(async ({ id, ...filed }) => ({
+        id,
+        type: "积分卡",
+        ...filed,
+        ...await VipMemberTask.mapValueToVipDetails(id)
+    })));
+    res.send(details);
 });
 
 export default route;

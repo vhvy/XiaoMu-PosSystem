@@ -344,6 +344,7 @@ async function init() {
         pay_type TEXT NOT NULL DEFAULT "现金",
         points REAL,
         current_point REAL,
+        count REAL NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
     ;`);

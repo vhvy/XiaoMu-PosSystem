@@ -101,10 +101,17 @@ class OrdersTask {
         return point / money;
     }
 
-    static async handleOrder({ origin_price, sale_price, commodity_list, vip_code, username,
+    static async handleOrder({
+        origin_price,
+        sale_price,
+        commodity_list,
+        vip_code,
+        username,
         pay_type,
         client_pay,
-        change }) {
+        change,
+        count
+    }) {
         // 保存订单信息
 
 
@@ -189,7 +196,8 @@ class OrdersTask {
             user_id,
             pay_type,
             client_pay,
-            change
+            change,
+            count
         });
 
         await this.saveOrderDetails(order_id, commodity_list_details);
@@ -255,7 +263,8 @@ class OrdersTask {
         change,
         pay_type,
         user_id,
-        points
+        points,
+        count
     }) {
         // 保存订单信息
 
@@ -270,7 +279,8 @@ class OrdersTask {
             "change",
             "pay_type",
             "user_id",
-            "points"
+            "points",
+            "count"
         ];
 
         const args = [
@@ -284,7 +294,8 @@ class OrdersTask {
             change,
             pay_type,
             user_id,
-            points
+            points,
+            count
         ];
 
         if (vip_code) {
@@ -309,7 +320,7 @@ class OrdersTask {
 
         if (order_id) {
             return await AppDAO.get(`
-        SELECT order_id, check_date, sale_origin_price, sale_price, vip_code, client_pay, change, user_id, is_undo, pay_type, points, current_point 
+        SELECT order_id, check_date, sale_origin_price, sale_price, vip_code, client_pay, change, user_id, is_undo, pay_type, points, count, current_point 
         FROM orders 
         WHERE order_id=?
         ;`, order_id);

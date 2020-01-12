@@ -13,7 +13,7 @@ route.post("/submit", validBody(
 ), async (req, res, next) => {
     // 创建新的订单
 
-    const { pay_type, client_pay, change, origin_price, sale_price, commodity_list, vip_code } = req.body;
+    const { pay_type, client_pay, change, origin_price, sale_price, commodity_list, vip_code, count } = req.body;
 
     const priceIsEqual = await OrdersTask.validOrderPrice(sale_price, commodity_list);
 
@@ -29,7 +29,7 @@ route.post("/submit", validBody(
 
     const { username } = req["jwt_value"];
     const { status, data } = await OrdersTask.handleOrder({
-        pay_type, client_pay, change, origin_price, sale_price, commodity_list, username, vip_code
+        pay_type, client_pay, change, origin_price, sale_price, commodity_list, username, vip_code, count
     });
 
     if (!status) {
@@ -60,9 +60,9 @@ route.put("/undo", validBody(
 
     await OrdersTask.undoOrder(order_id, result.vip_code, result.points, result.sale_price);
 
-    res.json({
-        message: `订单${order_id}已成功撤销!`
-    });
+    const order_details = await OrdersTask.getOrderAllDetails(order_id);
+
+    res.json(order_details);
 });
 
 route.put("/addvip", validBody(
@@ -97,9 +97,24 @@ route.put("/addvip", validBody(
 
     await OrdersTask.addVipToOrder(order_id, vip_code, points, sale_price);
 
-    res.json({
-        message: "追加完成!"
-    });
+    const order_details = await OrdersTask.getOrderAllDetails(order_id);
+
+    res.json(order_details);
+});
+
+route.get("/", async (req, res, next) => {
+    // 查询今日订单
+
+    const { username } = req["jwt_value"];
+    const data = await OrdersTask.getTodayOrders(username);
+    if (data.length === 0) res.json(data);
+
+    const result = await Promise.all(
+        data.map(
+            ({ order_id }) => OrdersTask.getOrderAllDetails(order_id))
+    );
+
+    res.json(result);
 });
 
 route.get("/:id", async (req, res, next) => {

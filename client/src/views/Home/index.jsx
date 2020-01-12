@@ -6,11 +6,21 @@ import { Main } from "./Main";
 import { MultipleTabs } from "./MultipleTabs";
 import { TabsProvider } from "./TabsProvider";
 import { connect } from "react-redux";
+import config from "../../config";
+
+const { GLOBAL_SIDER_COLLAPSED } = config;
 
 function _Home({ showTabs }) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(
+        localStorage.getItem(GLOBAL_SIDER_COLLAPSED) === "collapsed" ? true : false
+    );
 
     function toggleCollapsed() {
+        if (collapsed) {
+            localStorage.removeItem(GLOBAL_SIDER_COLLAPSED);
+        } else {
+            localStorage.setItem(GLOBAL_SIDER_COLLAPSED, "collapsed");
+        }
         setCollapsed(state => !state);
     }
 

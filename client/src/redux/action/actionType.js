@@ -30,3 +30,57 @@ export const TABS_CLOSE_TAB = "TABS_CLOSE_TAB";
 
 export const TOGGLE_TABS_STATUS = "TOGGLE_TABS_STATUS";
 // 设置是否使用多栏目功能
+
+export const CASH_HOTKEY_STATUS = "CASH_HOTKEY_STATUS";
+// 设置是否显示前台销售的热键列表
+
+export const CASH_ORDER_ADD_COMMODITY = "CASH_ORDER_ADD_COMMODITY";
+// 增加商品到当前订单
+
+export const CASH_ORDER_DELETE_COMMODITY = "CASH_ORDER_DELETE_COMMODITY";
+// 从当前订单删除商品
+
+export const CASH_ORDER_SET_SELECT_COMMODITY = "CASH_ORDER_SET_SELECT_COMMODITY";
+// 设置当前被选中的商品
+
+export const CASH_ORDER_SET_COMMODITY_COUNT = "CASH_ORDER_SET_COMMODITY_COUNT";
+// 设置当前选中商品的数量
+
+export const CASH_ORDER_SET_COMMODITY_PRICE = "CASH_ORDER_SET_COMMODITY_PRICE";
+// 设置当前选中商品的单价
+
+export const CASH_ORDER_SET_COMMODITY_STATUS_GIVE = "CASH_ORDER_SET_COMMODITY_STATUS_GIVE";
+// 设置当前选中商品状态为赠送
+
+export const CASH_ORDER_SET_COMMODITY_STATUS_RETURN = "CASH_ORDER_SET_COMMODITY_STATUS_RETURN";
+// 设置当前选中商品状态为赠送
+
+export const CASH_ORDER_SET_VIP = "CASH_ORDER_SET_VIP";
+// 设置当前订单的VIP信息
+
+export const CASH_ORDER_CLEAR_VIP = "CASH_ORDER_CLEAR_VIP";
+// 清除当前订单的VIP信息
+
+export const CASH_ORDER_RESET_STATUS = "CASH_ORDER_RESET_STATUS";
+// 清空当前订单
+
+export const CASH_ORDER_HANGUP = "CASH_ORDER_HANGUP";
+// 挂起当前订单
+
+export const CASH_ORDER_HANGWUP_GET = "CASH_ORDER_HANGWUP_GET";
+// 取出已挂起订单
+
+export const CASH_HISTORY_ORDER_INIT = "CASH_HISTORY_ORDER_INIT";
+// 初始化历史订单
+
+export const CASH_HISTORY_ORDER_ADD = "CASH_HISTORY_ORDER_ADD";
+// 添加新的已完成订单到历史订单
+
+export const CASH_HISTORY_ORDER_UNDO = "CASH_HISTORY_ORDER_UNDO";
+// 撤销已完成订单
+
+export const CASH_HISTORY_ORDER_ADDVIP = "CASH_HISTORY_ORDER_ADDVIP";
+// 为已完成订单追加vip
+
+export const CASH_HISTORY_ORDER_IMPORT = "CASH_HISTORY_ORDER_IMPORT";
+// 将已完成订单内商品导入前台收款界面

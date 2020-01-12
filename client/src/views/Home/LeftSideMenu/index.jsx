@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Button, Menu, Icon } from "antd";
-import { menus, menuValue } from "./menus";
+import { menus, menuValue } from "../menus";
 import { useHistory, useLocation } from "react-router-dom";
 import config from "../../../config";
 import { useAuth } from "../../AuthProvider";

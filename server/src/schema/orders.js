@@ -2,14 +2,15 @@ import Joi from "@hapi/joi";
 import { code } from "./vip_member.js";
 import { barcode, sale_price } from "./commodity.js";
 
-export const price = Joi.number().min(0.01).max(100000);
+export const price = Joi.number().min(0).max(100000);
 export const order_id = Joi.number().min(100000000000000);
+export const count = Joi.number().min(0.01).max(10000);
 
 export const commodity = Joi.object({
     barcode: barcode.required(),
     sale_price: sale_price.required(),
     origin_price: price.required(),
-    count: Joi.number().min(0.01).max(10000).required(),
+    count: count.required(),
     status: Joi.string().min(1).max(5)
 });
 
@@ -20,6 +21,7 @@ export const createOrderSchema = Joi.object({
     sale_price: price.required(),
     client_pay: price.required(),
     change: price,
+    count: count.required(),
     commodity_list: Joi.array().min(1).max(200).items(commodity).required()
 });
 
