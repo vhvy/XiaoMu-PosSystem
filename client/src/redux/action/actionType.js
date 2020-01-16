@@ -84,3 +84,27 @@ export const CASH_HISTORY_ORDER_ADDVIP = "CASH_HISTORY_ORDER_ADDVIP";
 
 export const CASH_HISTORY_ORDER_IMPORT = "CASH_HISTORY_ORDER_IMPORT";
 // 将已完成订单内商品导入前台收款界面
+
+export const WARE_CATEGORY_TREE = "WARE_CATEGORY_TREE";
+// 填充仓储管理商品分类
+
+export const WARE_CATEGORY_SELECT = "WARE_CATEGORY_SELECT";
+// 设置通过点击节点选择的节点
+
+export const WARE_CATEGORY_CHECK = "WARE_CATEGORY_CHECK";
+// 设置当前通过复选框选中的多个节点
+
+export const WARE_CATEGORY_EXPAND = "WARE_CATEGORY_EXPAND";
+// 设置当前展开的节点
+
+export const WARE_CATEGORY_DELETE = "WARE_CATEGORY_DELETE";
+// 删除一个节点
+
+export const WARE_CATEGORY_SET_PARENT = "WARE_CATEGORY_SET_PARENT";
+// 修改一个节点的父节点
+
+export const WARE_CATEGORY_CREATE = "WARE_CATEGORY_CREATE";
+// 创建一个新的分类
+
+export const WARE_CATEGORY_RENAME = "WARE_CATEGORY_RENAME";
+// 修改分类名称

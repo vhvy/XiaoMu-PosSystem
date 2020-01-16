@@ -1,4 +1,7 @@
 import { Cash } from "./Main/market/Cash";
+import { Supplier } from "./Main/warehouse/Supplier";
+// import { Categories } from "./Main/warehouse/Categories";
+import { Commodity } from "./Main/warehouse/Commodity";
 
 export const menus = [
     {
@@ -60,19 +63,22 @@ export const menus = [
         children: [
             {
                 title: "供应商管理",
-                path: "/home/warehouse/supplier"
+                path: "/home/warehouse/supplier",
+                component: Supplier
             },
             {
                 title: "进货管理",
                 path: "/home/warehouse/stock"
             },
-            {
-                title: "分类管理",
-                path: "/home/warehouse/categories"
-            },
+            // {
+            //     title: "分类管理",
+            //     path: "/home/warehouse/categories",
+            //     component: Categories
+            // },
             {
                 title: "商品管理",
-                path: "/home/warehouse/commodity"
+                path: "/home/warehouse/commodity",
+                component: Commodity
             }
         ]
     },

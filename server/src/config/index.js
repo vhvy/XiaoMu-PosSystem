@@ -1,5 +1,7 @@
 import prodEnv from "./prod.env.js";
 import devEnv from "./dev.env.js";
+import commonEnv from "./common.js";
+import merge from "webpack-merge";
 
 let config;
 
@@ -16,4 +18,4 @@ switch (env) {
         config = devEnv;
 }
 
-export default config;
+export default merge(commonEnv, config);

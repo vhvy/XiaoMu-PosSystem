@@ -1,5 +1,5 @@
 export class CommodityTasks {
     static query(ajax, key) {
-        return ajax.get(`/api/front/commodity/${key}`);
+        return ajax.get(`/api/front/commodity/${encodeURIComponent(key)}`);
     }
 }

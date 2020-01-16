@@ -78,13 +78,10 @@ route.put("/update", validBody(
 
 });
 
-route.delete("/delete", validBody(
-    deleteSupplierSchema,
-    "请输入正确的供货商名称!"
-), async (req, res, next) => {
+route.delete("/delete/:name", async (req, res, next) => {
     // 删除供货商
 
-    const { name } = req.body;
+    const { name } = req.params;
 
     if (name === default_supplier) return throwError(next, "不能删除默认供货商!")
 

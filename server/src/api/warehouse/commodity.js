@@ -9,15 +9,42 @@ import {
 import CommodityTask from "../../tasks/commodity.js";
 import CategoriesTask from "../../tasks/categories.js";
 import SuppliersTask from "../../tasks/suppliers.js";
+import config from "../../config/index.js";
+
+const { default_all_category } = config;
 
 const route = express.Router();
 
-route.get("/", async (req, res) => {
+route.get("/", async (req, res, next) => {
     // 获取所有商品信息
 
-    const result = await CommodityTask.getAllCommodityDetailsByLimit();
+    const { list } = req.query;
 
-    res.send(result);
+    if (!list) {
+        return throwError(next, "分类信息不存在!");
+    }
+
+    const arr = Array.from(new Set(list.split(",")));
+    // console.log(arr);
+
+    if (arr.includes(default_all_category)) {
+        // 如果前台传来分类树根节点，则视为请求所有商品
+
+        const list = await CommodityTask.getAllCommodityDetails();
+        return res.json(list);
+    }
+
+    for (let item of arr) {
+        const result = await CategoriesTask.getCategoryDetails(item);
+        // 有任何分类不存在直接返回400
+        if (!result) {
+            return throwError(next, `分类${item}不存在!`);
+        }
+    }
+
+    const result = await CommodityTask.getCommodityByCategory(arr);
+
+    res.json(result);
 });
 
 route.post("/create", validBody(

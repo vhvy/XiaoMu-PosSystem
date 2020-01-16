@@ -8,11 +8,54 @@ const { default_supplier } = config;
 
 class CommodityTask {
 
-    static async getAllCommodityDetailsByLimit() {
+    static async getAllCommodityDetails() {
         return await AppDAO.all(`
         SELECT * FROM commodity 
         ;`);
     }
+
+    static async getCommodityByCategory(category) {
+        /**
+         * category: 分类名，String 或 String[]
+         */
+
+        function query(id) {
+            return AppDAO.all(`
+            SELECT * FROM commodity WHERE category_id=?
+            ;`, id);
+        }
+
+        if (Array.isArray(category)) {
+            const result = await Promise.all(category.map(t => this.getCommodityByCategory(t)));
+
+            return result.reduce((arr, arr1) => [...arr, ...arr1], []);
+        }
+
+        const { id, parent_id } = await CategoriesTask.getCategoryDetails(category);
+
+        const commodityList = await query(id);
+
+        if (parent_id) {
+            // 如果有父分类id，证明为子分类，直接返回结果即可
+            return commodityList;
+        } else {
+            // 没有父分类id，证明为父分类，做进一步查询
+
+            const childList = await CategoriesTask.getChildCategory(id);
+            // 检查是否有子分类
+
+            if (childList.length === 0) return commodityList;
+            // 没有子分类， 直接返回结果
+
+            const result = (await Promise.all(childList.map(
+                async ({ id }) => await query(id)
+            )))
+                .reduce((arr, arr2) => [...arr, ...arr2], commodityList);
+
+            return result;
+        }
+    }
+
 
     static async getCommodityDetailsByTimestamp(
         timestamp,
@@ -151,7 +194,7 @@ class CommodityTask {
     }
 
     static async updateCommodityCategoryID(barcode, new_category_name) {
-        // 修改商品分类
+        // 修改商品所属分类
 
         const { id: category_id } = await CategoriesTask.getCategoryDetails(new_category_name);
         return await AppDAO.run(`

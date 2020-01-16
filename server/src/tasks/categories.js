@@ -25,6 +25,38 @@ class CategoriesTask {
         ]);
     }
 
+    static async checkCategoryHasCommodity(category) {
+
+        function query(id) {
+            return AppDAO.get(`
+            SELECT id FROM commodity WHERE category_id=?
+            ;`, id);
+        }
+
+
+        const { id, parent_id } = await this.getCategoryDetails(category);
+
+        if (parent_id) {
+            // 有父分类，证明为子分类，直接查询并返回结果
+            const result = await query(id);
+
+            return !!result;
+        } else {
+            // 没有父分类
+
+            const childList = await this.getChildCategory(id);
+            // 检查是否含有子分类
+
+            if (childList.length > 0) return true;
+            // 有子分类，返回true
+
+            const result = await query(id);
+            // 没有子分类，直接查询并返回
+
+            return !!result;
+        }
+    }
+
     static async getCategoryDetails(name) {
         const query = (typeof name === "number") ? "id" : "name";
         return await AppDAO.get(`
@@ -69,11 +101,20 @@ class CategoriesTask {
         return await del(id);
     }
 
-    static async getChildCategory(parent_name) {
-        const { id } = await this.getCategoryDetails(parent_name);
-        return AppDAO.all(`
+    static async getChildCategory(parent) {
+
+        if (typeof parent === "string") {
+            // 用分类名查询
+            const { id } = await this.getCategoryDetails(parent);
+            return await AppDAO.all(`
         SELECT id, name, parent_id FROM categories WHERE parent_id=?
-        ;`, [id]);
+        ;`, id);
+        } else {
+            // 用分类id查询
+            return await AppDAO.all(`
+        SELECT id, name, parent_id FROM categories WHERE parent_id=?
+        ;`, parent);
+        }
     }
 
     static async updateCategoryParent(name, parent_name) {

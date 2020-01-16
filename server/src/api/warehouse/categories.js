@@ -4,8 +4,7 @@ import { validBody } from "../../middleware/validBody.js";
 import {
     createCategorySchema,
     updateCategoryNameSchema,
-    updateCategoryParentSchema,
-    deleteCategorySchema
+    updateCategoryParentSchema
 } from "../../schema/categories.js";
 import CategoriesTask from "../../tasks/categories.js";
 
@@ -15,15 +14,8 @@ route.get("/", async (req, res) => {
     // 获取所有商品分类
 
     const result = await CategoriesTask.getCategoriesDetails();
-    let list = result.map(({ name, parent_id }) => {
-        let obj = {
-            name
-        }
-        if (parent_id) obj["parent_name"] = result.find(({ id }) => id === parent_id)["name"];
 
-        return obj;
-    });
-    res.send(list);
+    res.send(result);
 });
 
 route.post("/create", validBody(
@@ -70,7 +62,7 @@ route.post("/create", validBody(
     });
 });
 
-route.post("/updatename", validBody(
+route.put("/updatename", validBody(
     updateCategoryNameSchema,
     "请输入正确的信息!"
 ), async (req, res, next) => {
@@ -99,7 +91,7 @@ route.post("/updatename", validBody(
     });
 });
 
-route.post("/updateparent", validBody(
+route.put("/updateparent", validBody(
     updateCategoryParentSchema,
     "请输入正确的分类名称!"
 ), async (req, res, next) => {
@@ -142,26 +134,20 @@ route.post("/updateparent", validBody(
     });
 });
 
-route.post("/delete", validBody(
-    deleteCategorySchema, "请输入正确的分类名!"
-), async (req, res, next) => {
+route.delete("/delete/:name", async (req, res, next) => {
     // 删除分类
 
-    const { name } = req.body;
+    const { name } = req.params;
     const validCategoryResult = await CategoriesTask.getCategoryDetails(name);
     if (!validCategoryResult) {
         return throwError(next, "分类不存在!");
     }
 
     const { id } = validCategoryResult;
-    function validCategoryHasCommodity(id) {
-        // 检查当前分类下是否含有商品
-        // 待完成商品分类后再修改此处
+    const validCategoryHasCommodity = await CategoriesTask.checkCategoryHasCommodity(id);
+    // 检查当前分类下是否含有商品
 
-        return false;
-    }
-
-    if (validCategoryHasCommodity(id)) {
+    if (validCategoryHasCommodity) {
         return throwError(next, "当前分类下含有商品,无法删除!");
     }
 

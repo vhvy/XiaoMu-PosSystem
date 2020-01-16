@@ -20,7 +20,7 @@ export const useAjax = () => useContext(AjaxContext);
 
 export function AjaxProvider({ children }) {
     const location = useLocation();
-    const { logout } = useAuth;
+    const { logout } = useAuth();
     function onReq(request) {
         const token = TokenManage.Token;
         if (token) {
@@ -46,7 +46,7 @@ export function AjaxProvider({ children }) {
     }
 
     function onResErr(err) {
-
+        console.log("错误啦！")
         if (!err.response) {
             antdMessage.error("网络错误");
             return Promise.reject({

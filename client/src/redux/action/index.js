@@ -27,17 +27,97 @@ import {
     CASH_HISTORY_ORDER_ADDVIP,
     CASH_ORDER_HANGUP,
     CASH_ORDER_HANGWUP_GET,
-    CASH_HISTORY_ORDER_IMPORT
+    CASH_HISTORY_ORDER_IMPORT,
+    WARE_CATEGORY_SELECT,
+    WARE_CATEGORY_EXPAND,
+    WARE_CATEGORY_TREE,
+    WARE_CATEGORY_CHECK,
+    WARE_CATEGORY_DELETE,
+    WARE_CATEGORY_SET_PARENT,
+    WARE_CATEGORY_CREATE,
+    WARE_CATEGORY_RENAME
 } from "./actionType";
 
+export function updateCategoryNameAction(data) {
+    // 修改分类名称
+
+    return {
+        type: WARE_CATEGORY_RENAME,
+        data
+    };
+}
+
+export function createCategoryAction(data) {
+    // 创建一个新的分类
+
+    return {
+        type: WARE_CATEGORY_CREATE,
+        data
+    };
+}
+
+export function setCategoryParentAction(data) {
+    // 修改一个分类的父分类
+
+    return {
+        type: WARE_CATEGORY_SET_PARENT,
+        data
+    };
+}
+
+export function deleteCategoryAction(data, keys) {
+    // 删除一个分类
+
+    return {
+        type: WARE_CATEGORY_DELETE,
+        data,
+        keys
+    };
+}
+
+export function setCategoryInitTreeAction(data) {
+    // 将后台获取的分类填充到store里
+
+    return {
+        type: WARE_CATEGORY_TREE,
+        data
+    };
+}
+
+export function setCategoryCheckAction(list) {
+    // 设置当前通过复选框选中的节点，接受一个key数组
+
+    return {
+        type: WARE_CATEGORY_CHECK,
+        list
+    };
+}
+
+export function setCategoryExpandAction(list) {
+    // 设置当前展开的节点，接受一个key数组
+
+    return {
+        type: WARE_CATEGORY_EXPAND,
+        list
+    };
+}
+
+export function setCategorySelectAction(key) {
+    // 设置通过点击节点选择的节点
+
+    return {
+        type: WARE_CATEGORY_SELECT,
+        key
+    };
+}
 
 export function importHistoryOrderAction(data) {
     // 将已完成订单内商品导入前台收款界面
-    
+
     return {
         type: CASH_HISTORY_ORDER_IMPORT,
         data
-    }
+    };
 }
 
 export function addVipToHistoryOrderAction(data) {
@@ -46,7 +126,7 @@ export function addVipToHistoryOrderAction(data) {
     return {
         type: CASH_HISTORY_ORDER_ADDVIP,
         data
-    }
+    };
 }
 
 export function getHangupOrderAction({ data, id }) {
@@ -56,7 +136,7 @@ export function getHangupOrderAction({ data, id }) {
         type: CASH_ORDER_HANGWUP_GET,
         data,
         id
-    }
+    };
 }
 
 export function hangupOrderAction(data) {
@@ -64,7 +144,7 @@ export function hangupOrderAction(data) {
     return {
         type: CASH_ORDER_HANGUP,
         data
-    }
+    };
 }
 
 export function undoOrderFromHistoryAction(data) {
@@ -72,7 +152,7 @@ export function undoOrderFromHistoryAction(data) {
     return {
         type: CASH_HISTORY_ORDER_UNDO,
         data
-    }
+    };
 }
 
 export function addOrderToHistoryAction(order) {
