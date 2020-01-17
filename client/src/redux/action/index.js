@@ -35,8 +35,18 @@ import {
     WARE_CATEGORY_DELETE,
     WARE_CATEGORY_SET_PARENT,
     WARE_CATEGORY_CREATE,
-    WARE_CATEGORY_RENAME
+    WARE_CATEGORY_RENAME,
+    WARE_COMMODITY_SELECT
 } from "./actionType";
+
+export function setWareSelectCommodityAction(data) {
+    // 设置当前选中商品
+
+    return {
+        type: WARE_COMMODITY_SELECT,
+        data
+    };
+}
 
 export function updateCategoryNameAction(data) {
     // 修改分类名称

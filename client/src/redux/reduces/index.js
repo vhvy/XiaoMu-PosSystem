@@ -3,7 +3,7 @@ import { apiUrl } from "./apiUrl";
 import { tabs, showTabs } from "./tabs";
 import { userDetails } from "./userDetails";
 import { showCashHotKey, cash } from "./cash";
-import { categories } from "./categories";
+import { warehouse } from "./warehouse";
 
 export const reduces = combineReducers({
     apiUrl,
@@ -12,5 +12,5 @@ export const reduces = combineReducers({
     showTabs,
     showCashHotKey,
     cash,
-    categories
+    warehouse
 });

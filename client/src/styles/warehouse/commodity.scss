@@ -6,8 +6,7 @@
   flex-flow: column nowrap;
 
   .search,
-  .categories,
-  .commodity-list-wrap {
+  .categories {
     @extend .base-card;
   }
 
@@ -18,25 +17,40 @@
       width: 260px;
       margin-right: 20px;
     }
+
+    :global(.ant-btn) {
+      margin-right: 20px;
+    }
   }
 
   .bottom-wrap {
     flex: 1;
     position: relative;
     display: flex;
+
+    $cate-left-width: 230px;
+
     .categories {
       position: absolute;
       top: 0;
       left: 0;
-      width: 260px;
+      width: $cate-left-width;
       bottom: 0;
       overflow: auto;
       user-select: none;
+      padding: {
+        top: 0;
+        right: 0;
+        left: 5px;
+      }
     }
 
     .commodity-list-wrap {
       flex: 1;
-      margin-left: 270px;
+      margin-left: $cate-left-width + 10px;
+      .list-wrap {
+        height: 100%;
+      }
       // position: absolute;
       // top: 0;
       // left: 270px;
@@ -46,6 +60,7 @@
     }
     .right-menu {
       @extend .base-card;
+      z-index: 1500;
       padding: 0;
       position: fixed;
       user-select: none;

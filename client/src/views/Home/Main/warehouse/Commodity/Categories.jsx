@@ -44,8 +44,7 @@ function renderNodes(tree, isSelect = false) {
 }
 
 export function Categories() {
-    const { tree, checkedKeys, expandedKeys, selectKeys, categoryList } = useSelector(state => state.categories);
-
+    const { tree, checkedKeys, expandedKeys, selectKeys, categoryList } = useSelector(state => state.warehouse.categories);
 
     const dispatch = useDispatch();
 

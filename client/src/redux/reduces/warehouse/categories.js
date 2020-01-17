@@ -7,8 +7,8 @@ import {
     WARE_CATEGORY_SET_PARENT,
     WARE_CATEGORY_CREATE,
     WARE_CATEGORY_RENAME
-} from "../action/actionType";
-import config from "../../config";
+} from "../../action/actionType";
+import config from "../../../config";
 
 const { DEFAULT_CATEGORIES_PARENT: TREE_BASE_KEY } = config;
 

@@ -204,7 +204,7 @@ export function VirtualSelectList({
     }, [handleShowItem]);
 
     useEffect(() => {
-        if (select === 0) return;
+        if (select <= 0) return;
         // 没有商品时不做任何动作
         const { current: wrapDom } = scrollRef;
 
