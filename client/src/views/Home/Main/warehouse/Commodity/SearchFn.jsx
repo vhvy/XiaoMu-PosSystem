@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import styled from "../../../../../styles/warehouse/commodity.scss";
 import { Input, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,25 +6,18 @@ import { setWareSelectCommodityAction } from "../../../../../redux/action";
 
 const { Search } = Input;
 
-export function SearchFn({ value }) {
+export function SearchFn({
+    value,
+    handleAdd,
+    handleEdit,
+    handleDel
+}) {
 
     const {
         handleUpSelect,
         handleDownSelect,
         can_edit
     } = value;
-
-    function handleAdd() {
-        console.log("add");
-    }
-
-    function handleEdit() {
-        console.log("Edit");
-    }
-
-    function handleDel() {
-        console.log("del");
-    }
 
     const btnList = [
         {
@@ -69,9 +62,18 @@ export function SearchFn({ value }) {
         })();
     }
 
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        inputRef.current.focus();
+    }, []);
+
     return (
         <div className={styled["search"]}>
-            <Search placeholder="请在此输入要查询的商品" onKeyDown={handleHotKey} />
+            <Search
+                placeholder="请在此输入要查询的商品" onKeyDown={handleHotKey}
+                ref={inputRef}
+            />
             {
                 btnList.filter(({ show = true }) => show).map(({ title, hotkey, fn, type, disabled = false }) => (
                     <Button

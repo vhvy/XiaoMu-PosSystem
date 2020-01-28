@@ -15,6 +15,7 @@ import {
 import { useAjax } from "../../../../AjaxProvider";
 import { CategoriesTask } from "../../../../../tasks/categories";
 import config from "../../../../../config";
+import { CustomSelectTree } from "../../../../../components/CustomSelectTree";
 
 const { DEFAULT_CATEGORIES_PARENT: BASE_TREE } = config;
 
@@ -93,17 +94,30 @@ export function Categories() {
 
     function handleRightClick({ event, node }) {
         const { eventKey } = node.props;
-        if (eventKey === BASE_TREE) return;
         const { pageX, pageY } = event;
-        const isParent = !categoryList.find(i => i.id === eventKey).parent_id;
-        // 是否是一级分类
 
-        setRightMenu({
-            left: pageX,
-            top: pageY,
-            isParent,
-            key: eventKey
-        });
+        let data = {};
+        if (eventKey === BASE_TREE) {
+            data = {
+                left: pageX,
+                top: pageY,
+                isBaseTree: true,
+                key: eventKey
+            }
+        } else {
+            const isParent = !categoryList.find(i => i.id === eventKey).parent_id;
+            // 是否是一级分类
+
+            data = {
+                left: pageX,
+                top: pageY,
+                isParent,
+                key: eventKey
+            };
+        }
+
+
+        setRightMenu(data);
         // 设置右键菜单的坐标和相应信息
     }
 
@@ -126,7 +140,7 @@ export function Categories() {
 
         if (rightMenu === null) return null;
 
-        const { top, left, isParent, key } = rightMenu;
+        const { top, left, isParent, key, isBaseTree } = rightMenu;
 
         function handleCreateCategory() {
             setModalStatus(() => ({
@@ -202,11 +216,12 @@ export function Categories() {
             {
                 title: "创建新分类",
                 fn: handleCreateCategory,
-                not_child: true
+                not_child: true,
+                base_tree: true
             }
         ];
 
-        const items = baseItems.filter(i => (isParent ? !i.not_parent : !i.not_child));
+        const items = isBaseTree ? (baseItems.filter(i => i.base_tree)) : (baseItems.filter(i => (isParent ? !i.not_parent : !i.not_child)));
         // 根据触发右键菜单的节点是否是一级分类筛选出需要的菜单
 
         const isDisabled = !!(isParent && categoryList.find(i => i.parent_id === key));
@@ -601,19 +616,12 @@ function RightMenuModal({ status, type, hideModal, selectKey, tree, categoryList
                 {
                     isEditParent && (
                         <Form.Item label="新父分类">
-                            <TreeSelect
-                                showSearch
-                                treeIcon={true}
+                            <CustomSelectTree
                                 value={new_parent_name}
-                                placeholder="请选择父分类"
-                                allowClear
-                                treeDefaultExpandAll
                                 onChange={handleNewParent}
-                            >
-                                {
-                                    renderNodes(tree, true)
-                                }
-                            </TreeSelect>
+                                placeholder="请选择父分类"
+                                tree={tree}
+                            />
                         </Form.Item>
                     )
                 }

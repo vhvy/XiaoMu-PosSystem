@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import styled from "../../../../../styles/warehouse/commodity.scss";
 import {
     VirtualSelectList,
@@ -91,7 +91,15 @@ export function CommodityList({ commodityList, setSelect, selectId, selectType }
         });
     }
 
-    const renderItem = useMemo(() => (createRenderItemFn(columns, handleClickSelect)), []);
+    const handleCss = useCallback((css, styled, data) => {
+        const { in_price, sale_price } = data;
+        if (in_price === 0 || sale_price === 0 || sale_price <= in_price) {
+            return [...css, styled["error"]];
+        }
+        return css;
+    }, []);
+
+    const renderItem = useMemo(() => (createRenderItemFn(columns, handleClickSelect, "id", handleCss)), []);
 
     const Header = useMemo(() => (
         <VirtualSelectListHeader data={columns} />

@@ -37,6 +37,7 @@ const initState = {
 export function categories(state = initState, action) {
 
     function makeNeedShowKeys(keys) {
+
         if (keys.includes(TREE_BASE_KEY)) return [TREE_BASE_KEY];
 
         const show_key_list = [];
@@ -56,7 +57,6 @@ export function categories(state = initState, action) {
                 show_key_list.push(id);
             }
         }
-
         for (let { id, parent_id } of child_key_list) {
             !show_key_list.includes(parent_id) && show_key_list.push(id);
 
@@ -125,12 +125,29 @@ export function categories(state = initState, action) {
                 checkedKeys: [...action.list]
             };
         case WARE_CATEGORY_SELECT:
-            return {
-                ...state,
-                currentShowKeys: makeNeedShowKeys(action.key),
-                checkedKeys: [],
-                selectKeys: action.key
-            };
+            return (() => {
+                const { key } = action;
+
+                const value = state.categoryList.find(i => i.id === key[0]);
+
+                if (value && value.parent_id) {
+
+                    return {
+                        ...state,
+                        expandedKeys: [TREE_BASE_KEY, value.parent_id],
+                        currentShowKeys: makeNeedShowKeys(key),
+                        checkedKeys: [],
+                        selectKeys: key
+                    };
+                } else {
+                    return {
+                        ...state,
+                        currentShowKeys: makeNeedShowKeys(key),
+                        checkedKeys: [],
+                        selectKeys: key
+                    };
+                }
+            })();
         case WARE_CATEGORY_DELETE:
             return (() => {
 

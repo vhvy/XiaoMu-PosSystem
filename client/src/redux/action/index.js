@@ -36,8 +36,38 @@ import {
     WARE_CATEGORY_SET_PARENT,
     WARE_CATEGORY_CREATE,
     WARE_CATEGORY_RENAME,
-    WARE_COMMODITY_SELECT
+    WARE_COMMODITY_SELECT,
+    WARE_COMMODITY_CREATE,
+    WARE_COMMODITY_DELETE,
+    WARE_COMMODITY_UPDATE
 } from "./actionType";
+
+export function delWareCommodityAction(id) {
+    // 删除商品
+
+    return {
+        type: WARE_COMMODITY_DELETE,
+        id
+    };
+}
+
+export function updateWareCommodityAction(data) {
+    // 更新商品信息
+
+    return {
+        type: WARE_COMMODITY_UPDATE,
+        data
+    };
+}
+
+export function createWareCommodityAction(id) {
+    // 创建新商品
+
+    return {
+        type: WARE_COMMODITY_CREATE,
+        id
+    };
+}
 
 export function setWareSelectCommodityAction(data) {
     // 设置当前选中商品

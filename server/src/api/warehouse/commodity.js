@@ -104,12 +104,7 @@ route.post("/create", validBody(
 
     const queryCommodityResult = await CommodityTask.getCommodityDetails(lastID, "id");
 
-    const endResult = Object.assign({}, queryCommodityResult, {
-        vip_points: queryCommodityResult.vip_points === 1,
-        is_delete: queryCommodityResult.is_delete === 1,
-    });
-
-    res.json(endResult);
+    res.json(queryCommodityResult);
 });
 
 route.put("/update", validBody(
@@ -161,7 +156,6 @@ route.put("/update", validBody(
             return throwError(next, "新条码已存在!");
         }
     }
-
     const id = await CommodityTask.updateCommodityValue({
         current_barcode,
         barcode,
@@ -180,19 +174,13 @@ route.put("/update", validBody(
     commodity_value["vip_points"] = commodity_value["vip_points"] === 1;
 
 
-    res.json({
-        message: "修改成功!",
-        data: commodity_value
-    })
+    res.json(commodity_value);
 });
 
-route.delete("/delete", validBody(
-    deleteCommoditySchema,
-    "请输入正确的条码!"
-), async (req, res, next) => {
+route.delete("/delete/:barcode", async (req, res, next) => {
     // 删除商品
 
-    const { barcode } = req.body;
+    const { barcode } = req.params;
 
     const validBarcodeResult = await CommodityTask.getCommodityDetails(barcode);
     if (!validBarcodeResult) {
@@ -200,19 +188,17 @@ route.delete("/delete", validBody(
     }
     // 需要删除的商品条码不存在时返回400
 
-    async function checkCommodityUse(barcode) {
-        // 检查商品是否已经被出售过，出售过则无法被删除，只能禁用，待销售部分完成后再来完善此函数
+    const { id } = validBarcodeResult;
 
-        return false;
-    }
 
-    const validCommodityUseResult = await checkCommodityUse(barcode);
+    const validCommodityUseResult = await CommodityTask.checkCommodityUse(id);
 
+    // 检查商品是否已经被出售过，出售过则无法被删除，只能禁用
     if (validCommodityUseResult) {
         return throwError(next, "商品已被出售过，无法删除!");
     }
 
-    await CommodityTask.deleteCommodity(barcode);
+    await CommodityTask.deleteCommodity(id);
 
     res.json({
         message: "删除成功!",

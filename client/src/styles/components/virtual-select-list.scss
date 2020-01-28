@@ -33,6 +33,10 @@
         background-color: #e8e8e8;
       }
 
+      &.error {
+        color: #ff4d4f;
+      }
+
       .item {
         white-space: nowrap;
         text-overflow: ellipsis;

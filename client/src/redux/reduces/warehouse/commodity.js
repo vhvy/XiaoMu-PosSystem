@@ -1,5 +1,7 @@
 import {
-    WARE_COMMODITY_SELECT
+    WARE_COMMODITY_SELECT,
+    WARE_COMMODITY_CREATE,
+    WARE_COMMODITY_DELETE
 } from "../../action/actionType";
 
 const initState = {
@@ -14,6 +16,16 @@ export function commodity(state = initState, action) {
                 ...state,
                 selectId: action.data.selectId,
                 selectType: action.data.selectType
+            };
+        case WARE_COMMODITY_CREATE:
+            return {
+                ...initState,
+                selectId: action.id
+            };
+        case WARE_COMMODITY_DELETE:
+            return {
+                ...initState,
+                selectId: action.id
             };
         default:
             return state;

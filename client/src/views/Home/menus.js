@@ -2,6 +2,7 @@ import { Cash } from "./Main/market/Cash";
 import { Supplier } from "./Main/warehouse/Supplier";
 // import { Categories } from "./Main/warehouse/Categories";
 import { Commodity } from "./Main/warehouse/Commodity";
+import { Stock } from "./Main/warehouse/Stock";
 
 export const menus = [
     {
@@ -68,13 +69,9 @@ export const menus = [
             },
             {
                 title: "进货管理",
-                path: "/home/warehouse/stock"
+                path: "/home/warehouse/stock",
+                component: Stock
             },
-            // {
-            //     title: "分类管理",
-            //     path: "/home/warehouse/categories",
-            //     component: Categories
-            // },
             {
                 title: "商品管理",
                 path: "/home/warehouse/commodity",

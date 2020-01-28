@@ -107,7 +107,9 @@ route.get("/", async (req, res, next) => {
 
     const { username } = req["jwt_value"];
     const data = await OrdersTask.getTodayOrders(username);
-    if (data.length === 0) res.json(data);
+    if (data.length === 0) {
+        return res.json(data);
+    }
 
     const result = await Promise.all(
         data.map(

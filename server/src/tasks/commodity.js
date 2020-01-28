@@ -8,10 +8,25 @@ const { default_supplier } = config;
 
 class CommodityTask {
 
+    static async mapCommdityCateSupp(list) {
+        // 将商品信息详情中的分类id和供应商id替换为对应的文本
+
+        return await Promise.all(list.map(async ({ category_id, supplier_id, ...args }) => ({
+            ...args,
+            supplier: (await SuppliersTask.getSupplierDetails(supplier_id)).name,
+            category: (await CategoriesTask.getCategoryDetails(category_id)).name,
+            vip_points: args.vip_points === 1,
+            is_delete: args.is_delete === 1,
+            category_id,
+            supplier_id
+        })));
+    }
+
     static async getAllCommodityDetails() {
-        return await AppDAO.all(`
+        const result = await AppDAO.all(`
         SELECT * FROM commodity 
         ;`);
+        return await this.mapCommdityCateSupp(result);
     }
 
     static async getCommodityByCategory(category) {
@@ -19,10 +34,14 @@ class CommodityTask {
          * category: 分类名，String 或 String[]
          */
 
-        function query(id) {
-            return AppDAO.all(`
+        const query = async (id) => {
+            const result = await AppDAO.all(`
             SELECT * FROM commodity WHERE category_id=?
             ;`, id);
+            if (result.length === 0) return result;
+
+
+            return await this.mapCommdityCateSupp(result);
         }
 
         if (Array.isArray(category)) {
@@ -81,9 +100,13 @@ class CommodityTask {
     ) {
         // 查看商品信息
 
-        return await AppDAO.get(`
+        const result = await AppDAO.get(`
         SELECT * FROM commodity WHERE ${type}=?
         ;`, [query]);
+
+        if (!result) return result;
+
+        return (await this.mapCommdityCateSupp([result]))[0];
     }
 
     static async createCommodity({
@@ -345,6 +368,7 @@ class CommodityTask {
         const snapshot = await this.getCommodityDetails(current_barcode);
         // 商品信息快照
 
+
         for (let { key, fn } of handleList) {
             const vl = update_value[key];
             if (vl) {
@@ -368,7 +392,6 @@ class CommodityTask {
         const {
             id, barcode, name, category_id, pinyin, unit, size, vip_points, in_price, sale_price, work_date, change_date, supplier_id
         } = snapshot;
-
         await this.createCommoditySnapshot({
             create_time: update_time,
             commodity_id: id,
@@ -385,6 +408,7 @@ class CommodityTask {
             change_date,
             supplier_id
         });
+
         return snapshot["id"];
     }
 
@@ -426,10 +450,8 @@ class CommodityTask {
         ]);
     }
 
-    static async deleteCommodity(barcode) {
+    static async deleteCommodity(id) {
         // 删除商品
-
-        const { id } = await this.getCommodityDetails(barcode);
 
         await AppDAO.run(`
         DELETE FROM commodity_snapshot WHERE commodity_id=?
@@ -439,6 +461,15 @@ class CommodityTask {
         return await AppDAO.run(`
         DELETE FROM commodity WHERE id=?
         ;`, [id]);
+    }
+
+    static async checkCommodityUse(id) {
+        // 检查商品是否被出售过
+
+        return await AppDAO.get(`
+        SELECT id FROM order_details 
+        WHERE commodity_ID=?
+        ;`, id);
     }
 }
 
