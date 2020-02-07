@@ -104,8 +104,13 @@ export function SetVipModal({ status, hideFn, setVip, clearVip }) {
             if (data.length === 0) {
                 message.warn("没有找到相关的会员卡!")
             } else if (data.length === 1) {
-                closeModal();
-                setVip(data[0]);
+                const vipValue = data[0];
+                if (vipValue.is_disable) {
+                    message.warn("此会员卡已被禁用！");
+                } else {
+                    closeModal();
+                    setVip(vipValue);
+                }
             } else {
                 setData(s => ({
                     ...s,
@@ -135,8 +140,14 @@ export function SetVipModal({ status, hideFn, setVip, clearVip }) {
             clearVip();
         } else if (list.length > 0 && ctrlKey && key === "Enter") {
             e.preventDefault();
-            closeModal();
-            setVip(list.find(({ id }) => id === select));
+
+            const vipValue = list.find(({ id }) => id === select);
+            if (vipValue.is_disable) {
+                message.warn("此会员卡已被禁用！");
+            } else {
+                closeModal();
+                setVip(vipValue);
+            }
         } else if (list.length > 1) {
             const index = list.findIndex(({ id }) => id === select);
             if (key === "ArrowUp" && index !== 0) {

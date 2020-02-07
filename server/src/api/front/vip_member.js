@@ -9,9 +9,10 @@ route.get("/:query", async (req, res) => {
 
     const { query } = req.params;
     const result = await VipMemberTask.getVipMemberDetails(query.toUpperCase());
-    const details = await Promise.all(result.map(async ({ id, ...filed }) => ({
+    const details = await Promise.all(result.map(async ({ id, is_disable, ...filed }) => ({
         id,
         type: "积分卡",
+        is_disable: is_disable === 1,
         ...filed,
         ...await VipMemberTask.mapValueToVipDetails(id)
     })));

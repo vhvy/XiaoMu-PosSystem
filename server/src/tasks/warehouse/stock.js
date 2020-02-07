@@ -35,9 +35,11 @@ class StockTask {
     static async getStockDetails(args) {
         // 获取进货单详细信息
 
-        return await AppDAO.all(`
+        const result = await AppDAO.all(`
         SELECT * FROM stock_details WHERE stock_id=?
         ;`, args);
+
+        return await this.mapStockDetailsIDToText(result);
     }
 
     static async checkCommodityList(list) {

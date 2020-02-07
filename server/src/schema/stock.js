@@ -4,7 +4,7 @@ import { barcode, in_price } from "./commodity.js";
 
 export const commodity_item = Joi.object({
     barcode: barcode.required(),
-    count: Joi.string().min(1).max(50).required(),
+    count: Joi.number().min(1).max(5000).required(),
     in_price: in_price.required()
 });
 

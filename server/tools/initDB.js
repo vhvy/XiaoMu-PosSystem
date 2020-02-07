@@ -1,11 +1,19 @@
 import AppDAO from "../src/data/AppDAO.js";
-import moduleList from "../config/moduleList.js";
+import { moduleList, posModuleList } from "../config/moduleList.js";
 import { genHash } from "../src/lib/encryptPwd.js";
 import GroupTask from "../src/tasks/groups.js";
 import UserTask from "../src/tasks/users.js";
 import config from "../src/config/index.js";
 
-const { default_admin_group_name, default_supplier } = config;
+const {
+    default_admin_group_name,
+    default_pos_group_name,
+    default_supplier,
+    default_admin_username,
+    default_admin_password,
+    default_pos_username,
+    default_pos_password
+} = config;
 
 async function init() {
     const dao = AppDAO;
@@ -65,12 +73,31 @@ async function init() {
     // 创建默认管理员群组
     // 填充默认管理员群组权限
 
-    const hash = await genHash("password");
+    const hash = await genHash(default_admin_password);
     const { id: group_id } = await dao.get(`
     SELECT id FROM groups WHERE usergroup="${default_admin_group_name}"
     ;`);
-    await UserTask.createUser("admin", hash, group_id);
+    await UserTask.createUser(default_admin_username, hash, group_id);
     // 创建默认管理员
+
+    const posAuthorityIdList = await Promise.all(posModuleList.map(async i => (
+        await dao.get(`
+        SELECT id FROM authority WHERE authority=?
+        ;`, i)
+    )));
+    // 默认收银员组权限ID列表
+
+    await GroupTask.createGroup(default_pos_group_name, posAuthorityIdList);
+    // 创建默认收银员组
+
+    const posHash = await genHash(default_pos_password);
+    const { id: pos_group_id } = await dao.get(`
+    SELECT id FROM groups WHERE usergroup=?
+    ;`, default_pos_group_name);
+
+    await UserTask.createUser(default_pos_username, posHash, pos_group_id);
+    // 创建默认收银员
+
 
 
     await dao.run(`
@@ -320,7 +347,7 @@ async function init() {
         stock_id INTEGER NOT NULL,
         commodity_id INTEGER NOT NULL,
         in_price REAL NOT NULL DEFAULT 0.0,
-        count TEXT NOT NULL,
+        count REAL DEFAULT 0,
         FOREIGN KEY (stock_id) REFERENCES stock (id),
         FOREIGN KEY (commodity_id) REFERENCES commodity (id)
     )

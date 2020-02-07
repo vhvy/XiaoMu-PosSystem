@@ -39,8 +39,56 @@ import {
     WARE_COMMODITY_SELECT,
     WARE_COMMODITY_CREATE,
     WARE_COMMODITY_DELETE,
-    WARE_COMMODITY_UPDATE
+    WARE_COMMODITY_UPDATE,
+    WARE_STOCK_ADD,
+    WARE_STOCK_CLEAN,
+    WARE_STOCK_INIT,
+    WARE_STOCK_REMOVE,
+    WARE_STOCK_SELECT
 } from "./actionType";
+
+export function setWareStockSelectAction(data) {
+    // 设置当前选中商品
+
+    return {
+        type: WARE_STOCK_SELECT,
+        data
+    };
+}
+
+export function removeWareStockAction() {
+    // 删除当前选中商品
+
+    return {
+        type: WARE_STOCK_REMOVE
+    };
+}
+
+export function initWareStockAction(list) {
+    // 填充当前订货单商品
+
+    return {
+        type: WARE_STOCK_INIT,
+        list
+    };
+}
+
+export function cleanWareStockAction() {
+    // 清理当前进货单中商品
+
+    return {
+        type: WARE_STOCK_CLEAN
+    };
+}
+
+export function addWareStockAction(data) {
+    // 向进货单中添加商品
+
+    return {
+        type: WARE_STOCK_ADD,
+        data
+    };
+}
 
 export function delWareCommodityAction(id) {
     // 删除商品

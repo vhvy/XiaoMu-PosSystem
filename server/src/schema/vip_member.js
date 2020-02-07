@@ -7,6 +7,17 @@ export const sex = Joi.string().regex(/^[男女]$/);
 export const phone = Joi.string().min(5).max(13);
 export const is_disable = Joi.boolean();
 
+
+export const setVipPointSchema = Joi.object({
+    code: code.required(),
+    point: Joi.number().min(0.01).max(10000).required(),
+    type: Joi.bool().required()
+});
+
+export const setVipPointRuleSchema = Joi.object({
+    value: Joi.number().min(1).max(100).required()
+});
+
 export const createVipMemberSchema = Joi.object({
     code: code.required(),
     name: name.required(),

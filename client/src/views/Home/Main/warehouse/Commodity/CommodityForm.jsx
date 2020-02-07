@@ -1,49 +1,16 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Drawer, Form, Input, Row, Col, Switch, Button, message } from "antd";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { CustomSelectTree } from "../../../../../components/CustomSelectTree";
 import { useAjax } from "../../../../AjaxProvider";
-import { SupplierTask } from "../../../../../tasks/supplier";
 import styled from "../../../../../styles/warehouse/commodity.scss";
 import { useRef } from "react";
 import { CommodityTasks } from "../../../../../tasks/commodity";
+import { SupplierSelect } from "../../../../../components/SupplierSelect";
 
 const selector = ({ warehouse }) => ({
     tree: warehouse.categories.tree
 });
-
-function SupplierSelect({ value = "", handleChange }) {
-
-    const [supplierList, setSupplierList] = useState([]);
-    const ajax = useAjax();
-
-    async function getSupplierList() {
-        try {
-            const { data } = await SupplierTask.getSupplier(ajax);
-            setSupplierList(data);
-            if (value === null) {
-                // 如果为null 则设置为默认供货商
-                handleChange(data[0].name);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getSupplierList();
-    }, []);
-
-    return (
-        <CustomSelectTree
-            placeholder="选择供应商"
-            tree={supplierList}
-            onChange={handleChange}
-            value={value}
-        />
-    )
-}
-
 
 export function _BaseForm({ form, selectCommodity, initState, type, closeDrawer, flushFn, updateFn }) {
 
@@ -63,7 +30,7 @@ export function _BaseForm({ form, selectCommodity, initState, type, closeDrawer,
 
     const [supplierValue, setSupplier] = useState(initState.supplier);
     // 供应商值
-    
+
     const [isDelete, setIsDelete] = useState(initState.is_delete);
     // 是否禁用
 
@@ -211,7 +178,10 @@ export function _BaseForm({ form, selectCommodity, initState, type, closeDrawer,
                     label: "供货商",
                     id: "supplier",
                     component: useMemo(() => (
-                        <SupplierSelect value={supplierValue} handleChange={setSupplierValue} />
+                        <SupplierSelect
+                            value={supplierValue} handleChange={setSupplierValue}
+                            ajax={ajax}
+                        />
                     ), [supplierValue])
                 }
             ]

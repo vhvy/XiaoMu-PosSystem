@@ -7,7 +7,7 @@ class VipMemberTask {
         const query_fields = ["code", "pinyin", "name", "phone"];
         // 根据查询字段分别进行精准和模糊匹配
 
-        const need_fields = "id, code, name, phone";
+        const need_fields = "id, code, name, phone, is_disable";
 
         for (let key of query_fields) {
             const result = await AppDAO.all(`

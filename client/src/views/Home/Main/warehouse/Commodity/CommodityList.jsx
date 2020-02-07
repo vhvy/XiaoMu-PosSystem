@@ -48,16 +48,6 @@ const columns = [
         key: "count",
         type: 1
     },
-    // {
-    //     title: "供应商",
-    //     key: "supplier_id",
-    //     type: 1
-    // },
-    // {
-    //     title: "分类",
-    //     key: "category_id",
-    //     type: 3
-    // },
     {
         title: "修改日期",
         key: "change_date",

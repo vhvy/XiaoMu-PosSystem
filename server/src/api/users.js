@@ -15,7 +15,7 @@ import { validBody } from "../middleware/validBody.js";
 
 const route = express.Router();
 
-route.post("/updatepwd", validBody(
+route.put("/updatepwd", validBody(
     updateUserPwdSchema,
     "请输入正确的用户名和密码!"
 ), async (req, res, next) => {
@@ -49,11 +49,11 @@ route.use(admin);
 route.get("/", async (req, res) => {
     // 获取所有的用户信息;
 
-    const result = await (new UsersTask).getAllUser();
+    const result = await UsersTask.getAllUser();
     res.send(result);
 });
 
-route.post("/updateusergroup", validBody(
+route.put("/updateusergroup", validBody(
     updateUserGroupSchema,
     "请输入正确的信息!"
 ), async (req, res, next) => {
@@ -135,21 +135,26 @@ route.post("/createuser", validBody(
     // 当用户组不存在时返回400
 
     const hash = await genHash(password);
-    await GroupTask.createUser(new_username, hash, queryGroupResult.id);
-    res.json({
-        message: "创建成功!",
-        username: new_username,
-        group: queryGroupResult.usergroup
-    });
+    await UsersTask.createUser(new_username, hash, queryGroupResult.id);
+
+    const result = await UsersTask.getUserDetails(new_username);
+
+    res.json(result);
 });
 
-route.post("/updateuserstatus", validBody(
+route.put("/updateuserstatus", validBody(
     updateUserStatusSchema,
     "请输入正确的信息组合!"
 ), async (req, res, next) => {
     // 设置用户是否被禁用
 
     const { username, status } = req.body;
+
+    if (username === req["jwt_value"].username) {
+        return throwError(next, "无法禁用当前登录用户!");
+    }
+
+
     const queryUserResult = await UsersTask.validateUsername(username);
     if (!queryUserResult) {
         return throwError(next, "此用户不存在!"

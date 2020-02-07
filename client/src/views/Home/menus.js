@@ -1,8 +1,10 @@
 import { Cash } from "./Main/market/Cash";
 import { Supplier } from "./Main/warehouse/Supplier";
-// import { Categories } from "./Main/warehouse/Categories";
 import { Commodity } from "./Main/warehouse/Commodity";
 import { Stock } from "./Main/warehouse/Stock";
+import { Vip } from "./Main/vip";
+import { VipSetting } from "./Main/vip/Setting";
+import { UserManage } from "./Main/users";
 
 export const menus = [
     {
@@ -87,11 +89,13 @@ export const menus = [
         children: [
             {
                 title: "会员管理",
-                path: "/home/vip/manage"
+                path: "/home/vip/manage",
+                component: Vip
             },
             {
                 title: "高级功能",
-                path: "/home/vip/highfunc"
+                path: "/home/vip/setting",
+                component: VipSetting
             }
         ]
     },
@@ -104,22 +108,17 @@ export const menus = [
         title: "用户管理",
         path: "/home/users",
         icon: "user",
-        children: [
-            {
-                title: "用户信息",
-                path: "/home/users/details"
-            },
-            {
-                title: "权限管理",
-                path: "/home/users/authority"
-            }
-        ]
+        component: UserManage
     },
     {
         title: "系统设置",
         path: "/home/system",
         icon: "setting",
         children: [
+            {
+                title: "数据导入导出",
+                path: "/home/system/data"
+            },
             {
                 title: "店铺信息",
                 path: "/home/system/store"

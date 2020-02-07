@@ -120,3 +120,18 @@ export const WARE_COMMODITY_DELETE = "WARE_COMMODITY_DELETE";
 
 export const WARE_COMMODITY_UPDATE = "WARE_COMMODITY_UPDATE";
 // 更新商品信息
+
+export const WARE_STOCK_INIT = "WARE_STOCK_INIT";
+// 设置进货单商品详情
+
+export const WARE_STOCK_ADD = "WARE_STOCK_ADD";
+// 向进货单中添加商品
+
+export const WARE_STOCK_REMOVE = "WARE_STOCK_REMOVE";
+// 从进货单中删除选中商品
+
+export const WARE_STOCK_CLEAN = "WARE_STOCK_CLEAN";
+// 清空当前订货单中商品
+
+export const WARE_STOCK_SELECT = "WARE_STOCK_SELECT";
+// 设置当前选中商品

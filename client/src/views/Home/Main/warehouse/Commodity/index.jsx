@@ -84,7 +84,6 @@ export function Commodity() {
             newCommodityIdFlag = new_data.id;
             dispatch(setCategorySelectAction([new_data.category_id + ""]));
         } else {
-            dispatch(createWareCommodityAction(new_data.id));
             getCommodity(new_data.id);
         }
     }

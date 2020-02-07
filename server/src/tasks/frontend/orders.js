@@ -137,12 +137,12 @@ class OrdersTask {
                 }
             }
 
-            if (is_delete === 1) return {
+            if (is_delete) return {
                 status: false,
                 data: `条码为${barcode}的${name}已被禁用!`
             }
 
-            if (vip_points === 1) {
+            if (vip_points) {
                 point_money_list.push(math.multiply(sale_price, count));
             }
             in_price_list.push(math.multiply(in_price, count));
@@ -168,6 +168,8 @@ class OrdersTask {
 
         const points = math.round(math.multiply(point_money_sum, scale));
         // 本单积分
+
+
 
         const profit = math.subtract(sale_price, in_price_sum);
         // 本订单利润

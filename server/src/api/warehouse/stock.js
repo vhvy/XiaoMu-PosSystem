@@ -34,8 +34,7 @@ route.get("/:query", async (req, res, next) => {
     }
     // 订货单不存在时返回400
 
-    const result = await StockTask.getStockDetails(checkStockResult.id);
-    const data = await StockTask.mapStockDetailsIDToText(result);
+    const data = await StockTask.getStockDetails(checkStockResult.id);
     res.json(data);
 });
 
@@ -62,9 +61,11 @@ route.post("/create", validBody(
 
     const { date } = await StockTask.getStock(id, "id");
 
+
     res.json({
-        date,
+        id,
         supplier_name,
+        date,
         description
     });
 });

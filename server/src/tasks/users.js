@@ -9,18 +9,21 @@ class UsersTask {
         const all_user_list = await AppDAO.all(`
         SELECT id, username, group_id, disabled FROM users
         ;`);
-        const result = await Promise.all(all_user_list
+        return await this.mapValueToText(all_user_list);
+    }
+
+    static async mapValueToText(list) {
+        return await Promise.all(list
             .map(async ({ group_id, id, username, disabled }) => {
                 const { usergroup } = await GroupTask.getGroupDetails(group_id);
                 return {
                     id,
                     username,
-                    disabled,
+                    disabled: disabled === 1,
                     group_id,
                     group: usergroup
                 }
             }));
-        return result;
     }
 
     static async createUser(
@@ -88,9 +91,9 @@ class UsersTask {
     }
 
     static async updateUserStatus(query, status) {
-        const bool = status === false ? 1 : 0;
-        // status为true时账户为启用状态，数据库内为0
-        // status为false时账户为禁用状态，数据库内为1
+        const bool = status === false ? 0 : 1;
+        // status为false时账户为启用状态，数据库内为1
+        // status为true时账户为禁用状态，数据库内为0
         if (typeof query === "number") {
             return await AppDAO.run(`
             UPDATE users SET disabled=? WHERE id=?
@@ -184,11 +187,13 @@ class UsersTask {
     }
 
     static async getUserDetails(username) {
-        return await AppDAO.get(`
+        const result = await AppDAO.get(`
         SELECT id, username, group_id, disabled FROM users WHERE username=?
-        ;`, [
-            username
-        ]);
+        ;`, username);
+
+        if (!result) return result;
+
+        return (await this.mapValueToText([result]))[0];
     }
 }
 
