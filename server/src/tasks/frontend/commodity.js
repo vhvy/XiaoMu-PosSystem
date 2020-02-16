@@ -2,29 +2,41 @@ import AppDAO from "../../data/AppDAO.js";
 import PromotionTask from "../market/promotion.js";
 
 class CommodityTask {
-    static async getCommodityDetails(query) {
-        // 根据查询条件放回商品详情
+
+    static async getCommodityDetails(query, warequeryFlag = false) {
+        // 根据查询条件返回商品详情
 
         const query_fields = ["barcode", "pinyin", "name"]
         // 分别从条码、拼音首字母缩写、名称来查询
 
-        const need_fields = "id, barcode, name, unit, size, sale_price, vip_points, is_delete";
+        const front_field_list = ["id", "barcode", "name", "unit", "size", "sale_price", "vip_points", "is_delete"];
         // 前台进行销售时需要的字段
 
+        const ware_field_list = ["id", "category_id"];
+        // 仓库进行查询时需要的字段
+
+
+        const need_fields = (warequeryFlag ? ware_field_list : front_field_list).join(", ");
+
+        const queryMethod = warequeryFlag ? "get" : "all";
+
         for (let key of query_fields) {
-            const result = await AppDAO.all(`
+            const result = await AppDAO[queryMethod](`
             SELECT ${need_fields} FROM commodity 
             WHERE ${key}=?
             ;`, query);
-            if (result.length !== 0) return result;
+
+            if (warequeryFlag && result) return [result];
+            if (!warequeryFlag && result.length !== 0) return result;
             // 精准匹配
 
-            const result_fuzzy = await AppDAO.all(`
+            const result_fuzzy = await AppDAO[queryMethod](`
             SELECT ${need_fields} FROM commodity 
             WHERE ${key} LIKE ?
             ;`, `%${query}%`);
 
-            if (result_fuzzy.length !== 0) return result_fuzzy;
+            if (warequeryFlag && result_fuzzy) return [result_fuzzy];
+            if (!warequeryFlag && result_fuzzy.length !== 0) return result_fuzzy;
             // 模糊匹配
         }
 

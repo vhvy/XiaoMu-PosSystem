@@ -100,6 +100,8 @@ class CommodityTask {
     ) {
         // 查看商品信息
 
+        if (!query) return query;
+
         const result = await AppDAO.get(`
         SELECT * FROM commodity WHERE ${type}=?
         ;`, [query]);

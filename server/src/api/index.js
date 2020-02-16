@@ -10,6 +10,7 @@ import vip from "./vip/index.js";
 import front from "./front/index.js";
 import market from "./market/index.js";
 import admin from "../middleware/admin.js";
+import data from "./data/index.js";
 
 const route = express.Router();
 
@@ -25,5 +26,7 @@ route.use("/market", market);
 
 route.use("/vip", vip);
 route.use("/warehouse", warehouse);
+
+route.use("/data", data);
 
 export default route;

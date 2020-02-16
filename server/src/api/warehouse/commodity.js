@@ -3,8 +3,7 @@ import { throwError } from "../../middleware/handleError.js";
 import { validBody } from "../../middleware/validBody.js";
 import {
     createCommoditySchema,
-    updateCommoditySchema,
-    deleteCommoditySchema
+    updateCommoditySchema
 } from "../../schema/commodity.js";
 import CommodityTask from "../../tasks/commodity.js";
 import CategoriesTask from "../../tasks/categories.js";

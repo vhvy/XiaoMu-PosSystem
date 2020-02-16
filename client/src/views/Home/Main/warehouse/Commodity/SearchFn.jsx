@@ -1,8 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import styled from "../../../../../styles/warehouse/commodity.scss";
 import { Input, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { setWareSelectCommodityAction } from "../../../../../redux/action";
 
 const { Search } = Input;
 
@@ -10,7 +8,8 @@ export function SearchFn({
     value,
     handleAdd,
     handleEdit,
-    handleDel
+    handleDel,
+    handleSearch
 }) {
 
     const {
@@ -71,7 +70,9 @@ export function SearchFn({
     return (
         <div className={styled["search"]}>
             <Search
-                placeholder="请在此输入要查询的商品" onKeyDown={handleHotKey}
+                placeholder="请在此输入要查询的商品"
+                onKeyDown={handleHotKey}
+                onSearch={handleSearch}
                 ref={inputRef}
             />
             {

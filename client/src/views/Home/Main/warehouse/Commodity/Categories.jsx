@@ -206,7 +206,7 @@ export function Categories() {
             {
                 title: "修改父分类",
                 fn: handleEditParent,
-                not_parent: true
+                // not_parent: true
             },
             {
                 title: "创建子分类",
@@ -217,6 +217,7 @@ export function Categories() {
                 title: "创建新分类",
                 fn: handleCreateCategory,
                 not_child: true,
+                not_parent: true,
                 base_tree: true
             }
         ];
@@ -308,7 +309,6 @@ export function Categories() {
 }
 
 function RightMenuModal({ status, type, hideModal, selectKey, tree, categoryList, ajax, initTree }) {
-
 
     const [newCateValue, setNewCateValue] = useState("");
     const [newChildValue, setNewChildValue] = useState({
@@ -521,6 +521,13 @@ function RightMenuModal({ status, type, hideModal, selectKey, tree, categoryList
     const isChangeName = _type === "change_name";
     const isEditParent = _type === "edit_parent";
 
+    const edit_parent_tree = useMemo(() => {
+
+
+        const notEqualName = old_parent_name === "" ? child_name : old_parent_name;
+        return tree.filter(i => i.name !== notEqualName);
+    }, [child_name]);
+
     return (
         <Modal
             visible={status}
@@ -620,7 +627,7 @@ function RightMenuModal({ status, type, hideModal, selectKey, tree, categoryList
                                 value={new_parent_name}
                                 onChange={handleNewParent}
                                 placeholder="请选择父分类"
-                                tree={tree}
+                                tree={edit_parent_tree}
                             />
                         </Form.Item>
                     )

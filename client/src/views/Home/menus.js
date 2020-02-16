@@ -5,6 +5,8 @@ import { Stock } from "./Main/warehouse/Stock";
 import { Vip } from "./Main/vip";
 import { VipSetting } from "./Main/vip/Setting";
 import { UserManage } from "./Main/users";
+import { DataExport } from "./Main/system/data/Export";
+import { DataImport } from "./Main/system/data/Import";
 
 export const menus = [
     {
@@ -111,14 +113,27 @@ export const menus = [
         component: UserManage
     },
     {
+        title: "数据管理",
+        path: "/home/data",
+        icon: "database",
+        children: [
+            {
+                title: "商品导入",
+                path: "/home/data/import",
+                component: DataImport
+            },
+            {
+                title: "数据导出",
+                path: "/home/data/export",
+                component: DataExport
+            },
+        ]
+    },
+    {
         title: "系统设置",
         path: "/home/system",
         icon: "setting",
         children: [
-            {
-                title: "数据导入导出",
-                path: "/home/system/data"
-            },
             {
                 title: "店铺信息",
                 path: "/home/system/store"

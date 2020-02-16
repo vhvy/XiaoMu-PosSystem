@@ -20,9 +20,7 @@ class CategoriesTask {
         INSERT INTO categories 
         (name) 
         VALUES (?)
-        ;`, [
-            category
-        ]);
+        ;`, category);
     }
 
     static async checkCategoryHasCommodity(category) {

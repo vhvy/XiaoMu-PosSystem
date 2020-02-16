@@ -10,7 +10,7 @@ import { CommodityTasks } from "../../../../../tasks/commodity";
 import {
     setWareSelectCommodityAction,
     createWareCommodityAction,
-    setCategorySelectAction
+    setCategorySelectAction,
 } from "../../../../../redux/action";
 import { getFormatTime } from "../../../../../tools/time";
 import config from "../../../../../config";
@@ -26,11 +26,16 @@ const selector = ({ warehouse }) => ({
 });
 
 let newCommodityIdFlag = null;
+let queryCommodityIdFlag = null;
 
 export function Commodity() {
 
     const ajax = useAjax();
     const dispatch = useDispatch();
+
+    const setSelect = useCallback((data) => {
+        dispatch(setWareSelectCommodityAction(data));
+    }, [dispatch]);
 
     const { showKeys, selectId, selectType, categoryList } = useSelector(selector, shallowEqual);
 
@@ -57,16 +62,27 @@ export function Commodity() {
 
             if (data.length === 0) return;
             // 切换需要展示的商品
-
             if (id) {
                 dispatch(createWareCommodityAction(id));
             } else if (newCommodityIdFlag) {
                 dispatch(createWareCommodityAction(newCommodityIdFlag));
+            } else if (queryCommodityIdFlag) {
+
+
+                let selectId = queryCommodityIdFlag;
+                setTimeout(() => {
+                    setSelect({
+                        selectId,
+                        selectType: "down"
+                    });
+                });
+
+                queryCommodityIdFlag = null;
             } else {
-                dispatch(setWareSelectCommodityAction({
+                setSelect({
                     selectId: data[0] && data[0].id || -1,
                     selectType: "origin"
-                }));
+                });
             }
         } catch (err) {
             console.log(err);
@@ -102,9 +118,7 @@ export function Commodity() {
         getCommodity();
     }, [showKeys]);
 
-    const setSelect = useCallback((data) => {
-        dispatch(setWareSelectCommodityAction(data));
-    }, [dispatch]);
+
 
 
     useEffect(() => {
@@ -114,6 +128,22 @@ export function Commodity() {
         });
     }, []);
 
+    async function handleSearch(_query) {
+        const query = _query.trim();
+        if (query === "") return;
+
+        try {
+            const { data } = await CommodityTasks.query(ajax, query, true);
+            if (data.length === 0) return;
+
+            const { id, category_id } = data[0];
+
+            queryCommodityIdFlag = id;
+            dispatch(setCategorySelectAction([category_id + ""]));
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const selectCommodity = useMemo(() => {
         const result = originList.find(i => i.id === selectId);
@@ -250,6 +280,7 @@ export function Commodity() {
                 handleAdd={addCommodity}
                 handleEdit={editCommodity}
                 handleDel={handleDelCommodity}
+                handleSearch={handleSearch}
             />
             <div className={styled["bottom-wrap"]}>
                 {_Categories}

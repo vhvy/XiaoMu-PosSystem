@@ -24,7 +24,9 @@ app.use((req, res, next) => {
     }
 });
 
-app.use(express.json());
+app.use(express.json({
+    limit: "50MB"
+}));
 app.use("/api", api);
 app.use("*", (req, res) => {
     res.status(400).send({
