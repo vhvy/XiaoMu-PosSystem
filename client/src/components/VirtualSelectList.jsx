@@ -2,7 +2,23 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "../styles/components/virtual-select-list.scss";
 
 
+export function useSelect() {
 
+    const [selectData, setSelectData] = useState({
+        selectId: -1,
+        selectType: "origin"
+    });
+
+    function handleClickSelect(selectId) {
+        setSelectData(s => ({
+            ...s,
+            selectId,
+            selectType: "click"
+        }));
+    }
+
+    return [selectData, setSelectData, handleClickSelect];
+}
 
 
 export function createRenderItemFn(

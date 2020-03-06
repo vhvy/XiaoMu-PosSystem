@@ -7,6 +7,9 @@ import { VipSetting } from "./Main/vip/Setting";
 import { UserManage } from "./Main/users";
 import { DataExport } from "./Main/system/data/Export";
 import { DataImport } from "./Main/system/data/Import";
+import { PromotionCommodityManage } from "./Main/promotion/Commodity";
+import { Promotion } from "./Main/promotion/Manage";
+import { Orders } from "./Main/statistics/orders";
 
 export const menus = [
     {
@@ -52,11 +55,13 @@ export const menus = [
         children: [
             {
                 title: "活动管理",
-                path: "/home/promotion/manage"
+                path: "/home/promotion/manage",
+                component: Promotion
             },
             {
                 title: "活动商品管理",
-                path: "/home/promotion/commodity"
+                path: "/home/promotion/commodity",
+                component: PromotionCommodityManage
             }
         ]
     },
@@ -102,9 +107,16 @@ export const menus = [
         ]
     },
     {
-        title: "销售统计",
+        title: "数据报表",
         path: "/home/statistics",
         icon: "pie-chart",
+        children: [
+            {
+                title: "订单明细",
+                path: "/home/statistics/orders",
+                component: Orders
+            }
+        ]
     },
     {
         title: "用户管理",

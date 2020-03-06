@@ -83,9 +83,13 @@ export function AjaxProvider({ children }) {
     }
 
     const http = {
-        get: (url) => instance.get(url),
+        get: (url, params) => instance.get(url, {
+            params
+        }),
         post: (url, data) => instance.post(url, data),
-        delete: (url) => instance.delete(url),
+        delete: (url, params) => instance.delete(url, {
+            params
+        }),
         put: (url, data) => instance.put(url, data)
     };
 

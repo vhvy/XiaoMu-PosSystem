@@ -138,17 +138,30 @@ export function HistoryOrder({ status, hideFn, list }) {
         }
     }
 
-    async function handleUndo() {
+    function handleUndo() {
         // 撤销订单
         if (!undo_flag) return;
 
-        try {
-            const { data } = await Order.undoOrder(ajax, select);
-            dispatch(undoOrderFromHistoryAction(data));
-            antdMessage.success("已成功撤销订单!");
-        } catch (error) {
-            console.log(error);
+        async function undo() {
+
+            try {
+                const { data } = await Order.undoOrder(ajax, select);
+                dispatch(undoOrderFromHistoryAction(data));
+                antdMessage.success("已成功撤销订单!");
+            } catch (error) {
+                console.log(error);
+            }
+
         }
+
+        Modal.confirm({
+            title: "确认要撤销此订单吗?",
+            okText: "撤销",
+            okButtonProps: {
+                type: "danger"
+            },
+            onOk: undo
+        })
     }
 
     function dispatchVip(data) {

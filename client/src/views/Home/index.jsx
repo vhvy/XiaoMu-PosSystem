@@ -23,7 +23,6 @@ function _Home({ showTabs }) {
         }
         setCollapsed(state => !state);
     }
-
     return (
         <Layout style={{ height: "100vh" }}>
             <TabsProvider>

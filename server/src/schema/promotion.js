@@ -1,5 +1,5 @@
 import Joi from "@hapi/joi";
-import { barcode, in_price as price } from "./commodity.js";
+import { barcode } from "./commodity.js";
 
 export const name = Joi.string().min(1).max(20);
 export const start_date = Joi.date().timestamp();
@@ -28,22 +28,25 @@ export const updatePromotionSchema = Joi.object({
     ).required()
 });
 
-export const discount = Joi.number().min(0.0).max(1);
+export const discount_value = Joi.number().min(0.0).max(100000).required();
 
 export const commoditySchema = Joi.object({
     barcode: barcode.required(),
     promotion_type: name.required(),
-    single_off_price: price,
-    single_discount: discount,
-    fill_off_price: price,
-    fill_discount: discount
+    discount_value
 });
 
-export const updatePromotionDetailsSchema = Joi.object({
+export const addCommoditySchema = Joi.object({
     promotion_name: name.required(),
-    commodity_list: Joi.array().min(1).max(200).items(commoditySchema).required()
+    commodity: commoditySchema.required()
+    // commodity_list: Joi.array().min(1).max(200).items(commoditySchema).required()
 });
 
-export const deletePromotionSchema = Joi.object({
-    name: name.required()
+export const editCommoditySchema = Joi.object({
+    promotion_name: name.required(),
+    barcode: barcode.required(),
+    update_value: {
+        promotion_type: name.required(),
+        discount_value
+    }
 });

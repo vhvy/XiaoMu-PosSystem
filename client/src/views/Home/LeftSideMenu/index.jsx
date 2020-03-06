@@ -27,7 +27,6 @@ function CustomIcon(icon, online, title) {
 
 
 export function LeftSideMenu({ collapsed }) {
-
     const { tabs, handleTab } = useTabs();
     const { currentPath } = tabs;
 

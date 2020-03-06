@@ -11,6 +11,7 @@ import front from "./front/index.js";
 import market from "./market/index.js";
 import admin from "../middleware/admin.js";
 import data from "./data/index.js";
+import statistics from "./statistics/index.js";
 
 const route = express.Router();
 
@@ -28,5 +29,7 @@ route.use("/vip", vip);
 route.use("/warehouse", warehouse);
 
 route.use("/data", data);
+
+route.use("/statistics", statistics);
 
 export default route;

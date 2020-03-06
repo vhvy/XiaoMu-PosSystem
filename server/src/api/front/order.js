@@ -16,12 +16,14 @@ route.post("/submit", validBody(
     const { pay_type, client_pay, change, origin_price, sale_price, commodity_list, vip_code, count } = req.body;
 
     const priceIsEqual = await OrdersTask.validOrderPrice(sale_price, commodity_list);
+    // 验证前台提交的商品总金额和商品数量*单价总数是否相符
 
     if (!priceIsEqual) {
         return throwError(next, "订单实际金额和商品实际金额不对应!");
     }
 
     const changeIsValid = await OrdersTask.validChange(client_pay, change, sale_price);
+    // 验证前台提交的找零金额是否正确
 
     if (!changeIsValid) {
         return throwError(next, "找零金额错误!");

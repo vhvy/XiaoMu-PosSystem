@@ -289,26 +289,20 @@ async function init() {
     await dao.run(`
     CREATE TABLE IF NOT EXISTS promotion_type (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE,
-        key TEXT NOT NULL UNIQUE
+        name TEXT NOT NULL UNIQUE
     )
     ;`);
 
-    const type_list = {
-        "单品特价": "single_off_price",
-        "单品打折": "single_discount",
-        "满几件减多少": "fill_off_price",
-        "满几件打几折": "fill_discount"
-    }
-    const type_list_keys = Object.keys(type_list);
+    const type_list = ["单品特价", "单品打折"];
 
-    await Promise.all(type_list_keys.map(async key =>
+
+    await Promise.all(type_list.map(async key =>
         await dao.run(`
         INSERT INTO promotion_type 
-        (name, key) 
-        VALUES (?, ?)
-        ;`, [key, type_list[key]])
-    ))
+        (name) 
+        VALUES (?)
+        ;`, key)
+    ));
 
     await dao.run(`
     CREATE TABLE IF NOT EXISTS promotion_details (
@@ -316,14 +310,7 @@ async function init() {
         promotion_id INTEGER NOT NULL,
         commodity_id INTEGER NOT NULL,
         promotion_type_id INTEGER NOT NULL,
-        single_off_price REAL,
-        single_discount REAL,
-        fill_off_price REAL,
-        fill_discount REAL,
-        start_date INTEGER NOT NULL,
-        end_date INTEGER NOT NULL CHECK (end_date > start_date),
-        FOREIGN KEY (start_date) REFERENCES promotion (start_date),
-        FOREIGN KEY (end_date) REFERENCES promotion (end_date),
+        discount_value REAL,
         FOREIGN KEY (commodity_id) REFERENCES commodity (id),
         FOREIGN KEY (promotion_type_id) REFERENCES promotion_type (id)
     )

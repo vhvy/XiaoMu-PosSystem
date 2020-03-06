@@ -1,6 +1,8 @@
 export class CommodityTasks {
-    static query(ajax, key, need_category = false) {
-        return ajax.get(`/api/front/commodity/${encodeURIComponent(key)}${need_category ? "?warequery=true" : ""}`);
+    static query(ajax, key, warehouse = false) {
+        return ajax.get(`/api/front/commodity/${encodeURIComponent(key)}`, {
+            warehouse
+        });
     }
 
     static queryByCategory(ajax, category) {

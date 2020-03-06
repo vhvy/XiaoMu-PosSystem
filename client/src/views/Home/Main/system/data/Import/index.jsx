@@ -164,7 +164,7 @@ export function DataImport() {
         },
         category_exist: {
             name: "category_exist",
-            value: false
+            value: true
         },
         supplier_exist: {
             name: "supplier_exist",

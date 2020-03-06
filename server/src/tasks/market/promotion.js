@@ -3,10 +3,10 @@ import CommodityTask from "../commodity.js";
 
 class PromotionTask {
 
-    static async checkHasPromotion(nowTime) {
+    static async queryPromoByNowTime(nowTime) {
         // 检查提供的时间内是否有促销活动
 
-        return await AppDAO.get(`
+        return await AppDAO.all(`
         SELECT id FROM promotion 
         WHERE (start_date < ? AND end_date > ?)
         ;`, [nowTime, nowTime]);
@@ -27,16 +27,59 @@ class PromotionTask {
     }
 
 
-    static async getPromotionDetails(query) {
-        // 获取促销活动详情
+    static async getPromotionCommodityDetailsByName(query) {
+        // 使用促销活动名称获取参加所有促销活动的商品详情
 
-        return await AppDAO.all(`
+        const list = await AppDAO.all(`
         SELECT * FROM promotion_details 
         WHERE promotion_id=(
             SELECT id FROM promotion WHERE name=?
         )
         ;`, query);
+
+        if (list.length === 0) return list;
+
+        return await this.mapPromoCommodityDetails(list);
     }
+
+    static async mapPromoCommodityDetails(data) {
+        // 将促销活动中商品详细信息map为前端需要的信息
+
+        const promotion_type_map = await this.getPromotionType();
+        async function queryFn(
+            {
+                id,
+                commodity_id,
+                promotion_type_id,
+                discount_value,
+                ...field
+            }
+        ) {
+            const { name, barcode, in_price, sale_price } = await CommodityTask.getCommodityDetails(commodity_id, "id");
+            const promotion_type_name = promotion_type_map.find(i => i.id === promotion_type_id).name;
+
+            return {
+                id,
+                barcode,
+                name,
+                in_price,
+                sale_price,
+                promotion_type_name,
+                discount_value
+            };
+        }
+
+        if (Array.isArray(data)) {
+            // 如果传入参数是数组，则进行map映射
+
+            return await Promise.all(data.map(item => queryFn(item)));
+        }
+
+
+        return await queryFn(data);
+        // 否则就直接进行映射
+    }
+
 
     static async getPromotionType(args) {
         // 获取所有促销类型
@@ -51,6 +94,15 @@ class PromotionTask {
         SELECT * FROM promotion_type 
         WHERE ${query}=?
         ;`, args);
+    }
+
+    static async checkPromoType(name) {
+        // 检查促销类型是否合法
+
+        return await AppDAO.get(`
+        SELECT * FROM promotion_type 
+        WHERE name = ?
+        ;`, name);
     }
 
     static async createPromotion(name, start_date, end_date, description) {
@@ -94,14 +146,6 @@ class PromotionTask {
         ;`, args);
     }
 
-    static async updatePromotionCommodity(id, start_date, end_date) {
-        return await AppDAO.run(`
-        UPDATE promotion_details 
-        SET start_date=?, end_date=? 
-        WHERE promotion_id=?
-        ;`, [start_date, end_date, id]);
-    }
-
     static async deletePromotion(id) {
         // 删除指定ID的促销活动
 
@@ -113,129 +157,136 @@ class PromotionTask {
         ;`, id);
     }
 
-    static async getPromotionKey(id = false) {
-        if (id) {
-            const promotion_type_key = {};
-            (await this.getPromotionType()).map(({ id, key, name }) => {
-                promotion_type_key[id] = {
-                    name,
-                    key
-                };
-            });
-            return promotion_type_key;
-        } else {
-
-            const promotion_type_key = {};
-            (await this.getPromotionType()).map(({ name, key }) => {
-                promotion_type_key[name] = key;
-            });
-
-            return promotion_type_key;
-        }
-    }
-
-    static async validCommodityList(id, list) {
+    static async checkCommodity(promotion_id, barcode, promotion_type) {
         // 验证参加促销活动的商品是否合法
 
-        const promotion_type_key = await this.getPromotionKey();
+        const commodityDetails = await CommodityTask.getCommodityDetails(barcode);
+        //  获取商品信息
 
-        let result = [];
-        let barcode_list = [];
-        for (let i of list) {
-
-            const { barcode, promotion_type } = i;
-
-            if (barcode_list.includes(barcode)) {
-                return {
-                    status: false,
-                    data: `同一个活动中单个商品只能参加一次!条码${barcode}`
-                }
+        if (!commodityDetails) {
+            // 商品不存在 
+            return {
+                status: false,
+                message: `条码为${barcode}的商品不存在!`
             }
-
-            const commodity = await CommodityTask.getCommodityDetails(barcode);
-            if (!commodity) {
-                return {
-                    status: false,
-                    data: `条码为${barcode}的商品不存在!`
-                }
-            } // 商品不存在直接返回错误🙅
-
-            const queryPromotionTypeResult = await this.getPromotionType(promotion_type);
-            if (!queryPromotionTypeResult) {
-                return {
-                    status: false,
-                    data: `促销类型'${promotion_type}'不存在!`
-                }
-            }
-
-            const field = promotion_type_key[promotion_type];
-            if (i[field] === undefined) {
-                return {
-                    status: false,
-                    data: `请为${promotion_type}输入正确的对应值!`
-                }
-            }
-
-            result.push({
-                commodity_id: commodity["id"],
-                promotion_type_id: queryPromotionTypeResult["id"],
-                value: i[field],
-                field
-            });
-            barcode_list.push(barcode);
         }
+        // 商品不存在直接返回错误🙅
+
+        const promoTypeDetails = await this.checkPromoType(promotion_type);
+
+        if (!promoTypeDetails) {
+            // 商品促销类型不存在
+            return {
+                status: false,
+                message: `促销类型'${promotion_type}'不存在!`
+            }
+        }
+
+        const commodity_id = commodityDetails.id;
+
+        const promoCommodityExist = await this.checkPromoCommodityExist(promotion_id, commodity_id);
 
         return {
             status: true,
-            data: result
+            promoCommodityExist,
+            data: {
+                commodity_id,
+                promotion_type_id: promoTypeDetails.id
+            }
         };
     }
 
-    static async clearPromotion(id) {
-        // 清空指定活动下的所有商品
 
-        return await AppDAO.run(`
-        DELETE FROM promotion_details 
-        WHERE promotion_id=?
+    static async addCommodityToPromotion(promotion_id, data) {
+        // 添加新的商品到促销活动中
+        const { commodity_id, promotion_type_id, discount_value } = data;
+
+        const { lastID: id } = await AppDAO.run(`
+            INSERT INTO promotion_details 
+            (promotion_id, commodity_id, promotion_type_id, discount_value) 
+            VALUES (?, ?, ?, ?)
+            ;`, [
+            promotion_id,
+            commodity_id,
+            promotion_type_id,
+            discount_value
+        ]);
+        // 添加商品到促销活动中
+
+        return await this.mapPromoCommodityDetails({
+            id,
+            commodity_id,
+            promotion_type_id,
+            discount_value
+        });
+
+    }
+
+    static async getPromotionCommodityById(id) {
+        // 从参加促销活动的商品数据id查询商品促销数据
+
+        return await AppDAO.get(`
+        SELECT * FROM promotion_details 
+        WHERE id = ?
         ;`, id);
     }
 
-    static async updatePromotionDetails(promotion_id, start_date, end_date, list) {
-        // 设置参加促销活动的商品信息
-
-        await this.clearPromotion(promotion_id);
-
-        return await Promise.all(list.map(async item => {
-            const { commodity_id, promotion_type_id, field, value } = item;
-
-            return await AppDAO.run(`
-            INSERT INTO promotion_details 
-            (promotion_id, commodity_id, promotion_type_id, start_date, end_date, ${field}) 
-            VALUES (?, ?, ?, ?, ?, ?)
-            ;`, [
-                promotion_id,
-                commodity_id,
-                promotion_type_id,
-                start_date,
-                end_date,
-                value
-            ]);
-        }));
+    static async getCommodityByValidPromo(promo_id_list, commodity_id_list) {
+        // 从有效活动中查找促销商品
+        
+        return await AppDAO.all(`
+        SELECT * FROM promotion_details 
+        WHERE (
+            commodity_id IN (${commodity_id_list.join(", ")}) 
+            AND 
+            promotion_id IN (${promo_id_list.join(", ")})
+        )
+        ;`);
     }
 
-    static async getPromotionCommodity(time, commodity_id) {
-        // 获取某个时间段内参加活动的商品信息
+    static async delCommodityFromPromo(promotion_id, commodity_id) {
+        const { changes } = await AppDAO.run(`
+        DELETE FROM promotion_details 
+        WHERE (promotion_id = ? AND commodity_id = ?)
+        ;`, [promotion_id, commodity_id]);
+        return changes === 1;
+    }
 
-        const result = await AppDAO.all(`
-        SELECT start_date, promotion_type_id, single_off_price, single_discount, fill_off_price, fill_discount 
-        FROM promotion_details 
-        WHERE (commodity_id = ? AND start_date < ? AND end_date > ?)
-        ;`, [commodity_id, time, time]);
+    static async checkPromoCommodityExist(promotion_id, commodity_id) {
+        // 检查促销活动是否含有某商品
 
-        if (result.length === 0) return undefined;
-        result.sort(({ start_date }, { start_date: start_date2 }) => start_date - start_date2);
+        return await AppDAO.get(`
+        SELECT id FROM promotion_details 
+        WHERE (promotion_id = ? AND commodity_id = ?)
+        ;`, [promotion_id, commodity_id]);
+    }
 
-        return result[0];
+    static async updatePromoCommodity(promotion_id, commodity_id, promotion_type_id, discount_value, id) {
+        // 更新促销活动中某商品信息
+
+        const result = await AppDAO.run(`
+        UPDATE promotion_details 
+        SET promotion_type_id=?, discount_value=? 
+        WHERE (
+            promotion_id=? 
+            AND 
+            commodity_id=?
+        )
+        `, [
+            promotion_type_id,
+            discount_value,
+            promotion_id,
+            commodity_id
+        ]);
+
+        const base = await this.mapPromoCommodityDetails({
+            id,
+            commodity_id,
+            promotion_type_id,
+            discount_value
+        });
+
+        return base;
     }
 }
 

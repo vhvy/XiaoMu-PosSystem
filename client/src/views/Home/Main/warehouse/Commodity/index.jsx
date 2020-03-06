@@ -33,6 +33,8 @@ export function Commodity() {
     const ajax = useAjax();
     const dispatch = useDispatch();
 
+    const [spinStatus, setSpinStatus] = useState(false);
+
     const setSelect = useCallback((data) => {
         dispatch(setWareSelectCommodityAction(data));
     }, [dispatch]);
@@ -84,6 +86,8 @@ export function Commodity() {
                     selectType: "origin"
                 });
             }
+
+            setSpinStatus(false);
         } catch (err) {
             console.log(err);
         }
@@ -100,6 +104,7 @@ export function Commodity() {
             newCommodityIdFlag = new_data.id;
             dispatch(setCategorySelectAction([new_data.category_id + ""]));
         } else {
+            setSpinStatus(true);
             getCommodity(new_data.id);
         }
     }
@@ -115,6 +120,7 @@ export function Commodity() {
 
     useEffect(() => {
         if (showKeys.length === 0) return;
+        setSpinStatus(true);
         getCommodity();
     }, [showKeys]);
 
@@ -289,6 +295,7 @@ export function Commodity() {
                     setSelect={setSelect}
                     selectId={selectId}
                     selectType={selectType}
+                    spinStatus={spinStatus}
                 />
             </div>
             <CommodityForm

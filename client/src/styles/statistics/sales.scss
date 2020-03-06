@@ -1,0 +1,71 @@
+@import "../global.scss";
+
+.sales-wrap {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .sales-fn-wrap {
+    @extend .base-card;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    .select-wrap {
+      width: 130px;
+      margin: 0 10px;
+    }
+
+    .search-wrap {
+      width: 250px;
+
+      :global(.ant-input) {
+        text-transform: uppercase;
+      }
+    }
+
+    .navigation {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+
+      .btn-wrap {
+        margin: 0 10px;
+      }
+
+      .count {
+        margin: 0;
+      }
+    }
+  }
+
+  .sales-list-wrap {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+
+    .order-list,
+    .order-details {
+      flex: 0 1 50%;
+    }
+
+    .order-list {
+      margin-bottom: 5px;
+      position: relative;
+      .order-list-cont {
+        // container
+        height: 100%;
+      }
+    }
+
+    .order-details {
+      margin-top: 5px;
+      position: relative;
+      .order-commodity-list {
+        height: 100%;
+      }
+    }
+  }
+}

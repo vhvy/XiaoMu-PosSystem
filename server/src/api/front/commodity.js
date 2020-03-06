@@ -6,9 +6,15 @@ const route = express.Router();
 
 route.get("/:query", async (req, res, next) => {
 
-    const { warequery } = req.query;
-    const isWareQueryFlag = warequery && warequery === "true";
+    const { warehouse } = req.query;
+    const isWareQueryFlag = warehouse && warehouse === "true";
     // 是否仓库管理界面查询的flag
+
+    const { isAdmin } = req["jwt_value"];
+
+    if (isWareQueryFlag && !isAdmin) {
+        return throwError(next, "非管理员组用户无法执行此操作!");
+    }
 
     const { query } = req.params;
 

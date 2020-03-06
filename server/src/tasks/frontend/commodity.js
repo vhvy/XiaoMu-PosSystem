@@ -1,5 +1,6 @@
 import AppDAO from "../../data/AppDAO.js";
 import PromotionTask from "../market/promotion.js";
+import { math } from "../../lib/mathc.js";
 
 class CommodityTask {
 
@@ -12,7 +13,7 @@ class CommodityTask {
         const front_field_list = ["id", "barcode", "name", "unit", "size", "sale_price", "vip_points", "is_delete"];
         // 前台进行销售时需要的字段
 
-        const ware_field_list = ["id", "category_id"];
+        const ware_field_list = ["id", "barcode", "category_id", "name", "in_price", "sale_price", "is_delete"];
         // 仓库进行查询时需要的字段
 
 
@@ -43,12 +44,21 @@ class CommodityTask {
         return [];
     }
 
+
+
     static async parseCommodityList(list) {
-        // 检查商品是否有参加促销活动的
+        // 将商品属性转换为所需的格式
 
         const time = new Date().getTime();
-        const result = await PromotionTask.checkHasPromotion(time);
-        if (!result) {
+        // 当前时间戳
+
+        const promo_list = await PromotionTask.queryPromoByNowTime(time);
+        // 当前之间内是否有促销活动
+
+
+        if (!promo_list) {
+            // 没有促销活动，直接进行属性map
+
             return list.map(({ sale_price, vip_points, is_delete, ...keys }) => {
                 return {
                     ...keys,
@@ -60,12 +70,24 @@ class CommodityTask {
                 }
             });
         } else {
-            // { barcode, name, unit, size, sale_price, vip_points, is_delete }
-            return await Promise.all(list.map(async ({ id, barcode, sale_price, vip_points, is_delete, ...keys }) => {
+            // 有促销活动，按照促销活动规则进行优惠
 
-                const result = await PromotionTask.getPromotionCommodity(time, id);
+            const promo_type_list = await PromotionTask.getPromotionType();
 
-                if (!result) {
+            const promo_id_list = promo_list.map(({ id }) => id);
+
+            const commodity_id_list = list.map(({ id }) => id);
+
+            const promo_commodity_list = await PromotionTask.getCommodityByValidPromo(promo_id_list, commodity_id_list);
+            // 参加活动的商品信息
+
+            return list.map(({ id, barcode, sale_price, vip_points, is_delete, ...keys }) => {
+                const values = promo_commodity_list.find(({ commodity_id }) => commodity_id === id);
+                // 对应的促销信息
+
+                if (!values) {
+                    // 此商品没有促销信息时直接convert
+
                     return {
                         ...keys,
                         id,
@@ -75,38 +97,91 @@ class CommodityTask {
                         status: "销售",
                         origin_price: sale_price,
                         sale_price
+                    };
+                } else {
+                    // 此商品拥有促销信息
+
+                    const {
+                        promotion_type_id,
+                        discount_value
+                    } = values;
+
+                    const { name } = promo_type_list.find(i => i.id === promotion_type_id);
+
+                    let price = 0;
+                    // 促销活动之后的售价
+
+                    switch (name) {
+                        case "单品特价":
+                            price = discount_value;
+                            break;
+                        case "单品打折":
+                            price = math.multiply(sale_price, discount_value);
+                            break;
+                        default:
+                            price = sale_price;
+                            break;
                     }
-                }
-                const { promotion_type_id, ...args } = result;
-                const { key } = await PromotionTask.getPromotionType(promotion_type_id);
-                const value = args[key];
-                let price = 0;
 
-                switch (key) {
-                    case "single_discount":
-                        price = sale_price * value;
-                        break;
-                    case "single_off_price":
-                        price = value;
-                        break;
-                    default:
-                        price = sale_price;
-                        break;
+                    return {
+                        ...keys,
+                        id,
+                        barcode,
+                        vip_points: vip_points === 1,
+                        is_delete: is_delete === 1,
+                        status: "促销",
+                        origin_price: sale_price,
+                        sale_price: price
+                    };
                 }
 
-                return {
-                    ...keys,
-                    id,
-                    barcode,
-                    vip_points: vip_points === 1,
-                    is_delete: is_delete === 1,
-                    status: "促销",
-                    promotion_type: key,
-                    value,
-                    origin_price: sale_price,
-                    sale_price: price
-                }
-            }));
+            });
+
+            // return await Promise.all(list.map(async ({ id, barcode, sale_price, vip_points, is_delete, ...keys }) => {
+
+            //     const result = await PromotionTask.getCommodityByValidPromo(time, id);
+
+            //     if (!result) {
+            //         return {
+            //             ...keys,
+            //             id,
+            //             barcode,
+            //             vip_points: vip_points === 1,
+            //             is_delete: is_delete === 1,
+            //             status: "销售",
+            //             origin_price: sale_price,
+            //             sale_price
+            //         }
+            //     }
+            //     const { promotion_type_id, ...args } = result;
+            //     const { key } = await PromotionTask.getPromotionType(promotion_type_id);
+            //     const value = args[key];
+            //     let price = 0;
+
+            //     switch (key) {
+            //         case "single_discount":
+            //             price = sale_price * value;
+            //             break;
+            //         case "single_off_price":
+            //             price = value;
+            //             break;
+            //         default:
+            //             price = sale_price;
+            //             break;
+            //     }
+
+            //     return {
+            //         ...keys,
+            //         id,
+            //         barcode,
+            //         vip_points: vip_points === 1,
+            //         is_delete: is_delete === 1,
+            //         status: "促销",
+            //         promotion_type: key,
+            //         origin_price: sale_price,
+            //         sale_price: price
+            //     }
+            // }));
         }
     }
 }

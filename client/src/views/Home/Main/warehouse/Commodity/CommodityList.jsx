@@ -6,6 +6,7 @@ import {
     VirtualSelectListHeader,
     createRenderItemFn
 } from "../../../../../components/VirtualSelectList";
+import { LoadingBox } from "../../../../../components/LoadingBox";
 
 const columns = [
     {
@@ -72,7 +73,13 @@ const footerColumns = (length) => ([
     }
 ]);
 
-export function CommodityList({ commodityList, setSelect, selectId, selectType }) {
+export function CommodityList({
+    commodityList,
+    setSelect,
+    selectId,
+    selectType,
+    spinStatus = true
+}) {
 
     function handleClickSelect(selectId) {
         setSelect({
@@ -101,6 +108,9 @@ export function CommodityList({ commodityList, setSelect, selectId, selectType }
 
     return (
         <div className={styled["commodity-list-wrap"]}>
+            <LoadingBox
+                status={spinStatus}
+            />
             <VirtualSelectList
                 wrapCss={styled["list-wrap"]}
                 header={Header}

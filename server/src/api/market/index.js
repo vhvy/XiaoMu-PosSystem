@@ -1,5 +1,5 @@
 import express from "express";
-import promotion from "./promotion.js";
+import promotion from "./promotion/index.js";
 
 const route = express.Router();
 

@@ -391,9 +391,7 @@
 }
 说明: {
         "单品特价": "single_off_price",
-        "单品打折": "single_discount",
-        "满几件减多少": "fill_off_price",
-        "满几件打几折": "fill_discount"
+        "单品打折": "single_discount"
     }
 ```
 

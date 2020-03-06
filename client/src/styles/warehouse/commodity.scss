@@ -48,15 +48,11 @@
     .commodity-list-wrap {
       flex: 1;
       margin-left: $cate-left-width + 10px;
+      position: relative;
       .list-wrap {
         height: 100%;
       }
-      // position: absolute;
-      // top: 0;
-      // left: 270px;
-      // right: 0;
-      // bottom: 0;
-      // overflow: auto;
+      
     }
     .right-menu {
       @extend .base-card;

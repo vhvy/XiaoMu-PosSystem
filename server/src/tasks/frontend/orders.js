@@ -2,6 +2,7 @@ import AppDAO from "../../data/AppDAO.js";
 import { math } from "../../lib/mathc.js";
 import { getNightTimeStrap } from "../../lib/time.js";
 import CommodityTask from "../commodity.js";
+import FrontCommodityTask from "../frontend/commodity.js";
 import UserTask from "../users.js";
 import VipTask from "../vip.js";
 import { validateAdmin } from "../../middleware/admin.js";
@@ -102,35 +103,49 @@ class OrdersTask {
     }
 
     static async handleOrder({
-        origin_price,
-        sale_price,
-        commodity_list,
-        vip_code,
-        username,
         pay_type,
         client_pay,
         change,
+        origin_price,
+        sale_price,
+        commodity_list,
+        username,
+        vip_code,
         count
     }) {
         // 保存订单信息
 
 
-        let in_price_list = [], point_money_list = [];
+        let in_price_list = [];
+        // 商品进价列表
+
+        let point_money_list = [];
+        // 可以积分的金额列表
+
         let commodity_list_details = [];
-        // 保存订单所需的数据
+        // 订单所需商品数据
 
         const isAdmin = await validateAdmin(username);
+        // 是否是管理员，只有管理员可以修改商品价格
 
-        for (let { barcode, sale_price, count, ...args } of commodity_list) {
+        for (let item of commodity_list) {
+
+            const { barcode, sale_price, count, ...args } = item;
+
             const result = await CommodityTask.getCommodityDetails(barcode);
             if (!result) return {
                 status: false,
                 data: `条码为${barcode}的商品不存在!`
             }
 
-            const { id, vip_points, in_price, name, is_delete, sale_price: _sale_price } = result;
+            const { id, vip_points, in_price, name, is_delete } = result;
 
             if (!isAdmin) {
+                // 如果不是管理员，需要验证售价是否正确
+
+                const [{ sale_price: _sale_price }] = await FrontCommodityTask.parseCommodityList([item]);
+                // 获得商品促销价格
+
                 if (sale_price !== _sale_price) return {
                     static: false,
                     data: `条码为${barcode}的商品价格不正确!`
@@ -138,14 +153,20 @@ class OrdersTask {
             }
 
             if (is_delete) return {
+                // 如果商品已被禁用就直接返回错误
+
                 status: false,
                 data: `条码为${barcode}的${name}已被禁用!`
             }
 
             if (vip_points) {
+                // 如果商品可以积分，则将此商品金额填充进相应数组内，供后续计算积分
+
                 point_money_list.push(math.multiply(sale_price, count));
             }
+
             in_price_list.push(math.multiply(in_price, count));
+            // 将进价列表填入相应数组内
 
             commodity_list_details.push({
                 commodity_id: id,
@@ -212,6 +233,22 @@ class OrdersTask {
         }
     }
 
+    static async getOrderCommodityById(order_id, check_date, need_pinyin = false) {
+        // 查询订单商品信息
+
+        return await Promise.all((await this.getOrderDetails(order_id))
+            .map(async ({ id, order_id, commodity_id, ...args }) => {
+                const { name, pinyin } = await CommodityTask.getCommodityDetailsByTimestamp(check_date, commodity_id, "id");
+                let values = {
+                    ...args,
+                    id,
+                    name
+                };
+                need_pinyin && (values["pinyin"] = pinyin);
+                return values;
+            }));
+    }
+
     static async getOrderAllDetails(order_id) {
         // 获取订单的所有信息
 
@@ -219,14 +256,8 @@ class OrdersTask {
 
         if (!result) return undefined;
 
-        const commodity_data = await Promise.all((await this.getOrderDetails(order_id))
-            .map(async ({ id, order_id, commodity_id, ...args }) => {
-                const { name } = await CommodityTask.getCommodityDetailsByTimestamp(result.check_date, commodity_id, "id");
-                return {
-                    name,
-                    ...args
-                }
-            }));
+        const commodity_data = await this.getOrderCommodityById(order_id, result.check_date);
+
         return {
             ...result,
             commodity_list: commodity_data
@@ -314,6 +345,14 @@ class OrdersTask {
         ;`, args);
     }
 
+    static async queryOrderById(order_id) {
+        // 使用订单 id查询订单详细信息
+        return await AppDAO.get(`
+        SELECT * FROM orders 
+        WHERE order_id=?
+        ;`, order_id);
+    }
+
     static async getTodayOrders(username, order_id) {
         // 当传入username获取今日指定用户所操作的订单
         // 当传入order_id时获取指定订单的信息
@@ -370,6 +409,19 @@ class OrdersTask {
         vip_code=?, current_point=? 
         WHERE order_id=?
         ;`, [vip_code, vip_sum, order_id]);
+    }
+
+    static async getOrdersByTimerange(start_time, end_time) {
+        // 查询某个时间范围内的所有订单
+
+        return await AppDAO.all(`
+        SELECT * FROM orders 
+        WHERE (
+            check_date >= ? 
+            AND 
+            check_date <= ?
+        )
+        ;`, [start_time, end_time]);
     }
 }
 

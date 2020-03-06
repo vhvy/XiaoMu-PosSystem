@@ -1,11 +1,14 @@
 import express from "express";
-import PromotionTask from "../../tasks/market/promotion.js";
-import { validBody } from "../../middleware/validBody.js";
-import { createPromotionSchema, updatePromotionSchema, updatePromotionDetailsSchema, deletePromotionSchema } from "../../schema/promotion.js";
-import { throwError } from "../../middleware/handleError.js";
-import CommodityTask from "../../tasks/commodity.js";
+import PromotionTask from "../../../tasks/market/promotion.js";
+import { validBody } from "../../../middleware/validBody.js";
+import { createPromotionSchema, updatePromotionSchema, } from "../../../schema/promotion.js";
+import { throwError } from "../../../middleware/handleError.js";
+import CommodityTask from "../../../tasks/commodity.js";
+import promo_commodity from "./commodity.js";
 
 const route = express.Router();
+
+route.use("/commodity", promo_commodity);
 
 route.get("/", async (req, res) => {
     // 获取所有促销活动
@@ -40,10 +43,14 @@ route.post("/create", validBody(
     }
     // 当活动名称已存在时返回400
 
-    await PromotionTask.createPromotion(name, start_date, end_date, description);
+    const { lastID } = await PromotionTask.createPromotion(name, start_date, end_date, description);
 
     res.json({
-        name, start_date, end_date, description
+        id: lastID,
+        name,
+        start_date,
+        end_date,
+        description
     });
 });
 
@@ -97,13 +104,11 @@ route.put("/update", validBody(
     });
 });
 
-route.delete("/delete", validBody(
-    deletePromotionSchema,
-    "请输入正确的促销活动名称!"
-), async (req, res, next) => {
+route.delete("/delete/:name", async (req, res, next) => {
     // 删除促销活动
 
-    const { name } = req.body;
+    const { name } = req.params;
+
     const queryPromotionResult = await PromotionTask.getPromotion(name);
     if (!queryPromotionResult) {
         return throwError(next, "此活动不存在!");
@@ -118,7 +123,7 @@ route.delete("/delete", validBody(
 });
 
 route.post("/details", validBody(
-    updatePromotionDetailsSchema,
+    createPromotionSchema,
     "请输入正确的促销活动详情!"
 ), async (req, res, next) => {
     // 设置参加促销活动的商品详情
@@ -131,57 +136,17 @@ route.post("/details", validBody(
     }
     // 当促销活动不存在时返回400
 
-    const { id, start_date, end_date } = queryPromotionResult;
+    const { id } = queryPromotionResult;
     const { status, data } = await PromotionTask.validCommodityList(id, commodity_list);
     if (!status) {
         return throwError(next, data);
     }
     // 检查参加促销的商品是否合法
 
-    await PromotionTask.updatePromotionDetails(id, start_date, end_date, data);
+    await PromotionTask.updatePromotionDetails(id, data);
 
     res.json({
         message: "促销活动商品更新完成!"
-    });
-});
-
-
-route.get("/details/:query", async (req, res, next) => {
-    // 获取促销活动详情
-
-    const { query } = req.params;
-
-    const queryPromotionResult = await PromotionTask.getPromotion(query);
-    if (!queryPromotionResult) {
-        return throwError(next, "此活动不存在!");
-    }
-
-    let data = [];
-    const list = await PromotionTask.getPromotionDetails(query);
-    const { name: promotion_name } = queryPromotionResult;
-
-    if (list.length !== 0) {
-        const promotion_type_key = await PromotionTask.getPromotionKey(true);
-        data = await Promise.all(
-            list.map(
-                async ({ id, commodity_id, promotion_type_id, ...args }) => {
-                    const { name: commodity_name, barcode } = await CommodityTask.getCommodityDetails(commodity_id, "id");
-                    const { key, name: promotion_type_name } = promotion_type_key[promotion_type_id];
-
-                    return {
-                        id,
-                        barcode,
-                        commodity_name,
-                        promotion_type_name,
-                        [key]: args[key]
-                    }
-                }
-            )
-        );
-    }
-    res.json({
-        promotion_name,
-        data
     });
 });
 

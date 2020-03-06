@@ -20,5 +20,14 @@ export const mathc = {
     round: (a, bit = 2) => {
         return math.round(a, bit);
     },
-    abs: (n) => math.abs(n)
+    abs: (n) => math.abs(n),
+    formatRate: function (num, bit = 2) {
+        const str = this.multiply(num, 100) + "";
+        const dotIndex = str.indexOf(".");
+        if (num >= 1 || dotIndex === -1) {
+            return str + "%";
+        } else {
+            return str.slice(0, dotIndex + bit + 1) + "%"
+        }
+    }
 }
