@@ -20,4 +20,15 @@ export class StatisticsTasks {
 
         return ajax.get("/api/statistics/orders/query", params);
     }
+
+    static queryCommoditySalesProportionByTime(ajax, timerange, type) {
+        // 查询某个时间段里商品销售占比情况
+
+        const [start_time, end_time] = timerange;
+        return ajax.get("/api/statistics/proportion", {
+            start_time,
+            end_time,
+            type: type.join("$")
+        });
+    }
 }

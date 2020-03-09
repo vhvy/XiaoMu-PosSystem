@@ -10,6 +10,7 @@ import { DataImport } from "./Main/system/data/Import";
 import { PromotionCommodityManage } from "./Main/promotion/Commodity";
 import { Promotion } from "./Main/promotion/Manage";
 import { Orders } from "./Main/statistics/orders";
+import { Proportion } from "./Main/statistics/proportion";
 
 export const menus = [
     {
@@ -107,7 +108,7 @@ export const menus = [
         ]
     },
     {
-        title: "数据报表",
+        title: "数据统计",
         path: "/home/statistics",
         icon: "pie-chart",
         children: [
@@ -115,6 +116,11 @@ export const menus = [
                 title: "订单明细",
                 path: "/home/statistics/orders",
                 component: Orders
+            },
+            {
+                title: "占比分析",
+                path: "/home/statistics/proportion",
+                component: Proportion
             }
         ]
     },

@@ -11,6 +11,12 @@
     display: flex;
     flex-wrap: nowrap;
     overflow: hidden;
+
+    .select-type-wrap {
+      width: 200px;
+      margin: 0 10px;
+    }
+
     .select-wrap {
       width: 130px;
       margin: 0 10px;
@@ -38,6 +44,18 @@
       .count {
         margin: 0;
       }
+    }
+  }
+
+  .sales-proportion-body {
+    @extend .base-card;
+    flex: 1;
+    position: relative;
+
+
+    .echart-pie-wrap {
+      height: 100%;
+      width: 100%;
     }
   }
 

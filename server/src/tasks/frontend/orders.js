@@ -411,15 +411,21 @@ class OrdersTask {
         ;`, [vip_code, vip_sum, order_id]);
     }
 
-    static async getOrdersByTimerange(start_time, end_time) {
+    static async getOrdersByTimerange(start_time, end_time, not_undo = false) {
         // 查询某个时间范围内的所有订单
+        // not_undo，仅查询未撤销订单
+
+        const whereKey = [
+            "check_date >= ?",
+            "check_date <= ?"
+        ];
+
+        not_undo && whereKey.push("is_undo = 0");
 
         return await AppDAO.all(`
         SELECT * FROM orders 
         WHERE (
-            check_date >= ? 
-            AND 
-            check_date <= ?
+            ${whereKey.join(" AND ")}
         )
         ;`, [start_time, end_time]);
     }

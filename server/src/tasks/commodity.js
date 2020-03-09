@@ -97,7 +97,11 @@ class CommodityTask {
     static async getCommodityDetails(
         query,
         type = "barcode",
+        not_need_map = false
     ) {
+        // not_need_map
+        // 不需要转换商品信息
+
         // 查看商品信息
 
         if (!query) return query;
@@ -106,7 +110,7 @@ class CommodityTask {
         SELECT * FROM commodity WHERE ${type}=?
         ;`, [query]);
 
-        if (!result) return result;
+        if (!result || not_need_map) return result;
 
         return (await this.mapCommdityCateSupp([result]))[0];
     }

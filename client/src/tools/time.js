@@ -1,4 +1,7 @@
-export function getFormatTime(timestamp) {
+export function getFormatTime(_timestamp) {
+
+    const timestamp = (typeof _timestamp === "number") ? _timestamp : Number(_timestamp);
+
     const time = timestamp ? new Date(timestamp) : new Date();
     const year = time.getFullYear();
     const now_month = time.getMonth() + 1;
