@@ -12,6 +12,11 @@
     flex-wrap: nowrap;
     overflow: hidden;
 
+    .trends-type-wrap {
+      width: 85px;
+      margin: 0 10px;
+    }
+
     .select-type-wrap {
       width: 200px;
       margin: 0 10px;
@@ -52,8 +57,7 @@
     flex: 1;
     position: relative;
 
-
-    .echart-pie-wrap {
+    .echart-wrap {
       height: 100%;
       width: 100%;
     }

@@ -22,11 +22,16 @@ class CommodityTask {
         })));
     }
 
-    static async getAllCommodityDetails() {
+    static async getAllCommodityDetails(needMap = true) {
         const result = await AppDAO.all(`
         SELECT * FROM commodity 
         ;`);
-        return await this.mapCommdityCateSupp(result);
+
+        if (needMap) {
+            return await this.mapCommdityCateSupp(result);
+        }
+
+        return result;
     }
 
     static async getCommodityByCategory(category) {

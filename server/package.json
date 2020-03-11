@@ -7,6 +7,7 @@
   "scripts": {
     "dev:server": "cross-env NODE_ENV=development JWT_KEY=xiaomupossystem nodemon --experimental-modules src/index.js",
     "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
+    "dev:fakedb": "cross-env NODE_ENV=development node tools/fakeData.js",
     "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js"
   },
   "author": "vhvy",
@@ -17,6 +18,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mathjs": "^6.2.5",
+    "moment": "^2.24.0",
     "pinyin": "^2.9.0",
     "sqlite3": "^4.1.0"
   },

@@ -16,6 +16,10 @@ function TimeModal({
 
     const btn_list = [
         {
+            label: "前一天",
+            start_time: () => moment().subtract(1, "day").startOf("day")
+        },
+        {
             label: "今天",
             start_time: () => moment().startOf("day")
         },
@@ -97,8 +101,10 @@ function TimeModal({
 
 function createInitTime() {
     // 初始时间值，今天00:00至23:59
-    const start_time = moment().startOf("day");
-    const end_time = moment().endOf("day");
+    // const start_time = moment().startOf("day");
+    // const end_time = moment().endOf("day");
+    const start_time = moment(1559807190497);
+    const end_time = moment(1583808190497);
     return [start_time, end_time];
 }
 

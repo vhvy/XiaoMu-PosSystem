@@ -25,3 +25,9 @@ export const proportionSchema = Joi.object({
     end_time: timeStampSchema,
     type: proportionTypeSchema
 });
+
+export const salesTrendsSchema = Joi.object({
+    start_time: timeStampSchema,
+    end_time: timeStampSchema.invalid(Joi.ref("start_time")).min(Joi.ref("start_time")),
+    type: proportionTypeSchema
+});

@@ -3,7 +3,7 @@ import styled from "../styles/components/loading-box.scss";
 import { Spin } from "antd";
 
 export function LoadingBox({
-    status = false,
+    status = true,
     tip = "加载中，请稍候...",
     spinProps = {},
     wrapCss

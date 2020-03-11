@@ -31,4 +31,16 @@ export class StatisticsTasks {
             type: type.join("$")
         });
     }
+
+    static querySalesTrends(ajax, timerange, type) {
+        // 查询某个时间段里门店销售趋势
+
+        const [start_time, end_time] = timerange;
+
+        return ajax.get("/api/statistics/trends", {
+            start_time,
+            end_time,
+            type
+        });
+    }
 }

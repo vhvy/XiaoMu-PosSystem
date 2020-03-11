@@ -11,6 +11,7 @@ import { PromotionCommodityManage } from "./Main/promotion/Commodity";
 import { Promotion } from "./Main/promotion/Manage";
 import { Orders } from "./Main/statistics/orders";
 import { Proportion } from "./Main/statistics/proportion";
+import { Trends } from "./Main/statistics/trends";
 
 export const menus = [
     {
@@ -121,6 +122,11 @@ export const menus = [
                 title: "占比分析",
                 path: "/home/statistics/proportion",
                 component: Proportion
+            },
+            {
+                title: "趋势分析",
+                path: "/home/statistics/trends",
+                component: Trends
             }
         ]
     },

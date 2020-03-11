@@ -5,6 +5,7 @@ import CommodityTask from "./commodity.js";
 import CategoryTask from "./categories.js";
 import SupplierTask from "./suppliers.js";
 import { math } from "../lib/mathc.js";
+import { getFormatTime, createTimerangeKey } from "../lib/time.js";
 
 export class StatisticsTasks {
     static async queryOrdersByTime(start_time, end_time) {
@@ -420,6 +421,73 @@ export class StatisticsTasks {
         return {
             status: true,
             data: result
+        };
+    }
+
+    static async getSalesTrends(query) {
+        // 查询门店销售趋势
+        const { start_time, end_time, type } = query;
+
+        const config = [
+            {
+                type: "hour",
+                maxTime: 24 * 60 * 60 * 1000
+            },
+            {
+                type: "day",
+                maxTime: 366 * 24 * 60 * 60 * 1000
+            },
+            {
+                type: "month",
+                maxTime: 12 * 31 * 24 * 60 * 60 * 1000
+            }
+        ];
+
+        const handleItem = config.find(i => i.type === type);
+
+        if (!handleItem) {
+            return {
+                status: false,
+                message: `查询类型(${type})不存在`
+            }
+        }
+
+        const { maxTime } = handleItem;
+
+        const [_start_time, _end_time, timeKeyList] = createTimerangeKey(start_time, end_time, maxTime, type);
+
+        const order_list = await OrdersTasks.getOrdersByTimerange(_start_time, _end_time, true);
+
+        let result = {};
+
+        for (let { check_date, ...args } of order_list) {
+            const timeKey = getFormatTime(check_date, type);
+            !result[timeKey] && (result[timeKey] = {});
+            const keys = ["sale_price", "in_price", "profit", "count"];
+
+            for (let key of keys) {
+                let vl = result[timeKey];
+
+                vl[key] = vl[key] === undefined ? args[key] : math.add(vl[key], args[key]);
+            }
+        }
+
+
+        let data = [];
+
+        for (let key of timeKeyList) {
+            const value = result[key];
+            data.push({
+                time: key,
+                ...value
+            });
+        }
+
+
+
+        return {
+            status: true,
+            data
         };
     }
 }
