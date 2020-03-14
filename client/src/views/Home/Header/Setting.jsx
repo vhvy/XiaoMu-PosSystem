@@ -49,7 +49,7 @@ function _SettingDrawer({
             onClose={hide}
         >
             <CustomSwitch label="启用多标签" status={showTabs} toggleFn={toggleMulitTabs} />
-            <CustomSwitch label="启用热键列表" status={showCashHotKey} toggleFn={toggleCashHotKeyStatus} />
+            <CustomSwitch label="启用收银热键列表" status={showCashHotKey} toggleFn={toggleCashHotKeyStatus} />
         </Drawer>
     );
 }
