@@ -101,10 +101,8 @@ function TimeModal({
 
 function createInitTime() {
     // 初始时间值，今天00:00至23:59
-    // const start_time = moment().startOf("day");
-    // const end_time = moment().endOf("day");
-    const start_time = moment(1559807190497);
-    const end_time = moment(1583808190497);
+    const start_time = moment().startOf("day");
+    const end_time = moment().endOf("day");
     return [start_time, end_time];
 }
 

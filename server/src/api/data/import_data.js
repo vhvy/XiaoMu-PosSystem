@@ -1,5 +1,4 @@
 import express from "express";
-import { throwError } from "../../middleware/handleError.js";
 import { validBody } from "../../middleware/validBody.js";
 import { importCommpditySchema } from "../../schema/data.js";
 import ImportCommodityManage from "../../tasks/import_data/commodity.js";

@@ -429,6 +429,22 @@ class OrdersTask {
         )
         ;`, [start_time, end_time]);
     }
+
+    static async getAllOrder() {
+        // 获取所有订单
+
+        return await AppDAO.all(`
+        SELECT * FROM orders
+        ;`);
+    }
+
+    static async getAllOrderCommodity() {
+        // 获取所有订单商品
+
+        return await AppDAO.all(`
+        SELECT * FROM order_details
+        ;`);
+    }
 }
 
 export default OrdersTask;

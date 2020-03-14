@@ -55,7 +55,7 @@ export function UploadToServer({
                     tip="正在导入数据，请稍候..."
                     size="large"
                     indicator={
-                        <Icon type="loading" />
+                        <Icon type="loading" style={{ fontSize: 48 }} spin />
                     }
                 />
             )

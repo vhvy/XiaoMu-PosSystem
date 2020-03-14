@@ -30,8 +30,11 @@ class VipTasks {
     static async mapVipIdToDetails(list) {
         // 将会员类型id等信息转换为前端需要的字段
 
+        const vip_type_list = await this.getAllVipType();
+
+
         return await Promise.all(list.map(async item => {
-            const { name: vip_type } = await VipTasks.getVipTypeDetails(item["type_id"]);
+            const { name: vip_type } = vip_type_list.find(i => i.id === item["type_id"]);
             return Object.assign({}, item, {
                 vip_type,
                 is_disable: item.is_disable === 1
@@ -39,14 +42,28 @@ class VipTasks {
         }));
     }
 
-    static async getVipCurrentValue(vip) {
+    static async getVipCurrentValue(vip, isId = false) {
         // 获取会员卡当前积分值
+
+        if (isId) {
+            return await AppDAO.get(`
+                SELECT * FROM vip_value WHERE vip_id=?
+        ;`, vip);
+        }
 
         return await AppDAO.get(`
         SELECT * FROM vip_value WHERE vip_id=(
             SELECT id FROM vip_info WHERE code=?
         )
         ;`, vip);
+    }
+
+    static async getAllVipType() {
+        // 获取所有会员卡类型
+
+        return await AppDAO.all(`
+        SELECT * FROM vip_type
+        ;`);
     }
 
     static async getVipTypeDetails(type) {

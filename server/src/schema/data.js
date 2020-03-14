@@ -15,3 +15,9 @@ export const importCommpditySchema = Joi.object({
     rules: commodityRules,
     data: commodityList
 });
+
+const typeList = ["commodity", "vip", "sales"];
+
+export const exportDataSchema = Joi.object({
+    type: Joi.string().valid(...typeList).required()
+});
