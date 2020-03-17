@@ -10,10 +10,8 @@ export function useCategories({
     const [categories, setCategories] = useState([]);
 
     async function getCategories() {
-
         try {
             const { data } = await CategoriesTask.getCategoriesTree(ajax);
-
             if (onlyParent) {
                 // 只需要父分类
                 return setCategories(data.filter(i => !i.parent_id));

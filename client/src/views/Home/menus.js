@@ -1,14 +1,21 @@
 import { Cash } from "./Main/market/Cash";
+import { Device } from "./Main/market/Device";
+
 import { Supplier } from "./Main/warehouse/Supplier";
 import { Commodity } from "./Main/warehouse/Commodity";
 import { Stock } from "./Main/warehouse/Stock";
+
 import { Vip } from "./Main/vip";
 import { VipSetting } from "./Main/vip/Setting";
+
 import { UserManage } from "./Main/users";
+
 import { DataExport } from "./Main/system/data/Export";
 import { DataImport } from "./Main/system/data/Import";
+
 import { PromotionCommodityManage } from "./Main/promotion/Commodity";
 import { Promotion } from "./Main/promotion/Manage";
+
 import { Orders } from "./Main/statistics/orders";
 import { Proportion } from "./Main/statistics/proportion";
 import { Trends } from "./Main/statistics/trends";
@@ -21,33 +28,11 @@ export const menus = [
         permission: false
     },
     {
-        title: "销售管理",
+        title: "前台销售",
         path: "/home/market",
         icon: "shop",
         permission: false,
-        children: [
-            {
-                title: "前台销售",
-                path: "/home/market/cash",
-                permission: false,
-                component: Cash
-            },
-            {
-                title: "标签打印",
-                path: "/home/market/barcodeprint",
-                permission: false
-            },
-            {
-                title: "条码秤管理",
-                path: "/home/market/weigher",
-                permission: false
-            },
-            {
-                title: "设备管理",
-                path: "/home/market/device",
-                permission: false
-            }
-        ]
+        component: Cash
     },
     {
         title: "促销管理",
@@ -87,6 +72,10 @@ export const menus = [
                 title: "商品管理",
                 path: "/home/warehouse/commodity",
                 component: Commodity
+            },
+            {
+                title: "标签打印",
+                path: "/home/warehouse/barcodeprint"
             }
         ]
     },
@@ -152,6 +141,12 @@ export const menus = [
                 component: DataExport
             },
         ]
+    },
+    {
+        title: "设备管理",
+        path: "/home/device",
+        icon: "printer",
+        component: Device
     },
     {
         title: "系统设置",

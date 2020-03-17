@@ -6,8 +6,9 @@ export class CommodityTasks {
     }
 
     static queryByCategory(ajax, category) {
-        const query = encodeURIComponent(category.join(","));
-        return ajax.get(`/api/warehouse/commodity?list=${query}`);
+        return ajax.get("/api/warehouse/commodity", {
+            list: category.join(",")
+        });
     }
 
     static createCommodity(ajax, value) {
