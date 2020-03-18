@@ -35,8 +35,8 @@ export function Device() {
     ];
 
     const [modalData, setModalData] = useState({
-        status: true,
-        id: config[1].id
+        status: false,
+        id: config[3].id
     });
 
     const { title, component, modalWidth } = useMemo(() => config.find(i => i.id === modalData.id), [modalData.id]);
@@ -72,6 +72,7 @@ export function Device() {
                 onCancel={closeModal}
                 footer={null}
                 width={modalWidth}
+                destroyOnClose
             >
                 {component}
             </Modal>
