@@ -30,7 +30,11 @@ export class DahuaScale {
         }
 
         return data.map(({ plu_code, code, name, unit_price }) => {
-            return `!0V${plu_code}A${code}${convertToCent(unit_price)}000000000803000000000000000000000000000000000000000000000000B${convertToZoneBitCode(name)}C${convertToZoneBitCode(name)}D${convertToZoneBitCode(name)}E`;
+
+            const nameZoneBitCode = convertToZoneBitCode(name);
+            // 转为区位码的商品名称
+
+            return `!0V${plu_code}A${code}${convertToCent(unit_price)}000000000803000000000000000000000000000000000000000000000000B${nameZoneBitCode}C${nameZoneBitCode}D${nameZoneBitCode}E`;
         });
 
         /**PLU信息

@@ -1,0 +1,1 @@
+export { PosPrintConfig } from "./config";

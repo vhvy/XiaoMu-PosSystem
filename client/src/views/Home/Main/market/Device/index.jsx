@@ -36,7 +36,7 @@ export function Device() {
 
     const [modalData, setModalData] = useState({
         status: true,
-        id: config[0].id
+        id: config[1].id
     });
 
     const { title, component, modalWidth } = useMemo(() => config.find(i => i.id === modalData.id), [modalData.id]);
