@@ -4,6 +4,7 @@ import { Device } from "./Main/market/Device";
 import { Supplier } from "./Main/warehouse/Supplier";
 import { Commodity } from "./Main/warehouse/Commodity";
 import { Stock } from "./Main/warehouse/Stock";
+import { BarcodePrint } from "./Main/warehouse/BarcodePrint";
 
 import { Vip } from "./Main/vip";
 import { VipSetting } from "./Main/vip/Setting";
@@ -75,7 +76,8 @@ export const menus = [
             },
             {
                 title: "标签打印",
-                path: "/home/warehouse/barcodeprint"
+                path: "/home/warehouse/barcodeprint",
+                component: BarcodePrint
             }
         ]
     },

@@ -1,0 +1,38 @@
+@import "../global.scss";
+
+.barcodeprint-wrap {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .search-fn-wrap,
+  .search-result-wrap,
+  .commodity-list-wrap {
+    @extend .base-card;
+  }
+
+  .search-fn-wrap {
+    display: flex;
+
+    .search-input {
+      width: 250px;
+
+      input {
+        text-transform: uppercase;
+      }
+    }
+
+    & > * {
+      margin-right: 10px;
+    }
+  }
+
+  .search-result-wrap {
+    flex: 1;
+    margin: 10px 0;
+  }
+
+  .commodity-list-wrap {
+    flex: 1;
+  }
+}
