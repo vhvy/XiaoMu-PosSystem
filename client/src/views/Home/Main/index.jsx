@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { Layout } from "antd";
 import { menuValue } from "../menus";
 
@@ -23,6 +23,7 @@ export function Main() {
                                 <Route key={path} exact path={path} component={component} />
                         )
                 }
+                <Redirect to="/home" />
             </Switch>
         </Content>
     );

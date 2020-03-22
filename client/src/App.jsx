@@ -30,7 +30,7 @@ function App() {
                                         exact
                                     />
                             ))}
-                        <Redirect from="/" exact to="/home" />
+                        <Redirect to="/home" />
                     </Switch>
                 </AjaxProvider>
             </AuthProvider>

@@ -13,6 +13,8 @@ import admin from "../middleware/admin.js";
 import data from "./data/index.js";
 import statistics from "./statistics/index.js";
 
+import store from "./store.js";
+
 const route = express.Router();
 
 route.use("/token", token);
@@ -31,5 +33,7 @@ route.use("/warehouse", warehouse);
 route.use("/data", data);
 
 route.use("/statistics", statistics);
+
+route.use("/store", store)
 
 export default route;

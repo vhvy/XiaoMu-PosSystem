@@ -4,6 +4,7 @@ import { tabs, showTabs } from "./tabs";
 import { userDetails } from "./userDetails";
 import { showCashHotKey, cash } from "./cash";
 import { warehouse } from "./warehouse";
+import { store_name } from "./store";
 
 export const reduces = combineReducers({
     apiUrl,
@@ -12,5 +13,6 @@ export const reduces = combineReducers({
     showTabs,
     showCashHotKey,
     cash,
-    warehouse
+    warehouse,
+    store_name
 });

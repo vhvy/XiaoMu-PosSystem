@@ -2,7 +2,7 @@ import React from "react";
 import * as XLSX from "xlsx";
 import { Upload, message, Icon, } from "antd";
 import { useState } from "react";
-import styled from "../../../../../../styles/data/import.scss";
+import styled from "../../../../../styles/data/import.scss";
 
 const { Dragger } = Upload;
 

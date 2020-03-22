@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Select, Button, Progress, message } from "antd";
-import { useAjax } from "../../../../AjaxProvider";
-import { useCategories } from "../../../../../hooks/useCategories";
-import { ScaleList, } from "../../../../../device/scale";
-import { CommodityTasks } from "../../../../../tasks/commodity";
+import { useAjax } from "../../../AjaxProvider";
+import { useCategories } from "../../../../hooks/useCategories";
+import { ScaleList, } from "../../../../device/scale";
+import { CommodityTasks } from "../../../../tasks/commodity";
 
 const { Option } = Select;
 

@@ -1,5 +1,5 @@
 import { Cash } from "./Main/market/Cash";
-import { Device } from "./Main/market/Device";
+import { Device } from "./Main/device";
 
 import { Supplier } from "./Main/warehouse/Supplier";
 import { Commodity } from "./Main/warehouse/Commodity";
@@ -11,8 +11,8 @@ import { VipSetting } from "./Main/vip/Setting";
 
 import { UserManage } from "./Main/users";
 
-import { DataExport } from "./Main/system/data/Export";
-import { DataImport } from "./Main/system/data/Import";
+import { DataExport } from "./Main/data/Export";
+import { DataImport } from "./Main/data/Import";
 
 import { PromotionCommodityManage } from "./Main/promotion/Commodity";
 import { Promotion } from "./Main/promotion/Manage";
@@ -20,6 +20,8 @@ import { Promotion } from "./Main/promotion/Manage";
 import { Orders } from "./Main/statistics/orders";
 import { Proportion } from "./Main/statistics/proportion";
 import { Trends } from "./Main/statistics/trends";
+
+import { System } from "./Main/system";
 
 export const menus = [
     {
@@ -154,12 +156,7 @@ export const menus = [
         title: "系统设置",
         path: "/home/system",
         icon: "setting",
-        children: [
-            {
-                title: "店铺信息",
-                path: "/home/system/store"
-            }
-        ]
+        component: System
     }
 ];
 

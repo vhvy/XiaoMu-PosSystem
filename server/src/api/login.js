@@ -5,6 +5,7 @@ import { validBody } from "../middleware/validBody.js";
 import { userPwdSchema } from "../schema/user.js";
 import { throwError } from "../middleware/handleError.js";
 import config from "../config/index.js";
+import { StoreTasks } from "../tasks/store.js";
 
 const { default_admin_group_name } = config;
 
@@ -21,6 +22,9 @@ route.post("/",
             return throwError(next, message, 401);
         }
         // 当认证失败时返回401
+
+        const { name: store_name } = await StoreTasks.getStoreName();
+        // 店铺名称
 
         const {
             authorityList,
@@ -41,7 +45,8 @@ route.post("/",
             username,
             group,
             group_id,
-            isAdmin: default_admin_group_name === group
+            isAdmin: default_admin_group_name === group,
+            store_name
         });
 
     });

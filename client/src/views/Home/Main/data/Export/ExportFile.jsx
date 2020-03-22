@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "../../../../../../styles/data/export.scss";
+import styled from "../../../../../styles/data/export.scss";
 import { Button, Icon, Spin, Result } from "antd";
 
 export function ExportFile({

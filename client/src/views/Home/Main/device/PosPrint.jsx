@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Select, Button, message } from "antd";
-import { usePosprint } from "../../../../../hooks/usePosprint";
-import { PosPrintConfig } from "../../../../../device/pos_print";
+import { usePosprint } from "../../../../hooks/usePosprint";
+import { PosPrintConfig } from "../../../../device/pos_print";
 
 const { Option } = Select;
 

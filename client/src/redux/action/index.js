@@ -3,6 +3,7 @@ import {
     LOGIN_SET_CURRENT_USERNAME,
     LOGIN_SET_CURRENT_USER_AUTHORITY,
     LOGIN_SET_USER_IS_LOGIN,
+    SET_STORE_NAME,
     CLEAR_USER_STATE,
     USER_SET_IS_ADMIN,
     TABS_ADD_TAB,
@@ -46,6 +47,15 @@ import {
     WARE_STOCK_REMOVE,
     WARE_STOCK_SELECT
 } from "./actionType";
+
+export function setStoreName(name) {
+    // 设置店铺名称
+
+    return {
+        type: SET_STORE_NAME,
+        name
+    };
+}
 
 export function setWareStockSelectAction(data) {
     // 设置当前选中商品

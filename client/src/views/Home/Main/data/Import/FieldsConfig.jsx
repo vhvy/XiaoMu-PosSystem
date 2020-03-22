@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import styled from "../../../../../../styles/data/import.scss";
+import styled from "../../../../../styles/data/import.scss";
 import { Select, Form, Radio, Col } from "antd";
 
 const { Option } = Select;

@@ -19,6 +19,9 @@ export const CLEAR_USER_STATE = "CLEAR_USER_STATE";
 export const SET_USER_DETAILS = "SET_USER_DETAILS";
 // 设置用户信息
 
+export const SET_STORE_NAME = "SET_STORE_NAME";
+// 设置店铺名称
+
 export const TABS_SET_CURRENT_TAB = "TABS_SET_CURRENT_TAB";
 // 设置当前展示的栏目
 

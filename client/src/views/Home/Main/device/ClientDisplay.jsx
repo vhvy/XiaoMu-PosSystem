@@ -1,7 +1,7 @@
 import React from "react";
-import { useSerialport } from "../../../../../hooks/useSerialport";
+import { useSerialport } from "../../../../hooks/useSerialport";
 import { Form, Select, Button, message } from "antd";
-import { ClientDisplayConfig } from "../../../../../device/client_display";
+import { ClientDisplayConfig } from "../../../../device/client_display";
 
 const { Option } = Select;
 

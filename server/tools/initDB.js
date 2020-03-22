@@ -388,6 +388,17 @@ async function init() {
     ;`);
     // 每日的临时流水号生成
 
+    await dao.run(`
+    CREATE TABLE IF NOT EXISTS store_config (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL DEFAULT "小牧超市"
+    )
+    ;`);
+
+    await dao.run(`
+    INSERT INTO store_config (name) VALUES ("小牧超市")
+    ;`);
+
     AppDAO.close();
 }
 

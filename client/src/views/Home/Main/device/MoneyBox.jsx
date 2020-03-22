@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Form, message, Button, Radio } from "antd";
-import { MoneyBoxConfig } from "../../../../../device/money_box";
+import { MoneyBoxConfig } from "../../../../device/money_box";
 
 export const MoneyBox = Form.create()(_MoneyBox);
 

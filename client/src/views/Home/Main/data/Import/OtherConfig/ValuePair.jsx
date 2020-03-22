@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "../../../../../../../styles/data/import.scss";
+import styled from "../../../../../../styles/data/import.scss";
 import { Icon, Tag } from "antd";
 
 export function ValuePair({

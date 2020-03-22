@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "../../../../../../../styles/data/import.scss";
+import styled from "../../../../../../styles/data/import.scss";
 import { Select, Form, Radio, Input, InputNumber, Button, Icon, Modal } from "antd";
 
 const { Option } = Select;

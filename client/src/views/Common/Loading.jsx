@@ -8,21 +8,27 @@ import { useAjax } from "../AjaxProvider";
 
 export function Loading() {
 
-    const { login } = useAuth();
+    const { login, setStoreName } = useAuth();
     const ajax = useAjax();
     const hasToken = TokenManage.Token;
     const [isLoading, setIsLoading] = useState(Boolean(hasToken));
     let history = useHistory();
     useEffect(() => {
         async function validToken() {
-            const result = await TokenManage.validToken(ajax);
-            if (!result) {
-                history.replace("/login");
-            } else {
-                const { username, authority, isAdmin } = result;
+
+            try {
+                const { data } = await TokenManage.validToken(ajax);
+
+                const { user_values, store_name } = data;
+
+                const { username, authority, isAdmin } = user_values;
                 login(null, {
                     username, authority, isAdmin
                 });
+                setStoreName(store_name);
+            } catch (error) {
+                console.log(error);
+                history.replace("/login");
             }
 
             setIsLoading(false);

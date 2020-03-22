@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from "react";
-import styled from "../../../../../../styles/data/export.scss";
+import styled from "../../../../../styles/data/export.scss";
 import { Steps, Icon, Button } from "antd";
 import * as XLSX from "xlsx";
 import { ExportFile } from "./ExportFile";
 import { TypeConfig } from "./TypeConfig";
-import { useAjax } from "../../../../../AjaxProvider";
-import { DataManage } from "../../../../../../tasks/data";
+import { useAjax } from "../../../../AjaxProvider";
+import { DataManage } from "../../../../../tasks/data";
 
 const { Step } = Steps;
 

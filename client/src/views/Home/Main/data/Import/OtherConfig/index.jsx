@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import styled from "../../../../../../../styles/data/import.scss";
+import styled from "../../../../../../styles/data/import.scss";
 import { ValuePair } from "./ValuePair";
 import { RightContent } from "./RightContent";
-import copyObj from "../../../../../../../tools/copyObj";
+import copyObj from "../../../../../../tools/copyObj";
 
 export function OtherConfig({
     status,

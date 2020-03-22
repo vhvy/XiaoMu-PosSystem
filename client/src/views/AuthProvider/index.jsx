@@ -2,11 +2,8 @@ import React, { createContext, useContext } from "react";
 import { connect } from "react-redux";
 import {
     clearUserLoginStateAction,
-    setUserIsAdminAction,
-    setUserIsLoginAction,
-    setCurrentUserAuthorityAction,
-    setCurrentUsernameAction,
-    setUserDetailsAction
+    setUserDetailsAction,
+    setStoreName
 } from "../../redux/action";
 import { TokenManage } from "../../tasks/tokenManage";
 
@@ -21,11 +18,8 @@ function _AuthProvider({
     authority,
     isAdmin,
     clearUserState,
-    setUserName,
-    setUserAuthority,
-    setUserIsLogin,
-    setUserIsAdmin,
-    setUserDetails
+    setUserDetails,
+    setStoreName
 }) {
 
     function login(token, details) {
@@ -34,10 +28,6 @@ function _AuthProvider({
         }
         if (details) {
             const { username, authority, isAdmin } = details;
-            // setUserIsAdmin(isAdmin);
-            // setUserName(username);
-            // setUserAuthority(authority);
-            // setUserIsLogin(true);
             setUserDetails({
                 username,
                 authority,
@@ -59,7 +49,8 @@ function _AuthProvider({
         login,
         logout,
         username,
-        authority
+        authority,
+        setStoreName
     };
 
     return <AuthContext.Provider value={value} children={children} />;
@@ -78,12 +69,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         clearUserState: () => dispatch(clearUserLoginStateAction()),
-        setUserName: (name) => dispatch(setCurrentUsernameAction(name)),
-        setUserAuthority: (auth) => dispatch(setCurrentUserAuthorityAction(auth)),
-        setUserIsLogin: (bool) => dispatch(setUserIsLoginAction(bool)),
-        setUserIsAdmin: (bool) => dispatch(setUserIsAdminAction(bool)),
-        setUserDetails: (value) => dispatch(setUserDetailsAction(value))
-    }
+        setUserDetails: (value) => dispatch(setUserDetailsAction(value)),
+        setStoreName: (name) => dispatch(setStoreName(name))
+    };
 }
 
 export const AuthProvider = connect(mapStateToProps, mapDispatchToProps)(_AuthProvider);

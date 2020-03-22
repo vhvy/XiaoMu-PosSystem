@@ -1,42 +1,25 @@
 import React, { useState, useMemo } from "react";
-import styled from "../../../../../styles/device.scss";
+import styled from "../../../../styles/system.scss";
 import { Card, Modal } from "antd";
-import { Scale } from "./Scale";
-import { PosPrint } from "./PosPrint";
-import { ClientDisplay } from "./ClientDisplay";
-import { MoneyBox } from "./MoneyBox";
+import { useAjax } from "../../../AjaxProvider";
+import { StoreName } from "./StoreName";
 
+export function System() {
 
-
-export function Device() {
+    const ajax = useAjax();
 
     const config = [
         {
-            id: "scale",
-            title: "电子秤管理",
-            component: <Scale closeFn={closeModal} />,
-            modalWidth: 410
-        },
-        {
-            id: "pos-print",
-            title: "小票机管理",
-            component: <PosPrint closeFn={closeModal} />
-        },
-        {
-            id: "client-display",
-            title: "客显管理",
-            component: <ClientDisplay closeFn={closeModal} />
-        },
-        {
-            id: "money-box",
-            title: "钱箱管理",
-            component: <MoneyBox closeFn={closeModal} />
+            id: "store-name",
+            title: "店名设置",
+            modalWidth: 380,
+            component: useMemo(() => <StoreName ajax={ajax} closeFn={closeModal} />, [closeModal])
         }
     ];
 
     const [modalData, setModalData] = useState({
         status: false,
-        id: config[3].id
+        id: config[0].id
     });
 
     const { title, component, modalWidth } = useMemo(() => config.find(i => i.id === modalData.id), [modalData.id]);
@@ -58,11 +41,16 @@ export function Device() {
     }
 
     return (
-        <div className={styled["device-wrap"]}>
-            <Card title="设备列表">
+        <div className={styled["system-wrap"]}>
+            <Card title="系统设置">
                 {
                     config.map(({ id, title }) => (
-                        <Card.Grid onClick={handleClick.bind(null, id)} key={id}>{title}</Card.Grid>
+                        <Card.Grid
+                            onClick={handleClick.bind(null, id)}
+                            key={id}
+                        >
+                            {title}
+                        </Card.Grid>
                     ))
                 }
             </Card>

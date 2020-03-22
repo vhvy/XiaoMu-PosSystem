@@ -16,13 +16,9 @@ export class TokenManage {
         return (token && token !== "") ? token : undefined;
     }
 
-    static async validToken(http) {
-        try {
-            const result = await http.get("/api/token/auth");
-            return result.data;
-        } catch (err) {
-            return false;
-        }
+    static validToken(http) {
+
+        return http.get("/api/token/auth");
     }
 
     static save(t) {

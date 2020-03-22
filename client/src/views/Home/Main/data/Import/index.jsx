@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from "react";
-import styled from "../../../../../../styles/data/import.scss";
+import styled from "../../../../../styles/data/import.scss";
 import { Steps, Button } from "antd";
 import { UploadFile } from "./UploadFile";
 import { FieldsConfig } from "./FieldsConfig";
 import { UploadToServer } from "./UploadToServer";
 import { OtherConfig } from "./OtherConfig";
-import copyObj from "../../../../../../tools/copyObj";
+import copyObj from "../../../../../tools/copyObj";
 
 const { Step } = Steps;
 

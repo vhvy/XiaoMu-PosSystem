@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
-import styled from "../../../../../../styles/data/import.scss";
+import styled from "../../../../../styles/data/import.scss";
 import { Button, Icon, Spin, Result } from "antd";
-import { useAjax } from "../../../../../AjaxProvider";
-import { DataManage } from "../../../../../../tasks/data";
+import { useAjax } from "../../../../AjaxProvider";
+import { DataManage } from "../../../../../tasks/data";
 
 export function UploadToServer({
     importData,
