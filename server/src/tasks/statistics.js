@@ -8,6 +8,7 @@ import { math } from "../lib/mathc.js";
 import { getFormatTime, createTimerangeKey } from "../lib/time.js";
 
 export class StatisticsTasks {
+
     static async queryOrdersByTime(start_time, end_time) {
         // 通过时间查询商品销售详情
 

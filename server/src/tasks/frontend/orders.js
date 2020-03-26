@@ -430,6 +430,25 @@ class OrdersTask {
         ;`, [start_time, end_time]);
     }
 
+    static async getOrdersByTimerangeAndUser(start_time, end_time, user_id, not_undo = false) {
+        // 根据时间范围和收银员id查询订单列表
+
+        const whereKey = [
+            "check_date >= ?",
+            "check_date <= ?",
+            "user_id = ?"
+        ];
+
+        not_undo && whereKey.push("is_undo = 0");
+
+        return await AppDAO.all(`
+        SELECT * FROM orders 
+        WHERE (
+            ${whereKey.join(" AND ")}
+        )
+        ;`, [start_time, end_time, user_id]);
+    }
+
     static async getAllOrder() {
         // 获取所有订单
 

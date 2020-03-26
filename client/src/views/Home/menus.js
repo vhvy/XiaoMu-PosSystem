@@ -1,3 +1,5 @@
+import { Home } from "./Main/home";
+
 import { Cash } from "./Main/market/Cash";
 import { Device } from "./Main/device";
 
@@ -28,7 +30,8 @@ export const menus = [
         title: "系统主页",
         path: "/home",
         icon: "home",
-        permission: false
+        permission: false,
+        component: Home
     },
     {
         title: "前台销售",

@@ -6,11 +6,14 @@ export function LoadingBox({
     status = true,
     tip = "加载中，请稍候...",
     spinProps = {},
-    wrapCss
+    wrapCss,
+    noPadding = false
 }) {
 
 
     const wrapCssList = [styled["loading-wrap"]];
+
+    noPadding && wrapCssList.push(styled["no-padding"]);
 
     status && wrapCssList.push(styled["show"]);
 

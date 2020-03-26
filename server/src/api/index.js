@@ -1,5 +1,6 @@
 import express from "express";
 import auth from "../middleware/auth.js";
+import today from "./today.js";
 import users from "./users.js";
 import login from "./login.js";
 import groups from "./groups.js";
@@ -17,23 +18,70 @@ import store from "./store.js";
 
 const route = express.Router();
 
-route.use("/token", token);
-route.use("/login", login);
-route.use(auth);
-route.use("/front", front);
-route.use("/users", users);
+const config = [
+    {
+        path: "/token",
+        fn: token
+        // 验证token合法性
+    },
+    {
+        path: "/login",
+        fn: login
+        // 登录接口
+    },
+    {
+        fn: auth
+        // 路由守卫，此中间件以后的路由全部需要携带合法token
+    },
+    {
+        path: "/front",
+        fn: front
+    },
+    {
+        path: "/users",
+        fn: users
+    },
+    {
+        path: "/today",
+        fn: today
+        // 当日销售的数据
+    },
+    {
+        fn: admin
+        // 路由守卫，此中间件以后的路由全部需要管理员权限
+    },
+    {
+        path: "/groups",
+        fn: groups
+    },
+    {
+        path: "/market",
+        fn: market
+    },
+    {
+        path: "/vip",
+        fn: vip
+    },
+    {
+        path: "/warehouse",
+        fn: warehouse
+    },
+    {
+        path: "/data",
+        fn: data
+    },
+    {
+        path: "/statistics",
+        fn: statistics
+    },
+    {
+        path: "/store",
+        fn: store
+    }
+];
 
-route.use(admin);
-route.use("/groups", groups);
-route.use("/market", market);
-
-route.use("/vip", vip);
-route.use("/warehouse", warehouse);
-
-route.use("/data", data);
-
-route.use("/statistics", statistics);
-
-route.use("/store", store)
+for (let { path, fn } of config) {
+    path ? route.use(path, fn) : route.use(fn);
+}
 
 export default route;

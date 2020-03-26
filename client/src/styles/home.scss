@@ -1,0 +1,84 @@
+@import "./global.scss";
+
+.home-wrap {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+
+  .count-wrap,
+  .charts {
+    &.has-padding {
+      margin: 10px;
+    }
+  }
+
+  .count-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .item-wrap {
+      @extend .base-card;
+      width: 24%;
+      height: 80px;
+      display: flex;
+      justify-content: space-between;
+
+      .item-value {
+        flex: 0 1 70%;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-between;
+        overflow: hidden;
+        p {
+          margin: 0;
+          overflow: hidden;
+        }
+
+        .value {
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+
+      .item-icon {
+        flex: 0 1 30%;
+        font-size: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .charts {
+    flex: 1;
+    display: flex;
+
+    & > div {
+      @extend .base-card;
+
+      &:first-child {
+        // 身为第一个子节点
+        &:nth-last-child(1) {
+          // 同时也是倒数第一个子节点
+          // 仅有一个节点
+          flex: 0 1 100%;
+        }
+
+        &:nth-last-child(2) {
+          // 为倒数第二个子节点
+          // 共两个节点
+
+          margin-right: 5px;
+          flex: 0 1 50%;
+          & + div {
+            margin-left: 5px;
+            flex: 0 1 50%;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,16 @@
 import moment from "moment";
 
+export function getNextDayStartTimeStrap(time_stamp) {
+    // 获取下一天00:00的时间戳
+    return moment(Number(time_stamp)).add(1, "day").startOf("day").format("x");
+}
+
+export function getWeekendStartTimeStrap(end_time_stamp) {
+    // 获取指定日期一周前的时间戳
+
+    return moment(end_time_stamp).subtract(6, "day").startOf("day").format("x");
+}
+
 export function getNightTimeStrap(str) {
     // 获取指定日期午夜00:00的时间戳，默认返回今天午夜00:00的时间戳
 

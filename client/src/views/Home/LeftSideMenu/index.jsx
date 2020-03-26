@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Button, Menu, Icon } from "antd";
+import React, { useEffect } from "react";
+import { Layout, Menu, Icon } from "antd";
 import { menus, menuValue } from "../menus";
 import { useHistory, useLocation } from "react-router-dom";
-import config from "../../../config";
 import { useAuth } from "../../AuthProvider";
 import { useTabs } from "../TabsProvider";
+import { IconOnline } from "../../../components/IconOnline";
 
 const { menuMap, menuPath } = menuValue;
 
 const { SubMenu, Item } = Menu;
 const { Sider } = Layout;
 
-const { ICON_ONLINE_URL } = config;
-const IconFont = Icon.createFromIconfontCN({
-    scriptUrl: ICON_ONLINE_URL
-});
-
 function CustomIcon(icon, online, title) {
     return (
         <span>
-            {online ? <IconFont type={icon} /> : <Icon type={icon} />}
+            {online ? <IconOnline type={icon} /> : <Icon type={icon} />}
             {title ? <span>{title}</span> : ""}
         </span>
     );
