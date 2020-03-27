@@ -1,0 +1,25 @@
+.logo-wrap {
+  height: 60px;
+  background-repeat: no-repeat;
+  background-size: 100px 100px;
+  background-position-y: 44%;
+  overflow: hidden;
+  p {
+    margin: {
+      top: 20px;
+      left: 80px;
+      bottom: 0;
+    }
+
+    font-size: 16px;
+    color: #000;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+:global(.ant-layout-sider-children) > :global(.ant-menu) > :global(.ant-menu-item) {
+  width: 100%;
+}

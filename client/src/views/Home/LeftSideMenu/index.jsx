@@ -5,6 +5,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "../../AuthProvider";
 import { useTabs } from "../TabsProvider";
 import { IconOnline } from "../../../components/IconOnline";
+import logo from "../../../styles/images/logo.png";
+import styled from "../../../styles/sidemenu.scss";
 
 const { menuMap, menuPath } = menuValue;
 
@@ -78,7 +80,7 @@ export function LeftSideMenu({ collapsed }) {
                 })
         );
     }
-
+    
     return (
         <Sider
             trigger={null}
@@ -86,13 +88,13 @@ export function LeftSideMenu({ collapsed }) {
             collapsed={collapsed}
         >
             <div
+                className={styled["logo-wrap"]}
                 style={{
-                    fontSize: 24,
-                    textAlign: "center",
-                    padding: "20px",
-                    color: "#000"
+                    backgroundImage: `url(${logo})`
                 }}
-            >LOGO</div>
+            >
+                <p>小牧收银系统</p>
+            </div>
             <Menu
                 style={{
                     border: "none",

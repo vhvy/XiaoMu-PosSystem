@@ -7,8 +7,22 @@
   .login-wrapper {
     background-color: #fff;
     width: 320px;
-    .login-title {
-      margin: 20px 0;
+
+    .title-wrap {
+      position: relative;
+      .logo {
+        position: absolute;
+        width: 61px;
+        height: 61px;
+        top: 0;
+        bottom: 0;
+        left: 65px;
+      }
+      .login-title {
+        margin: 20px 0;
+        color: #000;
+        font-weight: bold;
+      }
     }
     .login-input-fix {
       margin-top: -10px;

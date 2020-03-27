@@ -149,17 +149,39 @@ export function VirtualSelectListFooter({ data, style = {} }) {
 
 export function VirtualSelectList({
     itemHeight = 40,
+    // 虚拟列表项目单行高度
+
     header,
+    // 表头组件
+
     footer,
+    // 底部组件
+
     renderItem,
     data,
+    // 数据源
+
     select = 0,
+    // 当前选中的项目id
+
     selectType,
+    // 选中类型
+
     wrapCss,
+    // 最外层容器css
+
     wrapStyle = {},
+    // 最外层内嵌样式
+
     scrollCss,
+    // 滚动容器css
+
     scrollStyle = {},
+    // 滚动容器外层css
+
     innerCss,
+    // 内层容器css
+
     innerStyle,
     selectFields = "id"
 }) {
