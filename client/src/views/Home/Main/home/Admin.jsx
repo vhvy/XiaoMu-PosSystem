@@ -128,6 +128,13 @@ export function Admin({
         return css;
     }
 
+    const base_category_data = category_data && category_data.length !== 0 && category_data || [
+        {
+            name: "暂无数据",
+            value: 0
+        }
+    ];
+
     return (
         <>
             <CountCard
@@ -135,7 +142,7 @@ export function Admin({
                 cssHook={handleCss}
             />
             <div className={handleCss(styled["charts"])}>
-                <PieCharts data={category_data} />
+                <PieCharts data={base_category_data} />
                 <LineCharts Option={Option} />
             </div>
         </>
