@@ -1,11 +1,6 @@
 import React, { useMemo, useCallback } from "react";
 import styled from "../../../../../styles/warehouse/commodity.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../components/VirtualSelectList";
 import { LoadingBox } from "../../../../../components/LoadingBox";
 
 const columns = [
@@ -96,15 +91,7 @@ export function CommodityList({
         return css;
     }, []);
 
-    const renderItem = useMemo(() => (createRenderItemFn(columns, handleClickSelect, "id", handleCss)), []);
-
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={footerColumns(commodityList.length)} />
-    ), [commodityList.length]);
+    const footerData = useMemo(() => footerColumns(commodityList.length), [commodityList.length]);
 
     return (
         <div className={styled["commodity-list-wrap"]}>
@@ -113,12 +100,13 @@ export function CommodityList({
             />
             <VirtualSelectList
                 wrapCss={styled["list-wrap"]}
-                header={Header}
-                footer={Footer}
                 data={commodityList}
-                renderItem={renderItem}
                 selectType={selectType}
                 select={selectId}
+                columns={columns}
+                footerColumn={footerData}
+                handleClickSelect={handleClickSelect}
+                handleColumnCss={handleCss}
             />
         </div>
     );

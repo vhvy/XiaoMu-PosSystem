@@ -9,7 +9,7 @@ route.get("/auth", async (req, res, next) => {
 
     const token = req.headers["authorization"];
     if (!token) {
-        return res.send(false);
+        return throwError(next, "没有登陆，请登陆!", 401);
     }
 
     try {

@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "../../../../../styles/statistics/sales.scss";
-import {
-    createRenderItemFn,
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader
-} from "../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../components/VirtualSelectList";
 import { useMemo } from "react";
 import { mathc } from "../../../../../tools/mathc";
 import { getFormatTime } from "../../../../../tools/time";
@@ -173,17 +168,7 @@ export function OrderList({
         return [data, footerData];
     }, [order_list]);
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(footerData)} />
-    ), [footerData]);
-
-    const renderItem = useMemo(() => (
-        createRenderItemFn(columns, handleClick)
-    ), []);
+    const footerColumn = useMemo(() => getFooterColumns(footerData), [footerData]);
 
     return (
         <div
@@ -194,12 +179,12 @@ export function OrderList({
             />
             <VirtualSelectList
                 wrapCss={styled["order-list-cont"]}
-                renderItem={renderItem}
-                header={Header}
-                footer={Footer}
                 data={data}
                 selectType={selectType}
                 select={selectId}
+                columns={columns}
+                footerColumn={footerColumn}
+                handleClickSelect={handleClick}
             />
         </div>
     );

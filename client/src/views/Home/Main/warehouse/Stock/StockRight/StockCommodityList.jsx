@@ -1,12 +1,7 @@
 import React, { useMemo } from "react";
 import styled from "../../../../../../styles/warehouse/stock.scss";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import {
     setWareStockSelectAction,
     cleanWareStockAction,
@@ -101,17 +96,7 @@ export function StockCommodityList({ type, stock }) {
         }));
     }
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(list)} />
-    ), [list]);
-
-    const renderItem = useMemo(() => (
-        createRenderItemFn(columns, handleClickSelect)
-    ), []);
+    const footerData = useMemo(() => getFooterColumns(list), [list]);
 
     function toogleAddMode() {
         dispatch(cleanWareStockAction());
@@ -148,12 +133,12 @@ export function StockCommodityList({ type, stock }) {
     return (
         <VirtualSelectList
             wrapCss={styled["stock-commodity-list"]}
-            header={Header}
-            footer={Footer}
             select={selectId}
             selectType={selectType}
             data={list}
-            renderItem={renderItem}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={handleClickSelect}
         />
     );
 }

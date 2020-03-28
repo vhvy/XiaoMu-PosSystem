@@ -38,7 +38,6 @@ function _AuthProvider({
     }
 
     function logout() {
-        console.log("logout")
         TokenManage.clean();
         clearUserState();
     }

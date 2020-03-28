@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../components/VirtualSelectList";
 import { useMemo } from "react";
 
 const columns = [
@@ -61,25 +56,17 @@ export function GlobalList({
     wrapCss
 }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(list.length)} />
-    ), [list.length]);
-
-    const renderItem = useMemo(() => createRenderItemFn(columns, handleClick), []);
+    const footerData = useMemo(() => getFooterColumns(list.length), [list.length]);
 
     return (
         <VirtualSelectList
-            header={Header}
-            footer={Footer}
-            renderItem={renderItem}
             wrapCss={wrapCss}
             selectType={selectType}
             select={selectId}
             data={list}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={handleClick}
         />
     );
 }

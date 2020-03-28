@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../../components/VirtualSelectList";
 
 const OrderDetailsColumns = [
     {
@@ -54,9 +50,6 @@ const OrderDetailsColumns = [
 export function OrderDetails({ data, wrapCss }) {
     if (data.length === 0) return null;
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={OrderDetailsColumns} />
-    ), []);
 
     const initState = {
         select: data[0].id,
@@ -74,7 +67,6 @@ export function OrderDetails({ data, wrapCss }) {
         });
     }
 
-    const renderItem = useMemo(() => createRenderItemFn(OrderDetailsColumns, handleSelect), [handleSelect]);
 
     useEffect(() => {
         setSelect(initState);
@@ -83,11 +75,11 @@ export function OrderDetails({ data, wrapCss }) {
     return (
         <VirtualSelectList
             wrapCss={wrapCss}
-            header={Header}
+            columns={OrderDetailsColumns}
             data={data}
             select={select}
             selectType={selectType}
-            renderItem={renderItem}
+            handleClickSelect={handleSelect}
         />
     );
 }

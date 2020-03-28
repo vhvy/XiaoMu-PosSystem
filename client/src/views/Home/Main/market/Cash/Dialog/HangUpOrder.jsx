@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Modal } from "antd";
 import styled from "../../../../../../styles/cash.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    VirtualSelectListFooter,
-    createRenderItemFn
-} from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import { mathc } from "../../../../../../tools/mathc";
 import { useDispatch } from "react-redux";
 import { getHangupOrderAction } from "../../../../../../redux/action";
@@ -94,25 +89,17 @@ function OrderList({
         };
     }), [list]);
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={OrderListColumns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={OrderListFooter(data.length)} />
-    ), [data.length]);
-
-    const renderItem = useMemo(() => createRenderItemFn(OrderListColumns, clickSelect), [clickSelect]);
+    const footerData = useMemo(() => OrderListFooter(data.length), [data.length]);
 
     return (
         <VirtualSelectList
             wrapCss={styled["order-list"]}
-            header={Header}
             data={data}
             select={select}
             selectType={selectType}
-            renderItem={renderItem}
-            footer={Footer}
+            columns={OrderListColumns}
+            footerColumn={footerData}
+            handleClickSelect={clickSelect}
         />
     );
 }

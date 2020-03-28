@@ -1,15 +1,9 @@
 import React from "react";
 import { Modal, message } from "antd";
 import styled from "../../../../../../styles/cash.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    VirtualSelectListFooter,
-    createRenderItemFn
-} from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import { useState } from "react";
 import { useMemo } from "react";
-import { useRef } from "react";
 import { useEffect } from "react";
 
 
@@ -107,17 +101,7 @@ export function SelectCommodity({
         });
     }
 
-    const renderItem = useMemo(() => createRenderItemFn(columns, handleClick), [columns]);
-
     const footerData = useMemo(() => getFooterData(list), [list]);
-
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), [columns]);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={footerData} />
-    ), [footerData]);
 
 
     function handleKeyArrow({ key }) {
@@ -161,12 +145,12 @@ export function SelectCommodity({
             >
                 <VirtualSelectList
                     wrapCss={styled["wrapper"]}
-                    header={Header}
-                    footer={Footer}
+                    columns={columns}
+                    footerColumn={footerData}
                     data={list}
-                    renderItem={renderItem}
                     select={select}
                     selectType={selectType}
+                    handleClickSelect={handleClick}
                 />
             </Modal>
 

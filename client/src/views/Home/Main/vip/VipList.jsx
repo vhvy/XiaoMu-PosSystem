@@ -1,11 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "../../../../styles/vip.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../components/VirtualSelectList";
 
 const getFooterColumns = (length) => ([
     {
@@ -72,27 +67,18 @@ function handleCss(css, styled, data) {
 
 export function VipList({ list, selectId, selectType, handleSelect }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(list.length)} />
-    ), [list.length]);
-
-    const renderItem = useMemo(() => (
-        createRenderItemFn(columns, handleSelect, "id", handleCss)
-    ), []);
+    const footerData = useMemo(() => getFooterColumns(list.length), [list.length]);
 
     return (
         <VirtualSelectList
             wrapCss={styled["vip-list"]}
-            header={Header}
-            footer={Footer}
             select={selectId}
             selectType={selectType}
             data={list}
-            renderItem={renderItem}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={handleSelect}
+            handleColumnCss={handleCss}
         />
     );
 }

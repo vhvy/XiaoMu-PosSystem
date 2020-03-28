@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "../../../../../../styles/cash.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    VirtualSelectListFooter,
-    createRenderItemFn
-} from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import { useMemo } from "react";
 
 /**
@@ -95,27 +90,18 @@ export function CashCommodity({ commodityList, select, selectType, clickSelect, 
 
     const wrapCss = styled["cash-commodity"];
 
-    const renderItem = useMemo(() => createRenderItemFn(columns, clickSelect), [clickSelect]);
 
     const footerData = useMemo(() => getFooterData(commodityList, count, money), [commodityList, count, money]);
-
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), [columns]);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={footerData} />
-    ), [footerData]);
 
     return (
         <VirtualSelectList
             wrapCss={wrapCss}
-            header={Header}
-            footer={Footer}
             data={commodityList}
             select={select}
             selectType={selectType}
-            renderItem={renderItem}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={clickSelect}
         />
     );
 }

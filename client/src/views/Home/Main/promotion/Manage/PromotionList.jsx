@@ -2,10 +2,7 @@ import React, { useMemo } from "react";
 import styled from "../../../../../styles/promotion/manage.scss";
 import { LoadingBox } from "../../../../../components/LoadingBox";
 import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
+    VirtualSelectList
 } from "../../../../../components/VirtualSelectList";
 
 const columns = [
@@ -56,13 +53,9 @@ export function PromotionList({
     selectType
 }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
 
-    const Footer = useMemo(() => (<VirtualSelectListFooter data={getFooterColumns(promoList.length)} />), [promoList.length]);
+    const footerData = useMemo(() => getFooterColumns(promoList.length), [promoList.length]);
 
-    const renderItem = useMemo(() => createRenderItemFn(columns, handleClick), []);
 
     return (
         <div className={styled["manage-list-wrap"]}>
@@ -72,9 +65,9 @@ export function PromotionList({
             <VirtualSelectList
                 wrapCss={styled["manage-list"]}
                 data={promoList}
-                header={Header}
-                footer={Footer}
-                renderItem={renderItem}
+                columns={columns}
+                footerColumn={footerData}
+                handleClickSelect={handleClick}
                 selectType={selectType}
                 select={selectId}
             />

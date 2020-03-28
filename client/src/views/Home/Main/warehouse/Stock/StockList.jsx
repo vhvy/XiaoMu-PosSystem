@@ -1,11 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styled from "../../../../../styles/warehouse/stock.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    VirtualSelectListFooter,
-    createRenderItemFn
-} from "../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../components/VirtualSelectList";
 import { getFormatTime } from "../../../../../tools/time";
 
 const columns = [
@@ -56,23 +51,17 @@ export function StockList({
         date: getFormatTime(i.date)
     })), [list]);
 
-    const renderItem = useMemo(() => (createRenderItemFn(columns, handleClickSelect)), []);
-
-    const header = useMemo(() => (<VirtualSelectListHeader data={columns} />), []);
-
-    const footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(list.length)} />
-    ), [list.length]);
+    const footerData = useMemo(() => getFooterColumns(list.length), [list.length]);
 
     return (
         <VirtualSelectList
             wrapCss={styled["stock-left"]}
-            header={header}
-            footer={footer}
             select={selectId}
             data={data}
-            renderItem={renderItem}
             selectType={selectType}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={handleClickSelect}
         />
     );
 }

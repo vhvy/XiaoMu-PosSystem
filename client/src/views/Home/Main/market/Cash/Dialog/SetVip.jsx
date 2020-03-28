@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, Input, message } from "antd";
-import { VirtualSelectList, VirtualSelectListHeader, createRenderItemFn } from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import { useAjax } from "../../../../../AjaxProvider";
 import styled from "../../../../../../styles/cash.scss";
 import { VipManage } from "../../../../../../tasks/vip";
@@ -48,23 +48,17 @@ const columns = [
 
 function List({ list, select, selectType, handleClick }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const renderItem = useMemo(() => createRenderItemFn(columns, handleClick), [handleClick]);
-
     return (
         <VirtualSelectList
             wrapStyle={{
                 marginTop: 20,
                 height: 250
             }}
-            header={Header}
+            columns={columns}
             data={list}
             select={select}
             selectType={selectType}
-            renderItem={renderItem}
+            handleClickSelect={handleClick}
         />
     );
 }

@@ -1,11 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "../../../../styles/users.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader,
-    createRenderItemFn
-} from "../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../components/VirtualSelectList";
 
 const columns = [
     {
@@ -52,15 +47,7 @@ export function UserManageList(
     }
 ) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter
-            data={getFooterColumns(list.length)}
-        />
-    ), [list.length]);
+    const footerData = useMemo(() => getFooterColumns(list.length), [list.length]);
 
     function handleCss(css, styled, data) {
         if (data.disabled === "禁用") {
@@ -69,19 +56,16 @@ export function UserManageList(
         return css;
     }
 
-    const renderItem = useMemo(() => (
-        createRenderItemFn(columns, handleClickSelect, "id", handleCss)
-    ), []);
-
     return (
         <VirtualSelectList
             wrapCss={styled["user-manage-list"]}
             data={list}
-            header={Header}
-            footer={Footer}
             select={selectId}
             selectType={selectType}
-            renderItem={renderItem}
+            columns={columns}
+            footerColumn={footerData}
+            handleClickSelect={handleClickSelect}
+            handleColumnCss={handleCss}
         />
     );
 }

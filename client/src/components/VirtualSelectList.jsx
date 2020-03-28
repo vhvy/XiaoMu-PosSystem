@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "../styles/components/virtual-select-list.scss";
+import { useMemo } from "react";
 
 
 export function useSelect() {
@@ -21,12 +22,12 @@ export function useSelect() {
 }
 
 
-export function createRenderItemFn(
+function createRenderItemFn({
     columns,
     handleClickSelect,
     selectFields = "id",
     handleColumnCss
-) {
+}) {
 
     function getCssName(key, type, center) {
         // 单元格css
@@ -97,7 +98,7 @@ export function createRenderItemFn(
     };
 }
 
-export function VirtualSelectListHeader({ data }) {
+function VirtualSelectListHeader({ data }) {
     return (
         <div className={styled["virtual-header"]}>{
             data.map(({ title, type, key, center }) => {
@@ -121,7 +122,7 @@ export function VirtualSelectListHeader({ data }) {
     );
 }
 
-export function VirtualSelectListFooter({ data, style = {} }) {
+function VirtualSelectListFooter({ data, style = {} }) {
     return (
         <div
             className={styled["virtual-footer"]}
@@ -151,13 +152,16 @@ export function VirtualSelectList({
     itemHeight = 40,
     // 虚拟列表项目单行高度
 
-    header,
-    // 表头组件
+    columns,
+    // 表头组件Column数据
+    // 同时也是渲染函数的渲染规则
 
-    footer,
-    // 底部组件
+    needHeader = true,
+    // 是否渲染表头组件
 
-    renderItem,
+    footerColumn,
+    // 底部组件Column数据
+
     data,
     // 数据源
 
@@ -182,6 +186,12 @@ export function VirtualSelectList({
     innerCss,
     // 内层容器css
 
+    handleClickSelect,
+    // 处理点击选择id
+
+    handleColumnCss,
+    // 处理列表单行css的钩子
+
     innerStyle,
     selectFields = "id"
 }) {
@@ -193,6 +203,19 @@ export function VirtualSelectList({
      * data: 当前虚拟列表数据
      * firstIndex: 虚拟列表中第一行数据在完整列表中的索引，可用来计算单元行的偏移位置和序号
      */
+
+    const renderItem = useMemo(() => createRenderItemFn({
+        columns,
+        handleClickSelect,
+        selectFields,
+        handleColumnCss
+    }), []);
+
+    const header = useMemo(() => columns && needHeader && <VirtualSelectListHeader data={columns} /> || null, [columns]);
+    // 头部组件
+
+    const footer = useMemo(() => footerColumn && <VirtualSelectListFooter data={footerColumn} /> || null, [footerColumn]);
+    // 底部组件
 
     const scrollRef = useRef(null);
     // 外部滚动容器ref

@@ -3,7 +3,7 @@ import { useAjax } from "../../../AjaxProvider";
 import styled from "../../../../styles/warehouse/supplier.scss";
 import { Modal, Button, Input, Form, message } from "antd";
 import { SupplierTask } from "../../../../tasks/supplier";
-import { createRenderItemFn, VirtualSelectList, VirtualSelectListFooter, VirtualSelectListHeader } from "../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../components/VirtualSelectList";
 import config from "../../../../config";
 
 const { DEFAULT_SUPPLIER_NAME } = config;
@@ -320,25 +320,17 @@ const SupplierListFooterColumns = (length) => ([
 
 function SupplierList({ list, select, selectType, handleClick }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={SupplierListColumns} />
-    ), []);
-
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={SupplierListFooterColumns(list.length)} />
-    ), [list.length]);
-
-    const renderItem = useMemo(() => (createRenderItemFn(SupplierListColumns, handleClick)), [handleClick]);
+    const footerData = useMemo(() => SupplierListFooterColumns(list.length), [list.length]);
 
     return (
         <VirtualSelectList
             wrapCss={styled["supplier-list"]}
-            header={Header}
-            footer={Footer}
-            renderItem={renderItem}
             data={list}
             select={select}
             selectType={selectType}
+            columns={SupplierListColumns}
+            footerColumn={footerData}
+            handleClickSelect={handleClick}
         />
     );
 }

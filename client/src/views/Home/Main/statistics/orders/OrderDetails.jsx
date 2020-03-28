@@ -1,12 +1,7 @@
 import React, { useMemo } from "react";
 import styled from "../../../../../styles/statistics/sales.scss";
 import { LoadingBox } from "../../../../../components/LoadingBox";
-import {
-    createRenderItemFn,
-    VirtualSelectList,
-    VirtualSelectListFooter,
-    VirtualSelectListHeader
-} from "../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../components/VirtualSelectList";
 import { mathc } from "../../../../../tools/mathc";
 
 const columns = [
@@ -80,15 +75,8 @@ export function OrderDetails({
     handleClick
 }) {
 
-    const Header = useMemo(() => (
-        <VirtualSelectListHeader data={columns} />
-    ), []);
 
-    const Footer = useMemo(() => (
-        <VirtualSelectListFooter data={getFooterColumns(commodity_list.length)} />
-    ), [commodity_list.length]);
-
-    const renderItem = useMemo(() => createRenderItemFn(columns, handleClick), []);
+    const footerData = useMemo(() => getFooterColumns(commodity_list.length), [commodity_list.length]);
 
     const data = useMemo(() => commodity_list.map(item => ({
         ...item,
@@ -103,9 +91,9 @@ export function OrderDetails({
                 status={load}
             />
             <VirtualSelectList
-                header={Header}
-                footer={Footer}
-                renderItem={renderItem}
+                columns={columns}
+                footerColumn={footerData}
+                handleClickSelect={handleClick}
                 data={data}
                 select={selectId}
                 selectType={selectType}

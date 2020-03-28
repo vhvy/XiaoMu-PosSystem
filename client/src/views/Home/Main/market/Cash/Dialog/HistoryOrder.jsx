@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Input, Modal, Button, message as antdMessage } from "antd";
 import styled from "../../../../../../styles/cash.scss";
-import {
-    VirtualSelectList,
-    VirtualSelectListHeader,
-    VirtualSelectListFooter,
-    createRenderItemFn
-} from "../../../../../../components/VirtualSelectList";
+import { VirtualSelectList } from "../../../../../../components/VirtualSelectList";
 import { useDispatch } from "react-redux";
 import {
     initCashHistoryOrderAction,
@@ -408,9 +403,7 @@ const OrderListFooter = (length) => ([
 function OrderList({ handleClick, select, selectType, list }) {
     // 历史订单列表
 
-    const Header = useMemo(() => (<VirtualSelectListHeader data={OrderListColumns} />), []);
-
-    const Footer = useMemo(() => (<VirtualSelectListFooter data={OrderListFooter(list.length)} />), [list.length]);
+    const footerData = useMemo(() => OrderListFooter(list.length), [list.length]);
 
     function handleColumnCss(css, styled, data) {
         if (data.is_undo !== "正常") {
@@ -418,8 +411,6 @@ function OrderList({ handleClick, select, selectType, list }) {
         }
         return css;
     }
-
-    const renderItem = useMemo(() => createRenderItemFn(OrderListColumns, handleClick, "order_id", handleColumnCss), [handleClick]);
 
     const data = useMemo(() =>
         list.map(({ order_id, sale_price, count = 1, vip_code, check_date, is_undo }) => ({
@@ -435,12 +426,13 @@ function OrderList({ handleClick, select, selectType, list }) {
     return (
         <VirtualSelectList
             wrapCss={styled["order-list"]}
-            header={Header}
-            footer={Footer}
+            columns={OrderListColumns}
+            footerColumn={footerData}
             data={data}
             select={select}
             selectType={selectType}
-            renderItem={renderItem}
+            handleClickSelect={handleClick}
+            handleColumnCss={handleColumnCss}
             selectFields="order_id"
         />
     );

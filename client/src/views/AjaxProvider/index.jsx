@@ -46,7 +46,6 @@ export function AjaxProvider({ children }) {
     }
 
     function onResErr(err) {
-        console.log("错误啦！")
         if (!err.response) {
             antdMessage.error("网络错误");
             return Promise.reject({

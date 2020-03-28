@@ -14,7 +14,7 @@ function _Login({ form }) {
     const http = useAjax();
     const location = useLocation();
     const { isLogin, login } = useAuth();
-
+    
     if (isLogin) {
         return <Redirect to={location.state && location.state.from || "/home"} />
     }
