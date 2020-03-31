@@ -10,7 +10,8 @@
     "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
     "dev:fakedb": "cross-env NODE_ENV=development node tools/fakeData.js",
     "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js",
-    "start": "cross-env NODE_ENV=production JWT_KEY=xiaomupossystem nodemon dist/bundle.cjs"
+    "start": "cross-env NODE_ENV=production JWT_KEY=xiaomupossystem nodemon dist/bundle.cjs",
+    "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "author": "vhvy",
   "license": "ISC",
