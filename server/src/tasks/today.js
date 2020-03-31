@@ -1,9 +1,8 @@
-import AppDAO from "../data/AppDAO.js";
 import OrderTasks from "./frontend/orders.js";
 import { StatisticsTasks } from "./statistics.js";
 import { getNightTimeStrap, getWeekendStartTimeStrap, getFormatTime, getNextDayStartTimeStrap } from "../lib/time.js";
 import UserTasks from "./users.js";
-import { math } from "../lib/mathc.js";
+import { mathc } from "../lib/mathc.js";
 
 export class TodayTasks {
 
@@ -109,12 +108,12 @@ export class TodayTasks {
                 count: 0
             });
 
-            weekend_data_values[day_key].sale_price = math.add(
+            weekend_data_values[day_key].sale_price = mathc.add(
                 weekend_data_values[day_key].sale_price,
                 sale_price
             );
 
-            weekend_data_values[day_key].count = math.add(
+            weekend_data_values[day_key].count = mathc.add(
                 weekend_data_values[day_key].count,
                 count
             );

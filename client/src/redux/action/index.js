@@ -48,7 +48,7 @@ import {
     WARE_STOCK_SELECT
 } from "./actionType";
 
-export function setStoreName(name) {
+export function setStoreNameAction(name) {
     // 设置店铺名称
 
     return {

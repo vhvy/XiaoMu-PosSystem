@@ -1,26 +1,48 @@
-import React, { createContext, useContext } from "react";
-import { connect } from "react-redux";
+import React, { createContext, useContext, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
     clearUserLoginStateAction,
     setUserDetailsAction,
-    setStoreName
+    setStoreNameAction
 } from "../../redux/action";
 import { TokenManage } from "../../tasks/tokenManage";
 
+const selector = ({ userDetails }) => {
+    const { username, authority, isLogin, isAdmin, } = userDetails;
+    return {
+        isLogin,
+        isAdmin,
+        username,
+        authority
+    };
+};
 
 const AuthContext = createContext();
+
 export const useAuth = () => useContext(AuthContext);
 
-function _AuthProvider({
+export function AuthProvider({
     children,
-    isLogin,
-    username,
-    authority,
-    isAdmin,
-    clearUserState,
-    setUserDetails,
-    setStoreName
 }) {
+
+    const dispatch = useDispatch();
+
+    const {
+        clearUserState,
+        setUserDetails,
+        setStoreName
+    } = useMemo(() => ({
+        clearUserState: () => dispatch(clearUserLoginStateAction()),
+        setUserDetails: (value) => dispatch(setUserDetailsAction(value)),
+        setStoreName: (name) => dispatch(setStoreNameAction(name))
+    }), [dispatch]);
+
+    const {
+        isLogin,
+        isAdmin,
+        username,
+        authority
+    } = useSelector(selector);
 
     function login(token, details) {
         if (token) {
@@ -54,23 +76,3 @@ function _AuthProvider({
 
     return <AuthContext.Provider value={value} children={children} />;
 }
-
-function mapStateToProps(state) {
-    const { username, authority, isLogin, isAdmin, } = state.userDetails;
-    return {
-        isLogin,
-        isAdmin,
-        username,
-        authority
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        clearUserState: () => dispatch(clearUserLoginStateAction()),
-        setUserDetails: (value) => dispatch(setUserDetailsAction(value)),
-        setStoreName: (name) => dispatch(setStoreName(name))
-    };
-}
-
-export const AuthProvider = connect(mapStateToProps, mapDispatchToProps)(_AuthProvider);

@@ -1,6 +1,6 @@
 import AppDAO from "../data/AppDAO.js";
 import { getPinyin } from "../lib/pinyin.js";
-import { math } from "../lib/mathc.js";
+import { mathc } from "../lib/mathc.js";
 
 class VipTasks {
 
@@ -283,8 +283,8 @@ class VipTasks {
 
         const { vip_id, vip_sum, sale_sum } = await this.getVipCurrentValue(code);
 
-        const new_vip_sum = math.subtract(vip_sum, point);
-        const new_sale_sum = math.subtract(sale_sum, price);
+        const new_vip_sum = mathc.subtract(vip_sum, point);
+        const new_sale_sum = mathc.subtract(sale_sum, price);
 
         return await AppDAO.run(`
         UPDATE vip_value 
@@ -298,7 +298,7 @@ class VipTasks {
 
         const { vip_id, vip_sum } = await this.getVipCurrentValue(code);
 
-        const new_vip_sum = math.subtract(vip_sum, point);
+        const new_vip_sum = mathc.subtract(vip_sum, point);
 
         return await AppDAO.run(`
         UPDATE vip_value 
@@ -318,8 +318,8 @@ class VipTasks {
         SELECT vip_sum, sale_sum FROM vip_value WHERE vip_id=?
         ;`, id);
 
-        const vip_sum = math.add(point, c_vip_sum);
-        const sale_sum = math.add(sum, c_sale_sum);
+        const vip_sum = mathc.add(point, c_vip_sum);
+        const sale_sum = mathc.add(sum, c_sale_sum);
 
         return await AppDAO.run(`
         UPDATE vip_value 
@@ -335,7 +335,7 @@ class VipTasks {
         SELECT * FROM vip_score_rules
         ;`);
 
-        const result = math.divide(point, money);
+        const result = mathc.divide(point, money);
 
         return result;
     }

@@ -1,11 +1,11 @@
 import AppDAO from "../src/data/AppDAO.js";
 import CommodityTasks from "../src/tasks/commodity.js";
 import moment from "moment";
-import { math } from "../src/lib/mathc.js";
+import { mathc } from "../src/lib/mathc.js";
 import UserTasks from "../src/tasks/users.js";
 
 function getRandomNum([min, max]) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return mathc.floor(mathc.random() * (max - min + 1) + min);
 }
 
 const config = {
@@ -51,12 +51,12 @@ function getRandomCommodity(list) {
         .filter(i => i.is_delete === 0)
         .forEach(item => {
             count++;
-            in_price = math.add(in_price, item.in_price);
-            sale_price = math.add(sale_price, item.sale_price);
+            in_price = mathc.add(in_price, item.in_price);
+            sale_price = mathc.add(sale_price, item.sale_price);
             sale_origin_price = sale_price;
-            profit = math.add(
+            profit = mathc.add(
                 profit,
-                math.subtract(item.sale_price, item.in_price)
+                mathc.subtract(item.sale_price, item.in_price)
             );
         });
 

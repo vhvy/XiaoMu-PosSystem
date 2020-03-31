@@ -1,5 +1,5 @@
 import AppDAO from "../../data/AppDAO.js";
-import { math } from "../../lib/mathc.js";
+import { mathc } from "../../lib/mathc.js";
 import { getNightTimeStrap } from "../../lib/time.js";
 import CommodityTask from "../commodity.js";
 import FrontCommodityTask from "../frontend/commodity.js";
@@ -12,14 +12,14 @@ let is_first_create = true;
 class OrdersTask {
 
     static async validChange(client_pay, change, sale_price) {
-        const result = math.subtract(client_pay, change);
+        const result = mathc.subtract(client_pay, change);
         return sale_price === result;
     }
 
     static async validOrderPrice(price, list) {
         // 验证前台提交的商品总价格和商品实际价格是否相符合
 
-        const result = math.addList(list.map(({ sale_price, count }) => math.multiply(sale_price, count)));
+        const result = mathc.addList(list.map(({ sale_price, count }) => mathc.multiply(sale_price, count)));
 
         return result === price;
     }
@@ -162,10 +162,10 @@ class OrdersTask {
             if (vip_points) {
                 // 如果商品可以积分，则将此商品金额填充进相应数组内，供后续计算积分
 
-                point_money_list.push(math.multiply(sale_price, count));
+                point_money_list.push(mathc.multiply(sale_price, count));
             }
 
-            in_price_list.push(math.multiply(in_price, count));
+            in_price_list.push(mathc.multiply(in_price, count));
             // 将进价列表填入相应数组内
 
             commodity_list_details.push({
@@ -181,18 +181,18 @@ class OrdersTask {
         const scale = await this.getVipPointsScale();
         // 商品积分比例
 
-        const in_price_sum = math.addList(in_price_list);
+        const in_price_sum = mathc.addList(in_price_list);
         // 本订单商品进价
 
-        const point_money_sum = math.addList(point_money_list);
+        const point_money_sum = mathc.addList(point_money_list);
         // 本订单可积分的商品总售价
 
-        const points = math.round(math.multiply(point_money_sum, scale));
+        const points = mathc.round(mathc.multiply(point_money_sum, scale));
         // 本单积分
 
 
 
-        const profit = math.subtract(sale_price, in_price_sum);
+        const profit = mathc.subtract(sale_price, in_price_sum);
         // 本订单利润
 
         const [order_id, timestamp] = await this.createOrderID();

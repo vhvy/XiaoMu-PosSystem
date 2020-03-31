@@ -20,7 +20,7 @@ import {
     CASH_HISTORY_ORDER_IMPORT
 } from "../action/actionType";
 import config from "../../config";
-import { mathc as math } from "../../tools/mathc";
+import { mathc } from "../../tools/mathc";
 import { getFormatTime } from "../../tools/time";
 
 const { GLOBAL_CASH_HOTKEY_SHOW } = config;
@@ -138,9 +138,9 @@ function currentOrder(state = orderInit, action) {
                                     case "赠送":
                                         return 0;
                                     case "退货":
-                                        return math.multiply(0 - math.abs(i.sale_price), action.count);
+                                        return mathc.multiply(0 - mathc.abs(i.sale_price), action.count);
                                     default:
-                                        return math.multiply(i.sale_price, action.count);
+                                        return mathc.multiply(i.sale_price, action.count);
                                 }
                             })()
                         });
@@ -160,9 +160,9 @@ function currentOrder(state = orderInit, action) {
                                     case "赠送":
                                         return 0;
                                     case "退货":
-                                        return math.multiply(0 - math.abs(action.price), i.count);
+                                        return mathc.multiply(0 - mathc.abs(action.price), i.count);
                                     default:
-                                        return math.multiply(action.price, i.count);
+                                        return mathc.multiply(action.price, i.count);
                                 }
                             })()
                         });
@@ -192,7 +192,7 @@ function currentOrder(state = orderInit, action) {
                         return Object.assign({}, i, {
                             status: "退货",
                             sale_price: 0 - i.sale_price,
-                            money: math.multiply(i.count, 0 - i.sale_price)
+                            money: mathc.multiply(i.count, 0 - i.sale_price)
                         });
                     }
                     return i;

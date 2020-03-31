@@ -1,25 +1,25 @@
-import * as _math from "mathjs";
+import math from "mathjs";
 
 
 
 
-export const math = {
+export const mathc = {
     addList: (list) => {
-        return _math.number(list.reduce((a, b) => _math.add(_math.bignumber(a), _math.bignumber(b)), 0));
+        return math.number(list.reduce((a, b) => math.add(math.bignumber(a), math.bignumber(b)), 0));
     },
     add: (a, b) => {
-        return _math.number(_math.add(_math.bignumber(a), _math.bignumber(b)));
+        return math.number(math.add(math.bignumber(a), math.bignumber(b)));
     },
     subtract: (a, b) => {
-        return _math.number(_math.subtract(_math.bignumber(a), _math.bignumber(b)));
+        return math.number(math.subtract(math.bignumber(a), math.bignumber(b)));
     },
     multiply: (a, b) => {
-        return _math.number(_math.multiply(_math.bignumber(a), _math.bignumber(b)));
+        return math.number(math.multiply(math.bignumber(a), math.bignumber(b)));
     },
     divide: (a, b) => {
-        return _math.number(_math.divide(_math.bignumber(a), _math.bignumber(b)));
+        return math.number(math.divide(math.bignumber(a), math.bignumber(b)));
     },
     round: (a, bit = 2) => {
-        return _math.round(a, bit);
+        return math.round(a, bit);
     }
 }

@@ -4,7 +4,7 @@ import OrdersTasks from "./frontend/orders.js";
 import CommodityTask from "./commodity.js";
 import CategoryTask from "./categories.js";
 import SupplierTask from "./suppliers.js";
-import { math } from "../lib/mathc.js";
+import { mathc } from "../lib/mathc.js";
 import { getFormatTime, createTimerangeKey } from "../lib/time.js";
 
 export class StatisticsTasks {
@@ -151,11 +151,11 @@ export class StatisticsTasks {
 
             for (let { commodity_id, count, sale_price } of order_commodity_list) {
 
-                const price = math.multiply(sale_price, count);
+                const price = mathc.multiply(sale_price, count);
                 // 订单中此商品总金额
 
                 if (commodity_count_value[commodity_id]) {
-                    commodity_count_value[commodity_id] = math.add(
+                    commodity_count_value[commodity_id] = mathc.add(
                         commodity_count_value[commodity_id],
                         price
                     );
@@ -172,7 +172,7 @@ export class StatisticsTasks {
         for (let id of commodity_id_list) {
             const { category_id } = await CommodityTask.getCommodityDetails(id, "id", true);
             if (category_count_list[category_id]) {
-                category_count_list[category_id] = math.add(
+                category_count_list[category_id] = mathc.add(
                     category_count_list[category_id],
                     commodity_count_value[id]
                 );
@@ -242,9 +242,9 @@ export class StatisticsTasks {
 
         for (let { vip_code, sale_price } of order_list) {
             if (vip_code) {
-                vip_sum = math.add(vip_sum, sale_price);
+                vip_sum = mathc.add(vip_sum, sale_price);
             } else {
-                no_vip_sum = math.add(no_vip_sum, sale_price);
+                no_vip_sum = mathc.add(no_vip_sum, sale_price);
             }
         }
 
@@ -270,7 +270,7 @@ export class StatisticsTasks {
         for (let { user_id, sale_price } of order_list) {
 
             if (user_check_count[user_id]) {
-                user_check_count[user_id] = math.add(user_check_count[user_id], sale_price);
+                user_check_count[user_id] = mathc.add(user_check_count[user_id], sale_price);
             } else {
                 user_check_count[user_id] = sale_price;
             }
@@ -293,7 +293,7 @@ export class StatisticsTasks {
         for (let { pay_type, sale_price } of order_list) {
 
             if (pay_type_count[pay_type]) {
-                pay_type_count[pay_type] = math.add(
+                pay_type_count[pay_type] = mathc.add(
                     pay_type_count[pay_type],
                     sale_price
                 );
@@ -320,10 +320,10 @@ export class StatisticsTasks {
 
             for (let { commodity_id, count, sale_price } of order_commodity_list) {
 
-                const price = math.multiply(count, sale_price);
+                const price = mathc.multiply(count, sale_price);
 
                 if (commodity_count_value[commodity_id]) {
-                    commodity_count_value[commodity_id] = math.add(
+                    commodity_count_value[commodity_id] = mathc.add(
                         commodity_count_value[commodity_id],
                         price
                     );
@@ -343,7 +343,7 @@ export class StatisticsTasks {
             const price = commodity_count_value[id];
 
             if (supplier_count_value[supplier_id]) {
-                supplier_count_value[supplier_id] = math.add(
+                supplier_count_value[supplier_id] = mathc.add(
                     supplier_count_value[supplier_id],
                     price
                 );
@@ -469,7 +469,7 @@ export class StatisticsTasks {
             for (let key of keys) {
                 let vl = result[timeKey];
 
-                vl[key] = vl[key] === undefined ? args[key] : math.add(vl[key], args[key]);
+                vl[key] = vl[key] === undefined ? args[key] : mathc.add(vl[key], args[key]);
             }
         }
 

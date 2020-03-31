@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useAjax } from "../../../../../AjaxProvider";
-import { Modal, Statistic, Radio, Input, Button, Switch, message } from "antd";
+import { Modal, Statistic, Radio, Input, Button, Switch } from "antd";
 import styled from "../../../../../../styles/cash.scss";
 import { mathc } from "../../../../../../tools/mathc";
 import config from "../../../../../../config";
-import { Printer } from "../../../../../../device/print";
-import { MoneyBox } from "../../../../../../device/moneyBox";
+import { PosPrint } from "../../../../../../device/pos_print";
+import { MoneyBox } from "../../../../../../device/money_box";
 import { Order } from "../../../../../../tasks/frontOrder";
 import { resetOrderAction, addOrderToHistoryAction } from "../../../../../../redux/action";
+import { ClientDisplay } from "../../../../../../device/client_display";
 
 const { confirm } = Modal;
 
@@ -141,6 +142,7 @@ export function Checkout({
             pay_type: hotKeyList[0].value,
             change: 0
         }));
+        ClientDisplay.reset();
     }
 
     const changeStyle = {
@@ -184,6 +186,11 @@ export function Checkout({
                 change: mathc.subtract(v, sale_price),
                 show_client_pay: v
             }));
+
+            ClientDisplay.show({
+                pay_price: v,
+                change: mathc.subtract(v, sale_price),
+            });
         } else {
             if (v === "") {
                 setData(s => ({
@@ -192,6 +199,10 @@ export function Checkout({
                     change: mathc.subtract(0, sale_price),
                     show_client_pay: 0,
                 }));
+                ClientDisplay.show({
+                    pay_price: 0,
+                    change: mathc.subtract(0, sale_price)
+                });
             } else {
                 setData(s => ({
                     ...s,
@@ -257,8 +268,7 @@ export function Checkout({
 
                 dispatch(addOrderToHistoryAction(data));
                 // 提交订单信息到历史订单里
-                printStatus && Printer.print("小票已打印!");
-                console.log("订单数据: ", data);
+                printStatus && PosPrint.print(data);
             } catch (error) {
                 console.log(error);
             }

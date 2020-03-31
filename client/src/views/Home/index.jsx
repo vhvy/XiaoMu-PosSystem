@@ -5,12 +5,17 @@ import { Header } from "./Header";
 import { Main } from "./Main";
 import { MultipleTabs } from "./MultipleTabs";
 import { TabsProvider } from "./TabsProvider";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import config from "../../config";
+
+const selector = ({ showTabs }) => ({ showTabs });
 
 const { GLOBAL_SIDER_COLLAPSED } = config;
 
-function _Home({ showTabs }) {
+export function Home() {
+
+    const { showTabs } = useSelector(selector);
+
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem(GLOBAL_SIDER_COLLAPSED) === "collapsed" ? true : false
     );
@@ -38,15 +43,5 @@ function _Home({ showTabs }) {
         </Layout>
     );
 }
-
-
-function mapStateToProps(state) {
-    const { showTabs } = state;
-    return {
-        showTabs
-    }
-}
-
-const Home = connect(mapStateToProps)(_Home);
 
 export default Home;

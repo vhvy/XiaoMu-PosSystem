@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Modal, Input, message } from "antd";
+import { Modal, Input, } from "antd";
 import styled from "../../../../../../styles/cash.scss";
 import { useAjax } from "../../../../../AjaxProvider";
 import { CommodityTasks } from "../../../../../../tasks/commodity";
 import { SelectCommodity } from "../Dialog/SelectCommodity";
-import { ClientDisplay } from "../../../../../../device/clientDisplay";
+import { ClientDisplay } from "../../../../../../device/client_display";
 
 const { Search } = Input;
 
@@ -41,7 +41,9 @@ export function BarcodeInputAndTotal({
     const ajax = useAjax();
 
     useEffect(() => {
-        ClientDisplay.show(money);
+        ClientDisplay.show({
+            all_price: money
+        });
         // 通过客显显示当前订单价格
     }, [money]);
 

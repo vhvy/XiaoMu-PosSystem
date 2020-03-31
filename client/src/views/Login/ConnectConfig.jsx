@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Icon, Modal } from "antd";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { config } from "../../config";
 import { setApiUrlAction } from "../../redux/action";
 import { setConnectConfig } from "../../tasks/setConnectConfig";
@@ -70,8 +70,21 @@ const ConfigForm = connect(ConfigFormMapStateToProps)(Form.create({
 })(_ConfigForm));
 
 
+const connectConfigSelector = ({ apiUrl }) => {
+    const { url, errors } = apiUrl;
+    return {
+        url,
+        errors
+    };
+}
 
-function _ConnectConfig({ url, errors }) {
+export function ConnectConfig() {
+
+    const {
+        url,
+        errors
+    } = useSelector(connectConfigSelector);
+
     const [modalVisible, setModalVisible] = useState(false);
 
     function showModal() {
@@ -108,13 +121,3 @@ function _ConnectConfig({ url, errors }) {
         </>
     );
 }
-
-function ConnectConfigMapStateToProps({ apiUrl }) {
-    const { url, errors } = apiUrl;
-    return {
-        url,
-        errors
-    };
-}
-
-export const ConnectConfig = connect(ConnectConfigMapStateToProps)(_ConnectConfig);

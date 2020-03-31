@@ -1,6 +1,6 @@
 import AppDAO from "../../data/AppDAO.js";
 import PromotionTask from "../market/promotion.js";
-import { math } from "../../lib/mathc.js";
+import { mathc } from "../../lib/mathc.js";
 
 class CommodityTask {
 
@@ -116,7 +116,7 @@ class CommodityTask {
                             price = discount_value;
                             break;
                         case "单品打折":
-                            price = math.multiply(sale_price, discount_value);
+                            price = mathc.multiply(sale_price, discount_value);
                             break;
                         default:
                             price = sale_price;

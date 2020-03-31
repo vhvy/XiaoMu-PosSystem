@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Icon, Drawer, Switch } from "antd";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     toggleTabsStatusAction,
     toggleCashHotKeyStatusAction,
@@ -18,19 +18,28 @@ function CustomSwitch({
     return (
         <div>
             {label}:&nbsp;&nbsp;&nbsp;&nbsp;
-                <Switch onChange={toggleFn} checked={status} />
+            <Switch onChange={toggleFn} checked={status} />
         </div>
     );
 }
 
-function _SettingDrawer({
+const selector = ({ showTabs, showCashHotKey }) => ({ showTabs, showCashHotKey });
+
+export function SettingDrawer({
     show,
-    hide,
-    showTabs,
-    toggleTabs,
-    showCashHotKey,
-    toggleCashHotKey
+    hide
 }) {
+    const { showTabs, showCashHotKey } = useSelector(selector);
+
+    const dispatch = useDispatch();
+
+    const {
+        toggleTabs,
+        toggleCashHotKey
+    } = useMemo(() => ({
+        toggleTabs: (bool) => dispatch(toggleTabsStatusAction(bool)),
+        toggleCashHotKey: (bool) => dispatch(toggleCashHotKeyStatusAction(bool))
+    }), [dispatch]);
 
     function toggleMulitTabs(bool) {
         bool ? localStorage.removeItem(GLOBAL_TABS_STATUS) : localStorage.setItem(GLOBAL_TABS_STATUS, "hide");
@@ -39,7 +48,6 @@ function _SettingDrawer({
 
     function toggleCashHotKeyStatus(bool) {
         bool ? localStorage.removeItem(GLOBAL_CASH_HOTKEY_SHOW) : localStorage.setItem(GLOBAL_CASH_HOTKEY_SHOW, "hide");
-        console.log(bool);
         toggleCashHotKey(bool);
     }
 
@@ -53,23 +61,6 @@ function _SettingDrawer({
         </Drawer>
     );
 }
-
-function mapStateToProps(state) {
-    const { showTabs, showCashHotKey } = state;
-    return {
-        showTabs,
-        showCashHotKey
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        toggleTabs: (bool) => dispatch(toggleTabsStatusAction(bool)),
-        toggleCashHotKey: (bool) => dispatch(toggleCashHotKeyStatusAction(bool))
-    }
-}
-
-const SettingDrawer = connect(mapStateToProps, mapDispatchToProps)(_SettingDrawer);
 
 export function Setting() {
 

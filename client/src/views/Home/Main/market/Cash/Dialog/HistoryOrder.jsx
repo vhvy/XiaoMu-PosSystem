@@ -12,7 +12,7 @@ import {
 import { Order } from "../../../../../../tasks/frontOrder";
 import { CommodityTasks } from "../../../../../../tasks/commodity";
 import { useAjax } from "../../../../../AjaxProvider";
-import { Printer } from "../../../../../../device/print";
+import { PosPrint } from "../../../../../../device/pos_print";
 import { getFormatTime } from "../../../../../../tools/time";
 import { mathc } from "../../../../../../tools/mathc";
 import { OrderDetails } from "./common/OrderDetails";
@@ -86,7 +86,8 @@ export function HistoryOrder({ status, hideFn, list }) {
 
     function handlePrint() {
         // 打印订单小票
-        Printer.print("小票已打印");
+        const data = list.find(({ order_id }) => order_id === select);
+        PosPrint.print(data);
     }
 
 
@@ -127,7 +128,7 @@ export function HistoryOrder({ status, hideFn, list }) {
 
             closeModal();
             dispatch(importHistoryOrderAction(commodity_list));
-            antdMessage.warn(`有${fail_list.length}个商品未能成功导入!`);
+            fail_list.length !== 0 && antdMessage.warn(`有${fail_list.length}个商品未能成功导入!`);
         } catch (error) {
             console.log(error);
         }
