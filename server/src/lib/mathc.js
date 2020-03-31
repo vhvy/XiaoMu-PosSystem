@@ -1,4 +1,4 @@
-import _math from "mathjs";
+import * as _math from "mathjs";
 
 
 

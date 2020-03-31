@@ -1,3 +1,5 @@
+const ICON_ONLINE_URL = process.env.TYPE === "offline" ? "icon://static/js/iconfontcn.js" : "/static/js/iconfontcn.js";
+
 export const common = {
     store_name: "小牧的小超市",
     GLOBAL_BASE_URL_KEY: "POSSYSTEM_BASEURL",
@@ -5,7 +7,7 @@ export const common = {
     GLOBAL_TABS_STATUS: "GLOBAL_TABS_STATUS",
     GLOBAL_SIDER_COLLAPSED: "GLOBAL_SIDER_COLLAPSED",
     GLOBAL_CASH_HOTKEY_SHOW: "GLOBAL_CASH_HOTKEY_SHOW",
-    ICON_ONLINE_URL: "//at.alicdn.com/t/font_1579118_o1mg56g7gk.js",
+    ICON_ONLINE_URL,
     GLOBAL_FRONT_BOX_STATUS: "GLOBAL_FRONT_BOX_STATUS",
     GLOBAL_FRONT_AUTO_PRINT_STATUS: "GLOBAL_FRONT_AUTO_PRINT_STATUS",
     DEFAULT_SUPPLIER_NAME: "默认供货商",

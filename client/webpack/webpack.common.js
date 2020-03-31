@@ -1,5 +1,7 @@
 const path = require("path");
 const htmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWeboackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: path.resolve("./", "src/index.js"),
@@ -16,7 +18,7 @@ module.exports = {
                     {
                         loader: "file-loader",
                         options: {
-                            name: "[path][name].[ext]"
+                            name: "static/images/[path][name].[ext]"
                         },
                     },
                 ],
@@ -74,10 +76,17 @@ module.exports = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new htmlWebpackPlugin({
             template: path.resolve("./", "src/public/index.html"),
             filename: "./index.html"
-        })
+        }),
+        new CopyWeboackPlugin([
+            {
+                from: "src/public/iconfontcn.js",
+                to:  "static/js/iconfontcn.js"
+            }
+        ])
     ],
     resolve: {
         extensions: [".js", ".jsx", ".json"]

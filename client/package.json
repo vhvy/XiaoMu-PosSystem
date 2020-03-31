@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev:client": "webpack-dev-server --config webpack/webpack.dev.js",
-    "build:client": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js"
+    "build:client": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js",
+    "build:electron": "cross-env NODE_ENV=production webpack --env.TYPE=offline --config webpack/webpack.electron.js"
   },
   "author": "vhvy",
   "license": "ISC",
@@ -32,6 +33,8 @@
     "@babel/preset-react": "^7.7.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.12.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.2.0",
     "file-loader": "^4.3.0",
     "html-webpack-plugin": "^3.2.0",
