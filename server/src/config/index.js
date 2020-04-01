@@ -1,7 +1,7 @@
 import prodEnv from "./prod.env.js";
 import devEnv from "./dev.env.js";
 import commonEnv from "./common.js";
-import merge from "webpack-merge";
+import merge from "../lib/merge.js";
 
 let config;
 

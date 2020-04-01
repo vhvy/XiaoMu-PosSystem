@@ -3,7 +3,7 @@ const merge = require("webpack-merge");
 const webpack = require("webpack");
 
 function customizeObject(a, b, key) {
-    if (key === 'module') {
+    if (key === "module") {
 
         const a_rules = a.rules;
         const b_rules = b.rules;
@@ -32,7 +32,6 @@ function customizeObject(a, b, key) {
 module.exports = env => {
 
     const TYPE = env && env.TYPE || "online";
-    console.log(env, TYPE)
     return merge(
         {
             customizeObject
