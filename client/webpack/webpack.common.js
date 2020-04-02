@@ -1,7 +1,7 @@
 const path = require("path");
 const htmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CopyWeboackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: path.resolve("./", "src/index.js"),
@@ -81,7 +81,7 @@ module.exports = {
             template: path.resolve("./", "src/public/index.html"),
             filename: "./index.html"
         }),
-        new CopyWeboackPlugin([
+        new CopyWebpackPlugin([
             {
                 from: "src/public/iconfontcn.js",
                 to:  "static/js/iconfontcn.js"

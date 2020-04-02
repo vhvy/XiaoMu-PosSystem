@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev:server": "cross-env NODE_ENV=development JWT_KEY=xiaomupossystem nodemon --experimental-modules src/index.js",
-    "build": "cross-env NODE_ENV=production JWT_KEY=xiaomupossystem webpack --config webpack.prod.cjs",
+    "build": "cross-env NODE_ENV=production webpack --env.JWT_KEY=xiaomupossystem --config webpack.prod.cjs",
     "dev:initdb": "cross-env NODE_ENV=development node tools/initDB.js",
     "dev:fakedb": "cross-env NODE_ENV=development node tools/fakeData.js",
     "build:initdb": "cross-env NODE_ENV=production node tools/initDB.js",
