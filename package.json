@@ -4,9 +4,9 @@
   "description": "小超市收银系统，包含前台和后台。",
   "main": "main.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production TYPE=offline JWT_KEY=xiaomupossystem electron .",
+    "start": "cross-env NODE_ENV=development electron .",
     "postinstall": "electron-builder install-app-deps",
-    "build": "electron-builder build"
+    "build": "cross-env NODE_ENV=production electron-builder build"
   },
   "repository": {
     "type": "git",

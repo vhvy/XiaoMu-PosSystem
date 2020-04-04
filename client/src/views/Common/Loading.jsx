@@ -39,7 +39,6 @@ export function Loading() {
                 });
                 setStoreName(store_name);
             } catch (error) {
-                console.log(error);
                 history.replace("/login", {
                     from: pathname
                 });
@@ -47,9 +46,8 @@ export function Loading() {
 
             setIsLoading(false);
         }
-
-        if (pathname === "/login" && !hasToken) return;
-        // 当前页面为登录界面且没有token时不对token进行验证
+        if (pathname === "/login" || !hasToken) return;
+        // 当前页面为登录界面或没有token时不对token进行验证
 
         // 否则进行验证
 
