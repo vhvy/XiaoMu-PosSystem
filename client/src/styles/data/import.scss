@@ -157,6 +157,9 @@
 
       .right-wrap {
         flex: 1;
+        :global(.ant-form-item) {
+          margin-bottom: 18px;
+        }
       }
     }
 
@@ -168,6 +171,10 @@
     }
 
     .fields-config-wrap {
+
+      & > p:first-of-type {
+        margin-bottom: 10px;
+      }
       :global(.ant-row) {
         margin-bottom: 0px;
       }

@@ -12,6 +12,24 @@
     password: "password"
 }
 ```
+
+```
+/api/token/auth
+验证token合法性
+
+方法: get
+```
+---
+
+## 首页数据
+
+```
+/api/today
+获取首页数据
+
+方法: get
+```
+
 ---
 
 ## 用户
@@ -135,13 +153,12 @@
 ```
 
 ```
-/api/warehouse/categories/delete
+/api/warehouse/categories/delete/:category
 删除分类
 
-方法: post
-参数: {
-    name: "name"
-}
+方法: delete
+参数: category: "name"
+
 ```
 
 ---
@@ -153,6 +170,17 @@
 获取所有商品的全部详细信息
 
 方法: get
+```
+
+```
+/api/warehouse/commodity
+获取所有商品的全部详细信息
+
+方法: get
+参数类型: params
+参数: {
+    list: ["category", "category2"].join(",")
+}
 ```
 
 ```
@@ -195,13 +223,11 @@
 ```
 
 ```
-/api/warehouse/commodity/delete
+/api/warehouse/commodity/delete/:barcode
 删除商品
 
 方法: delete
-参数: {
-    barcode: "00000068"
-}
+参数: barcode: "00000068"
 ```
 ---
 
@@ -242,13 +268,11 @@
 ```
 
 ```
-/api/warehouse/suppliers/delete
+/api/warehouse/suppliers/delete/:supplier
 删除供货商
 
 方法: delete
-参数: {
-    name: "旺财商贸"
-}
+参数: supplier: "name"
 ```
 
 ---
@@ -294,13 +318,11 @@
 ```
 
 ```
-/api/vip/members/delete
+/api/vip/members/delete/:code
 删除会员
 
 方法: delete
-参数: {
-    code: "0001"
-}
+参数: code: "0001"
 ```
 
 ```
@@ -315,6 +337,34 @@
 }
 ```
 
+```
+/api/vip/members/pointrules
+获取会员卡积分比例
+
+方法: get
+```
+
+```
+/api/vip/members/pointrules
+修改会员卡积分比例
+
+方法: put
+参数: {
+    "value": 100
+}
+```
+
+```
+/api/vip/members/setpoint
+修改会员卡积分
+
+方法: put
+参数: {
+	"point": 0.01,
+	"type": false,
+	"code": "0001"
+}
+```
 ---
 
 ## 促销活动
@@ -365,13 +415,47 @@
 ```
 
 ```
-/api/market/promotion/delete
+/api/market/promotion/commodity
+向促销活动中添加商品
+
+方法: post
+参数: {
+	"promotion_name": "春节促销活动",
+	"commodity": 
+		{
+			"barcode": "0001",
+			"promotion_type": "单品特价",
+			"discount_value": 12.3
+		}	
+}
+```
+
+```
+/api/market/promotion/commodity/:name
+获取参加促销活动的商品
+
+方法: get
+参数: name: "name"
+```
+
+```
+/api/market/promotion/commodity
+从促销活动中删除商品
+
+方法: delete
+参数类型: Params
+参数: {
+    name: "春节促销活动",
+    barcode: "00001"
+}
+```
+
+```
+/api/market/promotion/delete/:name
 删除促销活动
 
 方法: delete
-参数: {
-    name: "春节促销活动"
-}
+参数: name: "春节促销活动"
 ```
 
 ```
@@ -380,27 +464,13 @@
 
 方法: post
 参数: {
-    promotion_name: "春节促销活动",
-    commodity_list: [
-        {
-            barcode: "69019388",
-            promotion_type: 下方说明里的键,
-            下方说明里的值: value
-        }
-    ]
+	"promotion_name": "春节促销活动",
+	"barcode": "0001",
+	"update_value": {
+		"promotion_type": "单品特价",
+		"discount_value": 30
+	}
 }
-说明: {
-        "单品特价": "single_off_price",
-        "单品打折": "single_discount"
-    }
-```
-
-```
-/api/market/promotion/details/:query
-获取促销活动的详情
-
-方法: get
-参数: query = 活动名称
 ```
 
 ---
@@ -450,6 +520,22 @@
 ## 前台-提交订单
 
 ```
+/api/front/commodity/:query
+查询商品信息
+
+方法: get
+参数: query 用来查询的值
+```
+
+```
+/api/front/vip/:query
+查询会员信息
+
+方法: get
+参数: query 用来查询的值
+```
+
+```
 /api/front/order/:id
 获取订单详细信息
 
@@ -463,20 +549,183 @@
 
 方法: post
 参数: {
-    vip_code: "0001", // 可选
-    pay_type: "现金",
-    origin_price: 1.5,
-    sale_price: 1.2,
-    client_pay: 2,
-    change: 0.8,
-    commodity_list: [
+    "pay_type": "现金",
+    "client_pay": 30,
+    "change": 9,
+    "origin_price": 22,
+    "sale_price": 21,
+    "commodity_list": [
         {
-            barcode: "000001",
-            sale_price: 1.2,
-            origin_price: 1.5,
-            count: 1,
-            status: "销售"
+            "barcode": "0001",
+            "origin_price": 10,
+            "sale_price": 9,
+            "count": 1,
+            "status": "促销"
+        },
+        {
+            "barcode": "6931956000223",
+            "origin_price": 12,
+            "sale_price": 12,
+            "count": 1,
+            "status": "销售"
+        }
+    ],
+    "count": 2
+}
+```
+
+```
+/api/front/order
+获取今日已完成订单所有信息
+
+方法: get
+```
+
+```
+/api/front/order/undo
+撤销已完成订单
+
+方法: put
+参数: {
+	"order_id": 191215223810018
+}
+```
+
+```
+/api/front/order/addvip
+为会员追加订单积分
+
+方法: put
+参数: {
+	"order_id": 191215212540017,
+	"vip_code": "0005"
+}
+```
+
+---
+
+## 数据
+
+```
+/api/data/import/commodity
+导入商品数据
+
+方法: post
+参数: {
+    "rules": {
+        "barcode_exist": false,
+        "category_exist": false,
+        "supplier_exist": false
+    },
+    "data": [
+        {
+        	"barcode": "00001",
+            "name": "sda小绕珠",
+            "category_name": "玩具",
+            "in_price": 17.5,
+            "sale_price": 112,
+            "unit": "瓶",
+            "size": "500G",
+            "is_delete": false,
+            "vip_points": true
         }
     ]
 }
+```
+
+```
+/api/data/export
+导出(销售|商品|会员)数据
+
+方法: get
+参数类型: params
+参数: {
+    type: "sales" || "commodity" || "vip"
+}
+```
+
+---
+
+## 数据报表
+
+```
+/api/statistics/orders
+查询某个时间范围之内的订单
+
+方法: get
+参数类型: params
+参数: {
+    start_time: 1582888786729,
+    end_time: 1682888786729
+}
+```
+
+```
+/api/statistics/orders/:id
+查询某个订单的详细信息
+
+方法: get
+参数类型: params
+参数: id: 200228887860001
+```
+
+```
+/api/statistics/orders/query
+根据时间范围和查询类型来查询相关订单和商品
+
+方法: get
+参数类型: params
+参数: {
+    start_time: 1582888786729,
+    end_time: 1682888786729,
+    query: "daw",
+    type: "name" || "barcode"
+}
+```
+
+```
+/api/statistics/proportion
+查询某个时间范围内商品销售分类占比
+
+方法: get
+参数类型: params
+参数: {
+    start_time: 1582888786729,
+    end_time: 1682888786729,
+    type: "category$肉蛋类" || "category$all" || "vip" || "pos_user" || "pay_type" || "supplier"
+}
+```
+
+```
+/api/statistics/trends
+查询门店销售趋势
+
+方法: get
+参数类型: params
+参数: {
+    start_time: 1582888786729,
+    end_time: 1682888786729,
+    type: "hour" || "day" || "month"
+}
+```
+
+---
+
+## 店铺设置
+
+```
+/api/store/name
+更新店铺名称
+
+方法: put
+参数: {
+	"name": "小牧大商场"
+}
+```
+
+```
+/api/store/name
+获取店铺名称
+
+方法: get
 ```

@@ -4,8 +4,7 @@ import { throwError } from "../../middleware/handleError.js";
 import SuppliersTask from "../../tasks/suppliers.js";
 import {
     createSupplierSchema,
-    updateSupplierSchema,
-    deleteSupplierSchema
+    updateSupplierSchema
 } from "../../schema/suppliers.js";
 import config from "../../config/index.js";
 

@@ -16,7 +16,7 @@ import { WebFakeScale } from "./webFakeScale";
 // ];
 
 
-// web版本电子秤
+// web版本假电子秤数据
 export const ScaleList = [
     {
         name: "大华电子秤",

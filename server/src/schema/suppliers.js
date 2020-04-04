@@ -40,7 +40,3 @@ export const updateSupplierSchema = Joi.object({
         "new_description"
     ).required()
 });
-
-export const deleteSupplierSchema = Joi.object({
-    name: name.required()
-});
