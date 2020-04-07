@@ -5,7 +5,7 @@ import { mathc } from "../src/lib/mathc.js";
 import UserTasks from "../src/tasks/users.js";
 
 function getRandomNum([min, max]) {
-    return mathc.floor(mathc.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 const config = {
