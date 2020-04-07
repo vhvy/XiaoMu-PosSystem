@@ -3,21 +3,22 @@ import CommodityTasks from "../src/tasks/commodity.js";
 import moment from "moment";
 import { mathc } from "../src/lib/mathc.js";
 import UserTasks from "../src/tasks/users.js";
+import OrderTasks from "../src/tasks/frontend/orders.js";
 
 function getRandomNum([min, max]) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 const config = {
-    start_time: moment("2019-04-15"),
+    start_time: moment("2017-11-01"),
     // 开始日期
-    end_time_stamp: moment("2020-02-01").endOf("day").subtract(3, "hour").format("x"),
+    end_time_stamp: moment().endOf("day").subtract(3, "hour").format("x"),
     // 结束日期
     business_start: 8,
     // 开始营业时间
     business_stop: 21,
     // 结束营业时间
-    commodity_count_range: [1, 14],
+    commodity_count_range: [1, 5],
     // 订单内随机商品数量,
     order_interval_range: [15, 600]
 };
@@ -38,6 +39,8 @@ function getRandomCommodity(list) {
 
     for (let i = 1; i <= commodity_count; i++) {
         const index = getRandomNum([0, len - 1]);
+        // 随机商品数组下标
+
         commodity_list.push(list[index]);
     }
 
@@ -46,7 +49,7 @@ function getRandomCommodity(list) {
     let sale_origin_price = 0;
     let profit = 0;
     let count = 0;
-
+    let order_commodity = [];
     commodity_list
         .filter(i => i.is_delete === 0)
         .forEach(item => {
@@ -58,14 +61,23 @@ function getRandomCommodity(list) {
                 profit,
                 mathc.subtract(item.sale_price, item.in_price)
             );
+            order_commodity.push({
+                commodity_id: item.id,
+                barcode: item.barcode,
+                count: 1,
+                origin_price: item.sale_price,
+                sale_price: item.sale_price
+            });
         });
+
 
     return {
         in_price,
         sale_price,
         sale_origin_price,
         profit,
-        count
+        count,
+        order_commodity
     };
 }
 
@@ -83,6 +95,7 @@ function createToDayOrder(commodity_list, time_instance, list = []) {
     if (hour >= business_stop) {
         return list;
     }
+    // 当前时间如果超出了营业截止时间，返回数据
 
     const year = time_instance.get("year");
     const month = time_instance.get("month") + 1;
@@ -98,10 +111,13 @@ function createToDayOrder(commodity_list, time_instance, list = []) {
 
         return str;
     })();
+    // 订单流水号
 
     const order_id = `${String(year).slice(2)}${format(month)}${format(day)}${String(timestamp).slice(5, 10)}${serial_number}`;
+    // 订单号
 
     const values = getRandomCommodity(commodity_list);
+    // 生成随机商品信息
 
     list.push({
         order_id,
@@ -110,18 +126,19 @@ function createToDayOrder(commodity_list, time_instance, list = []) {
         user_id,
         ...values
     });
-
+    // 生成订单信息
 
     const timeInterval = getRandomNum(order_interval_range) * 1000;
     // 订单时间随机间隔
 
     time_instance.add(timeInterval, "millisecond");
+    // 订单随机间隔
 
     return createToDayOrder(commodity_list, time_instance, list);
-
+    // 递归生成
 }
 
-async function insertData(list) {
+async function insertOrderData(list) {
 
     const fields = [
         "order_id",
@@ -137,15 +154,18 @@ async function insertData(list) {
 
     return await Promise.all(list.map(
 
-        async item => {
-
+        async ({ order_commodity, ...item }) => {
             const values = fields.map(key => item[key]);
 
-            return await AppDAO.run(`
+            await AppDAO.run(`
         INSERT INTO orders 
         (${fields.join(", ")}) 
         VALUES (?${", ?".repeat(values.length - 1)})
-        ;`, values)
+        ;`, values);
+
+            return await OrderTasks.saveOrderDetails(values[0], order_commodity);
+
+
         }
     )
     );
@@ -170,9 +190,16 @@ async function main() {
     }
 
     while (check()) {
+
         start_time.startOf("day").add(business_start, "hour");
+        // 获取今日开始营业的时间
+
         const values = createToDayOrder(commodity_pool, start_time);
-        await insertData(values);
+        // 生成订单信息
+
+        await insertOrderData(values);
+        // 写入订单详情
+
         console.log("写入完成: ", start_time.format());
         start_time.add(1, "day");
     }

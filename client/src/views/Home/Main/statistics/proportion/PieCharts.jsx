@@ -39,7 +39,7 @@ export function PieChart({
             {
                 name: typeText,
                 type: "pie",
-                radius: 150,
+                radius: 130,
                 label: {
                     formatter: "{b}: {c}元 ({d}%)"
                 },
