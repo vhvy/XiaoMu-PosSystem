@@ -7,6 +7,7 @@
   "scripts": {
     "dev:server": "cross-env NODE_ENV=development JWT_KEY=xiaomupossystem nodemon --experimental-modules src/index.js",
     "build": "cross-env NODE_ENV=production webpack --env.JWT_KEY=xiaomupossystem --config webpack.prod.cjs",
+    "build:demo": "cross-env NODE_ENV=production webpack --env.JWT_KEY=xiaomupossystem --env.MODE=DEMO --config webpack.prod.cjs",
     "dev:fakedb": "cross-env NODE_ENV=development node tools/fakeData.js",
     "initdb": "node tools/initDB.js",
     "start": "cross-env NODE_ENV=production JWT_KEY=xiaomupossystem nodemon dist/bundle.cjs",

@@ -16,7 +16,11 @@ import statistics from "./statistics/index.js";
 
 import store from "./store.js";
 
+import preventModify from "../middleware/preventModify.js";
+
 const route = express.Router();
+
+const isDemoMode = process.env.MODE === "DEMO";
 
 const config = [
     {
@@ -32,6 +36,11 @@ const config = [
     {
         fn: auth
         // 路由守卫，此中间件以后的路由全部需要携带合法token
+    },
+    {
+        fn: preventModify,
+        isDemo: true
+        // demo模式下阻止所有的修改操作
     },
     {
         path: "/front",
@@ -80,7 +89,10 @@ const config = [
     }
 ];
 
-for (let { path, fn } of config) {
+for (let { path, fn, isDemo = false } of config) {
+    if (isDemo && !isDemoMode) continue;
+    // 当此路由是demo模式 且当前环境不是demo时跳过此路由
+
     path ? route.use(path, fn) : route.use(fn);
 }
 
