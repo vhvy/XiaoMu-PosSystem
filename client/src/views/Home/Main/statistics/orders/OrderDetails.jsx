@@ -13,7 +13,7 @@ const columns = [
     {
         title: "状态",
         key: "status",
-        type: 3
+        type: 1
     },
     {
         title: "条码",

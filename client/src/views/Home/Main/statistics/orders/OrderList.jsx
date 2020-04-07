@@ -10,17 +10,17 @@ const columns = [
     {
         title: "序号",
         key: "index",
-        type: 1
+        type: 5
     },
     {
         title: "订单号",
         key: "order_id",
-        type: 2
+        type: 3
     },
     {
         title: "结算时间",
         key: "date",
-        type: 2
+        type: 7
     },
     {
         title: "状态",
