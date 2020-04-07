@@ -89,7 +89,6 @@ function _ModifyDrawer({
 
         try {
             const { data } = await PromotionManage.addCommodityToPromo(ajax, values);
-            console.log(data);
 
             setCommodityList(list => [...list, data]);
             message.success("商品添加完成!");

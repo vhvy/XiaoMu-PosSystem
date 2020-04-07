@@ -212,8 +212,6 @@ function _VipForm({
             sex: vipSex
         });
 
-        console.log(selectItem);
-
         const keys = Object.keys(values);
 
         const needUpdateValues = {};
@@ -262,7 +260,6 @@ function _VipForm({
 
         try {
             const { data } = await VipManage.createVipMember(ajax, value);
-            console.log(data);
             addVip(data);
             handleClose();
             message.success("会员卡创建完成!");

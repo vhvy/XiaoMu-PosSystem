@@ -2,7 +2,6 @@ import Joi from "@hapi/joi";
 
 export const name = Joi.string().min(2).max(10).error(errors => {
     errors.forEach(err => {
-        console.log(err)
         switch (err.code) {
             case "string.empty":
                 err.message = "供应商名称不能为空!";

@@ -107,8 +107,6 @@ export function Promotion() {
 
                 setPromoList(s => s.filter(i => i.name !== name));
 
-                console.log(selectId)
-
                 setSelectData(s => ({
                     ...s,
                     selectId,

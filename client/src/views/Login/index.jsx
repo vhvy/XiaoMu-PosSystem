@@ -171,13 +171,13 @@ function _Login({ form }) {
                             )
                         }
                     </Form.Item>
-                    <Form.Item
+                    {/* <Form.Item
                         type="flex"
                         justify="center"
                         className={style["login-input-fix"]}
                     >
                         <Checkbox>本机服务器模式</Checkbox>
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item
                         type="flex"
                         justify="center"

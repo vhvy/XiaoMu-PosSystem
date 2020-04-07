@@ -121,7 +121,6 @@ export function SetVipModal({ status, hideFn, setVip, clearVip }) {
     function closeModal() {
         hideFn();
         setValue("");
-        console.log("clear");
         setData(initState);
     }
 

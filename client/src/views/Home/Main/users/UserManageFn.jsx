@@ -22,8 +22,6 @@ function _ChangeModal({
     changeUserGroup
 }) {
 
-    // console.log(user);
-
     function CustomGroupSelect(disabled) {
         const list = groups.map(({ usergroup }) => usergroup);
         return (

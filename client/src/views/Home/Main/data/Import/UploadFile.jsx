@@ -80,7 +80,6 @@ export function UploadFile({
 
                 setData(data);
             } catch (error) {
-                console.log(error);
                 message.warn("文件类型不正确!");
 
                 setLoadType({
@@ -101,7 +100,6 @@ export function UploadFile({
             type: "load",
             text: `正在上传${info.file.name}`
         });
-        console.log("Uploading...");
     }
 
     const Status = loadType === null ? "" : loadType.type === "done" ? loadType.text : (<>{loadType.text}<span className={styled["dot-ani"]} /></>)

@@ -133,7 +133,6 @@ export function DataExport() {
 
             setExportStatus("done");
         } catch (error) {
-            console.log(error);
             setExportStatus("failed");
         }
     }

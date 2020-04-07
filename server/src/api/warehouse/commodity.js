@@ -24,7 +24,6 @@ route.get("/", async (req, res, next) => {
     }
 
     const arr = Array.from(new Set(list.split(",")));
-    // console.log(arr);
 
     if (arr.includes(default_all_category)) {
         // 如果前台传来分类树根节点，则视为请求所有商品

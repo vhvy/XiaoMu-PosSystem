@@ -91,8 +91,7 @@ export function Orders() {
 
     const [ordersData, setOrdersData] = useState(initOrderState);
     // 订单列表数据
-
-    console.log(searchData);
+    
     const [orderDetailsData, setOrderDetailsData] = useState(initOrderDetailsState);
     // 订单商品列表数据
 

@@ -321,7 +321,6 @@ export function _BaseForm({ form, selectCommodity, initState, type, closeDrawer,
 
         try {
             const { data } = await CommodityTasks.updateCommodity(ajax, selectCommodity.barcode, new_data);
-            console.log(data);
             closeDrawer();
             message.success("商品信息修改成功!");
             updateFn(selectCommodity.id, data);

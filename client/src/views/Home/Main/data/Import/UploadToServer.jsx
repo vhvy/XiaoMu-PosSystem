@@ -27,7 +27,6 @@ export function UploadToServer({
             setResultData(data);
             setUploadStatus("done");
         } catch (error) {
-            console.log(error);
             setUploadStatus("error");
         }
     }
