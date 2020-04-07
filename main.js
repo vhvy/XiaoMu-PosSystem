@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser windo
 const path = require("path");
 const url = require("url");
+const fs = require("fs").promises;
 const { app, BrowserWindow, protocol, globalShortcut, Menu } = require("electron");
-require("./public/bundle.cjs");
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -51,8 +51,23 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
+function startServer() {
+
+    const pathname = process.env.NODE_ENV === "development" ?
+        path.join(__dirname, ".noserver") : path.join(__dirname, "../../.noserver");
+// 生产环境下__dirname是asar文件所在的目录
+
+    fs.readFile(pathname)
+        .then(v => console.log("检查到不启动服务器的flag，不启动服务器！"))
+        .catch(error => {
+            require("./public/bundle.cjs");
+            // 没有不启动服务器的flag，启动服务器!
+        });
+}
+
 app.on("ready", () => {
 
+    startServer();
 
     protocol.registerFileProtocol("images", (req, cb) => {
         const url = req.url.substr(9);
@@ -69,7 +84,7 @@ app.on("ready", () => {
         })
     });
 
-    globalShortcut.register("CmdOrCtrl+R", () => {});
+    globalShortcut.register("CmdOrCtrl+R", () => { });
 
     createWindow();
 });
@@ -81,11 +96,11 @@ app.on("window-all-closed", function () {
     if (process.platform !== "darwin") app.quit();
 });
 
-app.on("activate", function () {
-    // On macOS it"s common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) createWindow();
-});
+// app.on("activate", function () {
+//     // On macOS it"s common to re-create a window in the app when the
+//     // dock icon is clicked and there are no other windows open.
+//     if (mainWindow === null) createWindow();
+// });
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
