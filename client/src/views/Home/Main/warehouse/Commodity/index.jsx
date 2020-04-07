@@ -62,29 +62,30 @@ export function Commodity() {
             setOriginList(data);
 
 
-            if (data.length === 0) return;
-            // 切换需要展示的商品
-            if (id) {
-                dispatch(createWareCommodityAction(id));
-            } else if (newCommodityIdFlag) {
-                dispatch(createWareCommodityAction(newCommodityIdFlag));
-            } else if (queryCommodityIdFlag) {
+            if (data.length !== 0) {
+                // 切换需要展示的商品
+                if (id) {
+                    dispatch(createWareCommodityAction(id));
+                } else if (newCommodityIdFlag) {
+                    dispatch(createWareCommodityAction(newCommodityIdFlag));
+                } else if (queryCommodityIdFlag) {
 
 
-                let selectId = queryCommodityIdFlag;
-                setTimeout(() => {
-                    setSelect({
-                        selectId,
-                        selectType: "down"
+                    let selectId = queryCommodityIdFlag;
+                    setTimeout(() => {
+                        setSelect({
+                            selectId,
+                            selectType: "down"
+                        });
                     });
-                });
 
-                queryCommodityIdFlag = null;
-            } else {
-                setSelect({
-                    selectId: data[0] && data[0].id || -1,
-                    selectType: "origin"
-                });
+                    queryCommodityIdFlag = null;
+                } else {
+                    setSelect({
+                        selectId: data[0] && data[0].id || -1,
+                        selectType: "origin"
+                    });
+                }
             }
 
             setSpinStatus(false);
