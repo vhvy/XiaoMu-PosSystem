@@ -1,0 +1,7 @@
+node_modules/
+dist/
+build/
+public/
+.DS_Store
+.noserver
+*.db

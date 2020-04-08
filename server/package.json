@@ -1,0 +1,37 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev:server": "cross-env NODE_ENV=development JWT_KEY=xiaomupossystem nodemon --experimental-modules src/index.js",
+    "build": "cross-env NODE_ENV=production webpack --env.JWT_KEY=xiaomupossystem --config webpack.prod.cjs",
+    "build:demo": "cross-env NODE_ENV=production webpack --env.JWT_KEY=xiaomupossystem --env.MODE=DEMO --config webpack.prod.cjs",
+    "dev:fakedb": "cross-env NODE_ENV=development node tools/fakeData.js",
+    "initdb": "node tools/initDB.js",
+    "start": "cross-env NODE_ENV=production JWT_KEY=xiaomupossystem nodemon dist/bundle.cjs",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  },
+  "author": "vhvy",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^16.1.7",
+    "bcrypt": "^3.0.7",
+    "core-js": "^3.6.4",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mathjs": "^6.2.5",
+    "moment": "^2.24.0",
+    "pinyin": "^2.9.0",
+    "sqlite3": "^4.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "electron-rebuild": "^1.10.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

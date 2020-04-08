@@ -1,0 +1,28 @@
+@import "../global.scss";
+
+.loading-wrap {
+  background-color: #fff;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  opacity: 0;
+  z-index: -1;
+  transition: all ease 0.4s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.no-padding {
+    @extend .base-card;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+  &.show {
+    opacity: 1;
+    z-index: 10;
+  }
+}

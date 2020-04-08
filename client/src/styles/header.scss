@@ -1,0 +1,22 @@
+.header {
+  background-color: #fff;
+  padding: 10px;
+  display: flex;
+  align-items: center;  
+  justify-content: space-between;
+  .header-left {
+    display: flex;
+    align-items: center;
+    .header-title {
+      margin: 0;
+      margin-left: 30px;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    margin-right: 20px;
+    align-items: center;
+
+  }
+}
