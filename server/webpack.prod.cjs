@@ -17,7 +17,7 @@ module.exports = env => {
         plugins: [
             new webpack.DefinePlugin({
                 "process.env.JWT_KEY": JSON.stringify(JWT_KEY),
-                "process.env.DEMO": JSON.stringify(MODE || "NOTMODE")
+                "process.env.MODE": JSON.stringify(MODE || "NOTMODE")
             })
         ]
     };
