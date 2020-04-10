@@ -8,6 +8,12 @@ npm i -g windows-build-tools
 ```
 若要使用 v140 生成工具进行生成，请安装 v140 生成工具。或者，可以升级到当前 Visual Studio 工具，方式是通过选择“项目”菜单或右键单击该解决方案，然后选择“重定解决方案目标”
 ```
+### B站视频演示
+
+```
+https://www.bilibili.com/video/BV1Ua4y1t7cM/
+```
+
 
 ### 前端
 ```
