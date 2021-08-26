@@ -1,0 +1,20 @@
+{
+  "name": "xiaomu-possystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vhvy/XiaoMu-PosSystem.git"
+  },
+  "keywords": [],
+  "author": "vhvy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vhvy/XiaoMu-PosSystem/issues"
+  },
+  "homepage": "https://github.com/vhvy/XiaoMu-PosSystem#readme"
+}
