@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "baseUrl": "./",
+        "module": "ESNext",
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "moduleResolution": "Node",
+        "isolatedModules": true,
+        "target": "ESNext",
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "inlineSources": false,
+        "lib": [
+            "ESNext"
+        ],
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "ali-mysql-client": [
+                "./src/types/ali-mysql-client"
+            ]
+        },
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "removeComments": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        // "typeRoots": [
+        // "./node_modules/@types",
+        // "./src/types"
+        // ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    // "ts-node": {
+    //     "require": [
+    //         "tsconfig-paths/register"
+    //     ]
+    // }
+}

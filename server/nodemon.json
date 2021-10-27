@@ -1,0 +1,10 @@
+{
+    "exec": "node --loader ./scripts/esm-loader.js",
+    "watch": [
+        "src"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "ext": "js,ts,json"
+}
