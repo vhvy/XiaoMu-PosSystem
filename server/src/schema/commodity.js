@@ -2,7 +2,7 @@ import Joi from "@hapi/joi";
 import { categoryNameReq, categoryName } from "./categories.js";
 import { name as supplier_name } from "./suppliers.js";
 
-export const barcode = Joi.string().min(1).max(20);
+export const barcode = Joi.string().min(1).max(40);
 export const name = Joi.string().min(1).max(50);
 export const unit = Joi.string().min(1).max(10);
 export const size = Joi.string().min(1).max(30);
