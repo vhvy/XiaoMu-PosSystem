@@ -2,6 +2,7 @@ import { PATH_KEY, METHOD_KEY, MIDDLEWARE_KEY } from "@/constant/decorator";
 import router from "@/router/router";
 import { RequestMethod } from "@/decorator/request";
 import { Middleware } from "@/decorator/use";
+import config from "@/config/index";
 
 
 export const controller = (prefix: string): ClassDecorator => {
@@ -25,7 +26,7 @@ export const controller = (prefix: string): ClassDecorator => {
 
                 if (path && method) {
                     const handler = target.prototype[name];
-                    const fullPath = prefix + path;
+                    const fullPath = config.globalPrefix + prefix + path;
                     router[method](fullPath, ...combineMiddlewareList, handler);
                 }
             });
