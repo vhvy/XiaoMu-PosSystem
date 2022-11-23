@@ -1,18 +1,15 @@
-import "@/utils/index";
+import "reflect-metadata";
 import Koa from "koa";
-import routes from "@/app/routes/index";
-import middleware from "@/app/middleware/index";
 import config from "@/config/index";
-
-const { port } = config;
+import "@/router/index";
+import router from "@/router/router";
+import { koaBody } from "koa-body";
 
 const app = new Koa();
 
-middleware(app);
-routes(app);
+app.use(koaBody({}));
+app.use(router.routes());
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}...`);
+app.listen(config.port, () => {
+    console.log(`Server is start, listen port on ${config.port}`);
 });
-
-export default app;

@@ -5,24 +5,23 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "update:package": "npx ncu -i"
   },
   "dependencies": {
-    "@koa/router": "^10.1.1",
-    "ali-mysql-client": "^1.0.7",
+    "@koa/router": "^12.0.0",
     "jsonwebtoken": "^8.5.1",
-    "koa": "^2.13.1",
+    "koa": "^2.13.4",
+    "koa-body": "^6.0.1",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@types/koa": "^2.13.4",
-    "@types/koa__router": "^8.0.7",
-    "@types/node": "^16.7.10",
-    "chokidar": "^3.5.2",
-    "esm": "^3.2.25",
-    "module-alias": "^2.2.2",
-    "nodemon": "^2.0.14",
-    "ts-node": "^10.4.0",
-    "tsconfig-paths": "^3.11.0"
+    "@types/koa": "^2.13.5",
+    "@types/koa__router": "^12.0.0",
+    "@types/node": "^18.11.9",
+    "nodemon": "^2.0.20",
+    "npm-check-updates": "^16.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0"
   }
 }

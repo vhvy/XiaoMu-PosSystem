@@ -1,48 +1,33 @@
-import { HttpMethod, ControllerKey, MiddlewareKey } from "@/constants/index";
-import { getClassMethodsName, defineFnMiddlewareData, defineFnPathPrefix } from "@/utils/utils";
-import config from "@/config/index";
-
-// 路由装饰器，根据传入的请求方法和请求路径在类实例方法上添加元数据，供路由使用。
-function getRequestDecorator(type: HttpMethod): Function {
-    return function (path: string) {
-        return function (target: any, key: string) {
-            const fn = target[key];
-
-            Reflect.defineMetadata(ControllerKey.PATH, path, fn);
-            Reflect.defineMetadata(ControllerKey.METHOD, type, fn);
-        };
-    }
-}
-
-export const get = getRequestDecorator(HttpMethod.get);
-export const post = getRequestDecorator(HttpMethod.post);
-export const del = getRequestDecorator(HttpMethod.delete);
-export const put = getRequestDecorator(HttpMethod.put);
+import { PATH_KEY, METHOD_KEY, MIDDLEWARE_KEY } from "@/constant/decorator";
+import router from "@/router/router";
+import { RequestMethod } from "@/decorator/request";
+import { Middleware } from "@/decorator/use";
 
 
-// 鉴权装饰器，为传入的类上所有实例方法增加auth中间件。
-export function auth(constructor: Function): void {
-    const methods = getClassMethodsName(constructor);
-    const prototype = constructor.prototype as object;
-    type handler = keyof typeof prototype;
+export const controller = (prefix: string): ClassDecorator => {
+    return (target) => {
 
-    methods.forEach((fnName: handler) => {
-        const fn = prototype[fnName] as Function;
-        defineFnMiddlewareData(fn, MiddlewareKey.AUTH);
-    });
-}
+        const unifyMiddleware: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target) || [];
 
-// 路由前缀装饰器，为传入的类上所有实例方法增加路由前缀
-export function prefix(prefix: string = ""): Function {
-    return (constructor: Function): void => {
-        const methods = getClassMethodsName(constructor);
-        const prototype = constructor.prototype as object;
-        type handler = keyof typeof prototype;
+        Object
+            .getOwnPropertyNames(target.prototype)
+            .filter(n => n != "constructor")
+            .forEach(name => {
+                const path = Reflect.getMetadata(PATH_KEY, target.prototype, name);
+                const method: RequestMethod = Reflect.getMetadata(METHOD_KEY, target.prototype, name);
 
-        methods.forEach((fnName: handler) => {
-            const fn = prototype[fnName] as Function;
-            const fullPrefix = config.prefix + prefix;
-            defineFnPathPrefix(fn, fullPrefix);
-        });
-    }
+                const middlewareList: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target.prototype, name) || [];
+
+                const combineMiddlewareList = [
+                    ...unifyMiddleware,
+                    ...middlewareList
+                ];
+
+                if (path && method) {
+                    const handler = target.prototype[name];
+                    const fullPath = prefix + path;
+                    router[method](fullPath, ...combineMiddlewareList, handler);
+                }
+            });
+    };
 }
