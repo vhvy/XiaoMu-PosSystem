@@ -3,6 +3,7 @@ import router from "@/router/router";
 import { RequestMethod } from "@/decorator/request";
 import { Middleware } from "@/decorator/use";
 import config from "@/config/index";
+import response from "@/middleware/response";
 
 
 export const controller = (prefix: string): ClassDecorator => {
@@ -20,6 +21,7 @@ export const controller = (prefix: string): ClassDecorator => {
                 const middlewareList: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target.prototype, name) || [];
 
                 const combineMiddlewareList = [
+                    response,
                     ...unifyMiddleware,
                     ...middlewareList
                 ];

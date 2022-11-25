@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "@/orm/index";
 import Koa from "koa";
 import config from "@/config/index";
 import "@/router/index";

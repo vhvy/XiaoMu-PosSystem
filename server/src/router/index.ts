@@ -1,26 +1,19 @@
-import fs from "node:fs";
-import path from "node:path";
+import { getAllFilePath } from "@/utils/file";
 import url from "node:url";
+import router from "@/router/router";
+import { OtherController } from "@/controllers/other";
 
 const controllerDirUrlInfo = new URL("../controllers", import.meta.url);
 const controllerDirPath = url.fileURLToPath(controllerDirUrlInfo);
 
 
 const importController = (dirPath: string) => {
-    const list = fs.readdirSync(dirPath);
-    list.forEach(item => {
-        const fullPath = path.resolve(dirPath, item);
-        const info = fs.lstatSync(fullPath);
-        if (info.isFile()) {
-            // 控制器
-            const fileUrl = url.pathToFileURL(fullPath);
-            import(fileUrl.href);
-        } else if (info.isDirectory()) {
-            // 文件夹
-            importController(fullPath);
-        }
-    });
+    const controllerList = getAllFilePath(dirPath);
+    return controllerList.map(path => import(path));
 };
 
+const task = importController(controllerDirPath);
 
-importController(controllerDirPath);
+await Promise.all(task);
+
+router.all("(.*)", OtherController.prototype.notFound);

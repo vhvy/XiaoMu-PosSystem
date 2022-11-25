@@ -1,8 +1,8 @@
 import { MIDDLEWARE_KEY } from "@/constant/decorator";
-import koaRouterPkg from "@koa/router";
+import type { RouterContext } from "@koa/router";
 import { Next } from "koa";
 
-export type Middleware = (ctx: koaRouterPkg.RouterContext, next: Next) => Promise<any>;
+export type Middleware = (ctx: RouterContext, next: Next) => Promise<any>;
 
 
 export const use = (middleware: Middleware): MethodDecorator => {

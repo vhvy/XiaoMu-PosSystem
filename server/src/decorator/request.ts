@@ -4,7 +4,8 @@ export enum RequestMethod {
     GET = "get",
     POST = "post",
     PUT = "put",
-    DELETE = "delete"
+    DELETE = "delete",
+    ALL = "all"
 }
 
 const createRequestDecorator = (method: RequestMethod) => {
@@ -20,3 +21,4 @@ export const get = createRequestDecorator(RequestMethod.GET);
 export const post = createRequestDecorator(RequestMethod.POST);
 export const put = createRequestDecorator(RequestMethod.PUT);
 export const del = createRequestDecorator(RequestMethod.DELETE);
+export const all = createRequestDecorator(RequestMethod.ALL);

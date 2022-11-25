@@ -13,12 +13,16 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-body": "^6.0.1",
-    "reflect-metadata": "^0.1.13"
+    "mysql2": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.25.8",
+    "sequelize-typescript": "^2.1.5"
   },
   "devDependencies": {
     "@types/koa": "^2.13.5",
     "@types/koa__router": "^12.0.0",
     "@types/node": "^18.11.9",
+    "@types/validator": "^13.7.10",
     "nodemon": "^2.0.20",
     "npm-check-updates": "^16.4.3",
     "ts-node": "^10.9.1",
