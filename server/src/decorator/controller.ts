@@ -1,9 +1,11 @@
-import { PATH_KEY, METHOD_KEY, MIDDLEWARE_KEY } from "@/constant/decorator";
+import { PATH_KEY, METHOD_KEY, MIDDLEWARE_KEY, VALIDATE_KEY } from "@/constant/decorator";
 import router from "@/router/router";
 import { RequestMethod } from "@/decorator/request";
 import { Middleware } from "@/decorator/use";
 import config from "@/config/index";
 import response from "@/middleware/response";
+import createValidate from "@/middleware/validate";
+import type { ObjectSchema } from "joi";
 
 
 export const controller = (prefix: string): ClassDecorator => {
@@ -20,11 +22,21 @@ export const controller = (prefix: string): ClassDecorator => {
 
                 const middlewareList: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target.prototype, name) || [];
 
+                const validatorList: ObjectSchema[] = Reflect.getMetadata(VALIDATE_KEY, target.prototype, name) || [];
+
                 const combineMiddlewareList = [
-                    response,
                     ...unifyMiddleware,
                     ...middlewareList
                 ];
+
+                if (validatorList.length) {
+                    combineMiddlewareList.unshift(
+                        createValidate(validatorList, method)
+                    );
+                }
+
+                combineMiddlewareList.unshift(response);
+
 
                 if (path && method) {
                     const handler = target.prototype[name];
