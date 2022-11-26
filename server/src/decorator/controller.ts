@@ -10,9 +10,6 @@ import type { ObjectSchema } from "joi";
 
 export const controller = (prefix: string): ClassDecorator => {
     return (target) => {
-
-        const unifyMiddleware: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target) || [];
-
         Object
             .getOwnPropertyNames(target.prototype)
             .filter(n => n != "constructor")
@@ -25,17 +22,17 @@ export const controller = (prefix: string): ClassDecorator => {
                 const validatorList: ObjectSchema[] = Reflect.getMetadata(VALIDATE_KEY, target.prototype, name) || [];
 
                 const combineMiddlewareList = [
-                    ...unifyMiddleware,
-                    ...middlewareList
+                    response
                 ];
 
                 if (validatorList.length) {
-                    combineMiddlewareList.unshift(
+                    combineMiddlewareList.push(
                         createValidate(validatorList, method)
                     );
                 }
 
-                combineMiddlewareList.unshift(response);
+                combineMiddlewareList.push(...middlewareList);
+
 
 
                 if (path && method) {
