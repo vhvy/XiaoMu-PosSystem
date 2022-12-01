@@ -9,7 +9,6 @@ type Props = {
 }
 
 export const RouteGuard: React.FC<Props> = ({ children, meta }: Props) => {
-
     if (meta?.auth) {
         return <Navigate to="/login" />;
     }

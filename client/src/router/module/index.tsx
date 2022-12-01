@@ -1,7 +1,7 @@
 import { Route } from "@/router/utils";
 import { Navigate } from "react-router-dom";
 
-const modules = import.meta.glob("./*.ts", {
+const modules = import.meta.glob("./*.tsx", {
     eager: true,
     import: "default"
 });

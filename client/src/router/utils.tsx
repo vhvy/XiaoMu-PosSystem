@@ -1,11 +1,12 @@
 import { ReactElement, Suspense, lazy } from "react";
 
 export type RouteMeta = undefined | {
-    auth: Boolean,
-    title: string
+    auth?: Boolean,
+    title?: string
 };
 
 export interface Route {
+    index?: boolean,
     path: string,
     meta?: RouteMeta,
     children?: Route[],

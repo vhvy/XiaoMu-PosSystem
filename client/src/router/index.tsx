@@ -16,10 +16,11 @@ const createComponent = (element: ReactElement, meta: RouteMeta) => {
 
 const createRoutes = (routes: Route[]): RouteObject[] => {
 
-    return routes.map(({ path, element, meta, children }) => {
+    return routes.map(({ path, element, meta, children, index = false }) => {
         const route: RouteObject = {
             path,
             element: createComponent(element, meta),
+            index
         };
 
         if (children && children.length) {
