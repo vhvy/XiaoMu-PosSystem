@@ -7,7 +7,7 @@ const routes: Route = {
     element: <BaseLayout />,
     meta: {
         title: "销售",
-        auth: false
+        auth: true
     },
     children: [
         {

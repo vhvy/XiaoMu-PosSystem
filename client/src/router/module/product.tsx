@@ -6,7 +6,7 @@ const routes: Route = {
     path: "/product/*",
     element: <BaseLayout />,
     meta: {
-        auth: false
+        auth: true
     },
     children: [
         {

@@ -5,7 +5,7 @@ const routes: Route = {
     element: createLazyComp(() => import("@/pages/home/index")),
     meta: {
         title: "首页",
-        auth: false
+        auth: true
     }
 };
 
