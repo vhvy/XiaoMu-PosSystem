@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { RouteMeta } from "@/router/utils";
 import { Navigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 
 type Props = {
@@ -9,7 +10,9 @@ type Props = {
 }
 
 export const RouteGuard: React.FC<Props> = ({ children, meta }: Props) => {
-    if (meta?.auth) {
+    const { isLogin } = useAuth();
+    
+    if (meta?.auth && !isLogin) {
         return <Navigate to="/login" />;
     }
 
