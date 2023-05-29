@@ -6,7 +6,7 @@
         "strict": true,
         "noImplicitAny": true,
         "sourceMap": true,
-        "moduleResolution": "Node",
+        "moduleResolution": "node",
         "isolatedModules": true,
         "target": "ESNext",
         "strictNullChecks": true,

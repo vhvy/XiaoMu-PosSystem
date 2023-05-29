@@ -34,7 +34,7 @@ export const unifyUse = <T extends string>(middleware: Middleware, excludes: Arr
                 if (excludes.includes(key as T)) return;
 
                 const middlewareList: Middleware[] = Reflect.getMetadata(MIDDLEWARE_KEY, target.prototype, key) || [];
-                middlewareList.push(middleware);
+                middlewareList.unshift(middleware);
 
                 Reflect.defineMetadata(MIDDLEWARE_KEY, middlewareList, target.prototype, key);
             });

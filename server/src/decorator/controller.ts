@@ -22,7 +22,8 @@ export const controller = (prefix: string): ClassDecorator => {
                 const validatorList: ObjectSchema[] = Reflect.getMetadata(VALIDATE_KEY, target.prototype, name) || [];
 
                 const combineMiddlewareList = [
-                    response
+                    response,
+                    ...middlewareList
                 ];
 
                 if (validatorList.length) {
@@ -30,11 +31,7 @@ export const controller = (prefix: string): ClassDecorator => {
                         createValidate(validatorList, method)
                     );
                 }
-
-                combineMiddlewareList.push(...middlewareList);
-
-
-
+                
                 if (path && method) {
                     const handler = target.prototype[name];
                     const fullPath = config.globalPrefix + prefix + path;
