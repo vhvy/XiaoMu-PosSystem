@@ -1,5 +1,7 @@
-import { createLazyComp, Route } from "@/router/utils";
 import { Navigate } from "react-router-dom";
+import { Apps24Regular } from "@fluentui/react-icons";
+
+import { createLazyComp, Route } from "@/router/utils";
 import BaseLayout from "@/components/BaseLayout/index";
 
 const routes: Route = {
@@ -7,6 +9,11 @@ const routes: Route = {
     element: <BaseLayout />,
     meta: {
         auth: true
+    },
+    navConfig: {
+        labelKey: "product",
+        icon: <Apps24Regular />,
+        sort: 20
     },
     children: [
         {

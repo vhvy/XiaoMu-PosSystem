@@ -6,7 +6,7 @@ const modules = import.meta.glob("./*.tsx", {
     import: "default"
 });
 
-const routes = Object.values(modules) as Route[];
+export const routes = Object.values(modules) as Route[];
 
 const defaultRoute: Route = {
     path: "*",

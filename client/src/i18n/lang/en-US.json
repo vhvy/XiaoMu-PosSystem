@@ -26,5 +26,10 @@
             "serverAddress": "Server Address",
             "addressExample": "Example: http://192.168.1.1:9527"
         }
+    },
+    "RouteMetaTitle": {
+        "home": "Home",
+        "product": "Product",
+        "sales": "Sales"
     }
 }

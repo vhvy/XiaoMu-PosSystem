@@ -26,5 +26,9 @@ interface Locale {
             serverAddress: string,
             addressExample: string
         }
+    },
+    RouteMetaTitle: {
+        home: string,
+        product: string
     }
 }

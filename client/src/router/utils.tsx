@@ -10,7 +10,12 @@ export interface Route {
     path: string,
     meta?: RouteMeta,
     children?: Route[],
-    element: ReactElement
+    element: ReactElement,
+    navConfig?: {
+        labelKey: string,
+        icon: ReactElement,
+        sort: number
+    }
 }
 
 export type LoadComponentFn = () => Promise<any>;

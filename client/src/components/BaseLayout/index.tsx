@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import classNames from "classnames";
+import { Outlet } from "react-router-dom";
 
 import NavBar from "@/components/NavBar";
 import SideNav from "@/components/SideNav";
@@ -17,7 +18,7 @@ const Layout = ({ children }: Props) => {
             <div className={classNames("flex", "flex-row", classes.base_main_container)}>
                 <SideNav />
                 <div className={classNames("flex-auto", classes.base_body_container)}>
-                    {children}
+                    {children ?? <Outlet />}
                 </div>
             </div>
         </div>
