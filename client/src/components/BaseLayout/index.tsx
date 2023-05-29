@@ -1,17 +1,25 @@
 import { ReactElement } from "react";
-import { Outlet } from "react-router-dom";
+import classNames from "classnames";
+
+import NavBar from "@/components/NavBar";
+import SideNav from "@/components/SideNav";
+
+import classes from "./index.module.scss";
 
 type Props = {
-    children?: ReactElement[]
+    children?: ReactElement[] | ReactElement
 };
 
-const Layout = (props: Props) => {
+const Layout = ({ children }: Props) => {
     return (
-        <div>
-            <div>
-                left
+        <div className={classes.base_container}>
+            <NavBar />
+            <div className={classNames("flex", "flex-row", classes.base_main_container)}>
+                <SideNav />
+                <div className={classNames("flex-auto", classes.base_body_container)}>
+                    {children}
+                </div>
             </div>
-            <Outlet />
         </div>
     )
 };

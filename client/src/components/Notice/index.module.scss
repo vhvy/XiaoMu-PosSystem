@@ -1,0 +1,41 @@
+.alert_box {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 1;
+    transition: top ease 0.3s;
+}
+
+.alert_box,
+.alert_content {
+    width: fit-content;
+}
+
+.msg_fade {
+    &_enter {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    &_active_enter,
+    &_done_enter {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    &_exit {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    &_done_exit,
+    &_active_exit {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    &_active_enter,
+    &_active_exit {
+        transition: all ease 0.3s;
+    }
+}

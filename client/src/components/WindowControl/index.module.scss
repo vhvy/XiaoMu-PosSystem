@@ -1,0 +1,14 @@
+.control_btn {
+    width: 46px;
+    transition: background-color 0.1s ease-out;
+    color: #fff;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        // background-color: hsla(0,0%,100%,.1)
+    }
+
+    &:global(.close):hover {
+        background-color: rgba(232, 17, 35, 0.9);
+    }
+}

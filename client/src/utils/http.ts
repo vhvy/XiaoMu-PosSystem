@@ -15,18 +15,16 @@ const ALLOW_BODY_METHOD = [
 
 type UrlQuery = Record<string, any> | undefined;
 
-type RequestBody = object | FormData | string | undefined;
-
-interface HttpConfig {
+export interface HttpConfig {
     timeout?: number,
     requireAuth?: boolean
 };
 
-const request = async (
+const request = async <R>(
     method: HTTP_METHOD = HTTP_METHOD.GET,
     path: string,
     query?: UrlQuery,
-    body?: RequestBody,
+    body?: any,
     httpConfig: HttpConfig = {
         timeout: config.TIMEOUT,
         requireAuth: true
@@ -49,20 +47,22 @@ const request = async (
     }
 
 
+    const abortController = new AbortController();
+
     const fetchConfig: RequestInit = {
         method,
-        headers
+        headers,
+        signal: abortController.signal
     };
 
     if (body && ALLOW_BODY_METHOD.includes(method)) {
         if (body instanceof FormData) {
         } else if (typeof body === "object") {
             body = JSON.stringify(body);
+            headers.set("Content-Type", "application/json")
         }
         fetchConfig.body = body;
     }
-
-    const abortController = new AbortController();
 
     const timerFlag = setTimeout(() => {
         abortController.abort();
@@ -71,19 +71,23 @@ const request = async (
     try {
         const response = await fetch(url, fetchConfig);
         clearTimeout(timerFlag);
-        const result = await response.json();
+        const result: R = await response.json();
 
-        return result;
+        if (response.status === 200) {
+            return result;
+        } else {
+            return Promise.reject(result);
+        }
+
     } catch (err: any) {
-        return err;
+        return Promise.reject(err);
     }
-
 }
 
-const get = (path: string, query?: UrlQuery, httpConfig?: HttpConfig) => request(HTTP_METHOD.GET, path, query, undefined, httpConfig);
-const post = (path: string, body?: RequestBody, httpConfig?: HttpConfig) => request(HTTP_METHOD.POST, path, undefined, body, httpConfig);
-const put = (path: string, body?: RequestBody, httpConfig?: HttpConfig) => request(HTTP_METHOD.PUT, path, undefined, body, httpConfig);
-const del = (path: string, query?: UrlQuery, httpConfig?: HttpConfig) => request(HTTP_METHOD.DELETE, path, query, undefined, httpConfig);
+const get = <R>(path: string, query?: UrlQuery, httpConfig?: HttpConfig) => request<R>(HTTP_METHOD.GET, path, query, undefined, httpConfig);
+const post = <R>(path: string, body?: any, httpConfig?: HttpConfig) => request<R>(HTTP_METHOD.POST, path, undefined, body, httpConfig);
+const put = <R>(path: string, body?: any, httpConfig?: HttpConfig) => request<R>(HTTP_METHOD.PUT, path, undefined, body, httpConfig);
+const del = <R>(path: string, query?: UrlQuery, httpConfig?: HttpConfig) => request<R>(HTTP_METHOD.DELETE, path, query, undefined, httpConfig);
 
 export default {
     get,

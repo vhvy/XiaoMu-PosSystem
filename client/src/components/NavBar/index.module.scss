@@ -1,0 +1,19 @@
+.nav_bar {
+    height: var(--nav-bar-height);
+    background-color: #2a7cd0;
+    user-select: none;
+}
+
+.nav_left,
+.nav_right {
+    width: 20%;
+}
+
+.nav_left {
+    background: url(/static/images/logo.png) no-repeat 10px center / 24px;
+}
+
+.nav_center {
+    width: 60%;
+    color: #fff;
+}

@@ -1,4 +1,4 @@
-export interface UserInfo {
+interface UserInfo {
     uid: number,
     account: string,
     username: string

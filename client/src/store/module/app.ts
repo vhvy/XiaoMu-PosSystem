@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import storage from "@/utils/storage";
 import StorageKeys from "@/constants/storage";
-import { UserInfo } from "@/types/user";
 
 interface AppBaseState {
     isLogin: boolean,

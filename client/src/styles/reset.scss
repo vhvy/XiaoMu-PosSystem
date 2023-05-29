@@ -26,3 +26,8 @@ ul {
     margin: 0;
     padding: 0;
 }
+
+div,
+input {
+    box-sizing: border-box;
+}

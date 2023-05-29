@@ -1,0 +1,30 @@
+{
+    "AppName": "XMPosSystem",
+    "Common": {
+        "okText": "OK",
+        "saveBtnText": "Save",
+        "cancelBtnText": "Cancel"
+    },
+    "Login": {
+        "loginTitle": "Sign in",
+        "accountPlaceholder": "Account",
+        "passwordPlaceholder": "Password",
+        "loginConfirmBtn": "Sign in",
+        "advancedSettingsBarText": "Advanced Settings",
+        "forgetPasswordText": "Forget Password?",
+        "settingsTitle": "Settings",
+        "backToLoginPanelBtnText": "Back",
+        "accountValidate": {
+            "invalidMsg": "Please enter a valid account.",
+            "lengthLimit": "Account length must be more than 3 and less than 10"
+        },
+        "passwordValidate": {
+            "invalidMsg": "Please enter a valid password.",
+            "lengthLimit": "Password length must be more than 6 and less than 16"
+        },
+        "Settings": {
+            "serverAddress": "Server Address",
+            "addressExample": "Example: http://192.168.1.1:9527"
+        }
+    }
+}

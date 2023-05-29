@@ -1,0 +1,28 @@
+@mixin flex {
+    display: flex;
+}
+
+@mixin flex-column {
+    flex-flow: column nowrap;
+}
+
+@mixin flex-justify-center {
+    justify-content: center;
+}
+
+@mixin flex-justify-end {
+    justify-content: end;
+}
+
+@mixin flex-align-center {
+    align-items: center;
+}
+
+@mixin flex-center {
+    @include flex-justify-center;
+    @include flex-align-center;
+}
+
+@mixin flex-auto {
+    flex: 1;
+}

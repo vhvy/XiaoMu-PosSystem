@@ -8,7 +8,7 @@
         ],
         "strict": true,
         "baseUrl": "./",
-        "skipLibCheck": false,
+        "skipLibCheck": true,
         "module": "ESNext",
         "moduleResolution": "Node",
         "resolveJsonModule": true,
@@ -23,15 +23,29 @@
             ]
         },
         "types": [
-            "vite/client"
+            "vite/client",
+            "node"
+        ],
+        "plugins": [
+            {
+                "name": "typescript-plugin-css-modules",
+                "options": {
+                    "customMatcher": "\\.s?css$"
+                }
+            }
         ]
     },
     "include": [
-        "src"
+        "src",
+        "scripts"
     ],
     "references": [
         {
             "path": "./tsconfig.node.json"
         }
-    ]
+    ],
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    }
 }

@@ -1,0 +1,113 @@
+@import "@/styles/animation.scss";
+@import "./styles/common.module.scss";
+
+.login_main {
+    height: 100vh;
+    background-image: linear-gradient(to right bottom, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+}
+
+@mixin login_container {
+    width: 440px;
+    padding: 44px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.login_body {
+    @include login_container;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.logo_title {
+    height: 24px;
+    padding-left: 36px;
+    background: url(/static/images/logo.png) no-repeat -2px center / 30px;
+    margin-bottom: 16px;
+}
+
+.login_fade {
+    &_appear {
+        left: 440px;
+        opacity: 0;
+    }
+
+    &_done_appear,
+    &_active_appear {
+        left: 0;
+        opacity: 1;
+    }
+
+    &_exit {
+        left: 0;
+        opacity: 1;
+    }
+
+    &_active_exit,
+    &_done_exit {
+        left: -440px;
+        opacity: 0;
+    }
+
+    &_enter {
+        left: -440px;
+        opacity: 0;
+    }
+
+    &_active_enter,
+    &_done_enter {
+        left: 0;
+        opacity: 1;
+    }
+
+    &_active_enter,
+    &_active_exit,
+    &_active_appear {
+        transition: all cubic-bezier(0.5, 0, 0.5, 1) 0.25s;
+    }
+}
+
+.login_setting_panel {
+    &.login_fade {
+        &_active_exit,
+        &_done_exit {
+            left: 440px;
+            opacity: 0;
+        }
+
+        &_enter {
+            left: 440px;
+            opacity: 0;
+        }
+
+        &_active_enter,
+        &_done_enter {
+            left: 0;
+            opacity: 1;
+        }
+    }
+}
+
+.login_advanced_settings_bar {
+    @include login_container;
+    
+    height: 48px;
+    padding: {
+        top: 8px;
+        bottom: 8px;
+    }
+    font-size: 28px;
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &:active,
+    &:focus {
+        background-color: rgba(0, 0, 0, 0.3);
+        outline: 1px dashed #000;
+    }
+}
+
+.login_advanced_settings_bar_text {
+    margin-left: 12px;
+}

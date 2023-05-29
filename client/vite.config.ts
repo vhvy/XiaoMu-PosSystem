@@ -12,7 +12,13 @@ export default defineConfig({
         reactVitePlugin()
     ],
     server: {
-        port: 9528
+        port: 9528,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:9527',
+                changeOrigin: true
+            }
+        }
     },
     resolve: {
         alias: {

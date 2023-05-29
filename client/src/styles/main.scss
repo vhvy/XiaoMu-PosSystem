@@ -1,0 +1,56 @@
+@import "@/styles/mixins.scss";
+
+:root {
+    --nav-bar-height: 30px;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    min-width: 800px;
+    min-height: 600px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.relative {
+    position: relative;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.flex {
+    @include flex;
+}
+
+.flex-column {
+    @include flex-column;
+}
+
+.flex-justify-center {
+    @include flex-justify-center;
+}
+
+.flex-justify-end {
+    @include flex-justify-end;
+}
+
+.flex-align-center {
+    @include flex-align-center;
+}
+
+.flex-center {
+    @extend .flex-justify-center, .flex-align-center;
+}
+
+.flex-auto {
+    @include flex-auto;
+}

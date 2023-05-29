@@ -1,0 +1,12 @@
+.base_container {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.base_main_container {
+    height: calc(100vh - var(--nav-bar-height));
+}
+
+.base_body_container {
+    overflow: hidden;
+}

@@ -1,35 +1,34 @@
 import { createContext } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { updateUserInfo, saveLoginInfo, clearLoginInfo } from "@/store/module/app";
-import { UserInfo } from "@/types/user";
 
-interface ILoginSuccessPayload {
+export interface LoginSuccessPayload {
     userInfo: UserInfo,
     token: string
 }
 
-interface IHandleLoginSuccess {
-    (payload: ILoginSuccessPayload): void
+interface HandleLoginSuccess {
+    (payload: LoginSuccessPayload): void
 }
 
-interface IHandleLogout {
+interface HandleLogout {
     (): void
 }
 
-interface IHandleUpdateUserInfo {
+interface HandleUpdateUserInfo {
     (payload: UserInfo): void
 }
 
-interface IAuthContext {
+interface AuthContext {
     isLogin: boolean,
     userInfo: UserInfo,
 
-    handleLogout: IHandleLogout,
-    handleLoginSuccess: IHandleLoginSuccess
-    handleUpdateUserInfo: IHandleUpdateUserInfo
+    handleLogout: HandleLogout,
+    handleLoginSuccess: HandleLoginSuccess
+    handleUpdateUserInfo: HandleUpdateUserInfo
 };
 
-export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
+export const AuthContext = createContext<AuthContext>({} as AuthContext);
 
 type Props = {
     children: React.ReactElement
@@ -40,11 +39,11 @@ const AuthProvider = ({ children }: Props) => {
     const { isLogin, userInfo } = useAppSelector((state) => state.app);
     const dispatch = useAppDispatch();
 
-    const handleLogout: IHandleLogout = () => dispatch(clearLoginInfo());
+    const handleLogout: HandleLogout = () => dispatch(clearLoginInfo());
 
-    const handleLoginSuccess: IHandleLoginSuccess = (payload) => dispatch(saveLoginInfo(payload));
+    const handleLoginSuccess: HandleLoginSuccess = (payload) => dispatch(saveLoginInfo(payload));
 
-    const handleUpdateUserInfo: IHandleUpdateUserInfo = (payload) => dispatch(updateUserInfo(payload));
+    const handleUpdateUserInfo: HandleUpdateUserInfo = (payload) => dispatch(updateUserInfo(payload));
 
     const authValue = {
         isLogin,
