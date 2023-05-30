@@ -20,8 +20,12 @@ const useStyles = makeStyles({
 const SideNav = () => {
 
     const [config] = useState(() => routes
-        .filter(route => route.navConfig)
-        .sort((a, b) => a.navConfig!.sort < b.navConfig!.sort ? -1 : 1)
+        .filter(route => route.path !== "/login")
+        .sort((a, b) => {
+            if (!a.navConfig || !b.navConfig) return 0;
+            if (a.navConfig.sort === undefined || b.navConfig.sort === undefined) return 0;
+            return a.navConfig.sort < b.navConfig!.sort ? -1 : 1;
+        })
     );
 
     const { locale } = useLocale();
@@ -29,10 +33,10 @@ const SideNav = () => {
     const location = useLocation();
     const styles = useStyles();
 
-    type RouteMetaTitleKey = keyof typeof locale.RouteMetaTitle;
+    type NavLabelKey = keyof typeof locale.NavLabel;
 
-    const getNavLabelText = (labelKey: RouteMetaTitleKey): string => {
-        if (labelKey in locale.RouteMetaTitle) return locale.RouteMetaTitle[labelKey];
+    const getNavLabelText = (labelKey: NavLabelKey): string => {
+        if (labelKey in locale.NavLabel) return locale.NavLabel[labelKey];
         return labelKey;
     }
 
@@ -66,7 +70,6 @@ const SideNav = () => {
 
     const handleNavClick = (nav: Route) => {
         const path = getPath(nav);
-
         navigate(path);
     }
 
@@ -78,9 +81,9 @@ const SideNav = () => {
                     config.map((nav, index) => {
                         return (
                             <div key={nav.path} className={getNavItemCss(index)} onClick={() => handleNavClick(nav)}>
-                                {nav.navConfig!.icon}
+                                {nav.navConfig?.icon}
                                 <span className={classNames(styles.nav_item, classes.nav_item_label)}>
-                                    {getNavLabelText(nav.navConfig!.labelKey as RouteMetaTitleKey)}
+                                    {getNavLabelText(nav.navConfig!.labelKey as NavLabelKey)}
                                 </span>
                             </div>
                         );

@@ -4,8 +4,10 @@ const routes: Route = {
     path: "/login",
     element: createLazyComp(() => import("@/pages/users/login")),
     meta: {
-        title: "登录",
         auth: false
+    },
+    navConfig: {
+        labelKey: "login"
     }
 };
 

@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 import { RouteMeta } from "@/router/utils";
 import useAuth from "@/hooks/useAuth";
+import useTitle from "@/hooks/useTitle";
 
 
 type Props = {
@@ -22,9 +23,7 @@ export const RouteGuard: React.FC<Props> = ({ children, meta }: Props) => {
         return <Navigate to={getRedirectPath(location.pathname + location.search)} />;
     }
 
-    if (meta?.title) {
-        document.title = meta.title;
-    }
+    useTitle();
 
     return children;
 };

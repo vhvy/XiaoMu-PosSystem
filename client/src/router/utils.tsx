@@ -1,8 +1,7 @@
 import { ReactElement, Suspense, lazy } from "react";
 
 export type RouteMeta = undefined | {
-    auth?: Boolean,
-    title?: string
+    auth?: Boolean
 };
 
 export interface Route {
@@ -13,8 +12,8 @@ export interface Route {
     element: ReactElement,
     navConfig?: {
         labelKey: string,
-        icon: ReactElement,
-        sort: number
+        icon?: ReactElement,
+        sort?: number
     }
 }
 

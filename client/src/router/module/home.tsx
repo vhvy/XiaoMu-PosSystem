@@ -13,7 +13,6 @@ const routes: Route = {
         </BaseLayout>
     ),
     meta: {
-        title: "首页",
         auth: true
     },
     navConfig: {

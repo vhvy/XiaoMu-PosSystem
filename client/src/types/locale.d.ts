@@ -27,8 +27,12 @@ interface Locale {
             addressExample: string
         }
     },
-    RouteMetaTitle: {
+    NavLabel: {
         home: string,
-        product: string
+        product: string,
+        sales: string,
+        productCategory: string,
+        productList: string,
+        salesOrder: string
     }
 }

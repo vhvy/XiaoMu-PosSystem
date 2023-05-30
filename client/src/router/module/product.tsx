@@ -20,8 +20,16 @@ const routes: Route = {
             path: "category",
             index: true,
             element: createLazyComp(() => import("@/pages/product/category")),
-            meta: {
-                title: "产品-分类"
+            navConfig: {
+                labelKey: "productCategory"
+            }
+        },
+        {
+            path: "list",
+            index: true,
+            element: createLazyComp(() => import("@/pages/product/list")),
+            navConfig: {
+                labelKey: "productList"
             }
         },
         {

@@ -1,0 +1,28 @@
+.side_sub_nav {
+    width: 201px;
+    padding: 20px 5px;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+    user-select: none;
+}
+
+.sub_nav_list {
+    --nav-height: 32px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: var(--nav-height);
+        border-radius: 3px;
+        background-color: #fff;
+        top: calc(var(--nav-height) * var(--active-index));
+        transition: top ease-in 0.1s;
+    }
+}
+
+.sub_nav_item {
+    height: var(--nav-height);
+    padding-left: 16px;
+}

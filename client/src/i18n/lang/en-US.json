@@ -27,9 +27,12 @@
             "addressExample": "Example: http://192.168.1.1:9527"
         }
     },
-    "RouteMetaTitle": {
+    "NavLabel": {
         "home": "Home",
         "product": "Product",
-        "sales": "Sales"
+        "sales": "Sales",
+        "productCategory": "Category",
+        "productList": "List",
+        "salesOrder": "Order"
     }
 }

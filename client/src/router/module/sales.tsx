@@ -8,7 +8,6 @@ const routes: Route = {
     path: "/sales/*",
     element: <BaseLayout />,
     meta: {
-        title: "销售",
         auth: true
     },
     navConfig: {
@@ -21,6 +20,9 @@ const routes: Route = {
             path: "order",
             index: true,
             element: createLazyComp(() => import("@/pages/sales/order")),
+            navConfig: {
+                labelKey: "salesOrder"
+            }
         },
         {
             path: "*",
