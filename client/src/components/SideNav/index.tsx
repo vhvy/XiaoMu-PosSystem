@@ -1,10 +1,14 @@
 import { useMemo, useState } from "react";
-import { makeStyles, tokens } from "@fluentui/react-components";
+import { Menu, MenuItem, MenuList, MenuPopover, MenuTrigger, Tooltip, makeStyles, tokens } from "@fluentui/react-components";
 import classNames from "classnames";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import CodIcon from "@/components/CodIcon";
 import { routes } from "@/router/module";
 import useLocale from "@/hooks/useLocale";
+import useDialog from "@/hooks/useDialog";
+import useAuth from "@/hooks/useAuth";
+import useMsg from "@/hooks/useMsg";
 import type { Route } from "@/router/utils";
 
 import classes from "./index.module.scss";
@@ -20,7 +24,10 @@ const useStyles = makeStyles({
 const SideNav = () => {
 
     const [config] = useState(() => routes
-        .filter(route => route.path !== "/login")
+        .filter(route => {
+            if (route.navConfig?.showSideNav === false) return false;
+            return true;
+        })
         .sort((a, b) => {
             if (!a.navConfig || !b.navConfig) return 0;
             if (a.navConfig.sort === undefined || b.navConfig.sort === undefined) return 0;
@@ -28,10 +35,13 @@ const SideNav = () => {
         })
     );
 
+    const { handleLogout } = useAuth();
     const { locale } = useLocale();
     const navigate = useNavigate();
     const location = useLocation();
     const styles = useStyles();
+    const Dialog = useDialog();
+    const Message = useMsg();
 
     type NavLabelKey = keyof typeof locale.NavLabel;
 
@@ -73,9 +83,20 @@ const SideNav = () => {
         navigate(path);
     }
 
+    const handleConfirmSignOut = () => {
+        Dialog.confirm({
+            title: locale.Common.promptTitle,
+            content: locale.NavUserMenu.signOutDialogContent,
+            onOk: () => {
+                handleLogout();
+                Message.success(locale.NavUserMenu.signOutSuccessPrompt);
+            }
+        });
+    }
+
 
     return (
-        <nav className={classes.side_nav_container}>
+        <nav className={classNames("flex", "flex-column", classes.side_nav_container)}>
             <div className={classNames("relative", classes.side_nav_inner_container)} style={{ '--active-index': activeIndex }}>
                 {
                     config.map((nav, index) => {
@@ -89,6 +110,23 @@ const SideNav = () => {
                         );
                     })
                 }
+            </div>
+            <div className={classNames("flex", "flex-center", "pointer", classes.nav_user_btn)}>
+                <Menu positioning="after-bottom">
+                    <MenuTrigger disableButtonEnhancement>
+                        <Tooltip content={locale.NavLabel.user} relationship="label" positioning="after" showDelay={0} withArrow>
+                            <div className={classNames("text-center", classes.user_btn_box)}>
+                                <CodIcon icon="account" className={classes.user_btn} />
+                            </div>
+                        </Tooltip>
+                    </MenuTrigger>
+                    <MenuPopover>
+                        <MenuList>
+                            <MenuItem onClick={handleConfirmSignOut}>{locale.NavUserMenu.signOut}</MenuItem>
+                            <MenuItem>{locale.NavUserMenu.accountInfo}</MenuItem>
+                        </MenuList>
+                    </MenuPopover>
+                </Menu>
             </div>
         </nav>
     );

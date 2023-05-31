@@ -13,7 +13,8 @@ export interface Route {
     navConfig?: {
         labelKey: string,
         icon?: ReactElement,
-        sort?: number
+        sort?: number,
+        showSideNav?: boolean
     }
 }
 

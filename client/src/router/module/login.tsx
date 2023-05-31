@@ -7,7 +7,8 @@ const routes: Route = {
         auth: false
     },
     navConfig: {
-        labelKey: "login"
+        labelKey: "login",
+        showSideNav: false
     }
 };
 

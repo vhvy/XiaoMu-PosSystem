@@ -12,6 +12,7 @@ import store from "@/store/index";
 import AuthProvider from "@/provider/AuthProvider";
 import LocaleProvider from "@/provider/LocaleProvider";
 import Notice from "@/components/Notice/index";
+import XMDialog from "@/components/XMDialog";
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
             <FluentProvider theme={webLightTheme}>
                 <LocaleProvider>
                     <Notice />
+                    <XMDialog />
                     <AuthProvider>
                         <RouterProvider router={router} />
                     </AuthProvider>

@@ -3,7 +3,8 @@
     "Common": {
         "okText": "OK",
         "saveBtnText": "Save",
-        "cancelBtnText": "Cancel"
+        "cancelBtnText": "Cancel",
+        "promptTitle": "Prompt"
     },
     "Login": {
         "loginTitle": "Sign in",
@@ -28,11 +29,19 @@
         }
     },
     "NavLabel": {
+        "login": "Login",
         "home": "Home",
         "product": "Product",
         "sales": "Sales",
         "productCategory": "Category",
         "productList": "List",
-        "salesOrder": "Order"
+        "salesOrder": "Order",
+        "user": "Accounts"
+    },
+    "NavUserMenu": {
+        "signOut": "Sign Out",
+        "accountInfo": "Account Info",
+        "signOutDialogContent": "Are you sure you want to log out?",
+        "signOutSuccessPrompt": "Logout success!"
     }
 }

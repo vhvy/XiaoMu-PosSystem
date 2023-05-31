@@ -62,3 +62,7 @@ body {
 .flex-auto {
     @include flex-auto;
 }
+
+.text-center {
+    text-align: center;
+}

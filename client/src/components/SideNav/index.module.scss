@@ -3,11 +3,11 @@
     background-color: #ebebeb;
     overflow: auto;
     user-select: none;
+    padding: 4px 0;
 }
 
 .side_nav_inner_container {
     width: 100%;
-    padding-top: 4px;
 
     &::before {
         content: "";
@@ -27,6 +27,7 @@
     height: 56px;
     color: var(--tab-base-color1);
 
+    &:hover,
     &:global(.active) {
         color: var(--tab-base-active-color);
     }
@@ -34,4 +35,18 @@
 
 .nav_item_label {
     margin-top: 2px;
+}
+
+.nav_user_btn {
+    margin-top: auto;
+    height: 48px;
+}
+
+.user_btn_box {
+    width: 100%;
+}
+
+.user_btn {
+    font-size: 24px !important;
+    color: var(--tab-base-color1);
 }

@@ -1,5 +1,6 @@
 const enum EventEnum {
-    NOTICE
+    NOTICE,
+    DIALOG
 }
 
 export default EventEnum;

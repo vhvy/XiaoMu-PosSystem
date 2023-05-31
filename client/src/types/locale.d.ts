@@ -3,7 +3,8 @@ interface Locale {
     Common: {
         okText: string,
         saveBtnText: string,
-        cancelBtnText: string
+        cancelBtnText: string,
+        promptTitle: string
     },
     Login: {
         loginTitle: string,
@@ -28,11 +29,19 @@ interface Locale {
         }
     },
     NavLabel: {
+        login: string,
         home: string,
         product: string,
         sales: string,
         productCategory: string,
         productList: string,
-        salesOrder: string
+        salesOrder: string,
+        user: string
+    },
+    NavUserMenu: {
+        signOut: string,
+        accountInfo: string,
+        signOutDialogContent: string,
+        signOutSuccessPrompt: string
     }
 }
