@@ -2,6 +2,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import { Provider } from "react-redux";
+import { SWRConfig } from "swr";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 
 import "@/styles/reset.scss";
@@ -14,7 +15,19 @@ import LocaleProvider from "@/provider/LocaleProvider";
 import Notice from "@/components/Notice/index";
 import XMDialog from "@/components/XMDialog";
 
+import useMsg from "@/hooks/useMsg";
+
 const App = () => {
+
+    const msg = useMsg();
+
+    const handleSWRError = (err: Error) => {
+        msg.error(err.message);
+    }
+
+    const swrConfig = {
+        onError: handleSWRError
+    };
 
     return (
         <Provider store={store}>
@@ -22,9 +35,11 @@ const App = () => {
                 <LocaleProvider>
                     <Notice />
                     <XMDialog />
-                    <AuthProvider>
-                        <RouterProvider router={router} />
-                    </AuthProvider>
+                    <SWRConfig value={swrConfig}>
+                        <AuthProvider>
+                            <RouterProvider router={router} />
+                        </AuthProvider>
+                    </SWRConfig>
                 </LocaleProvider>
             </FluentProvider>
         </Provider>

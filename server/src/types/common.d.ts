@@ -1,3 +1,3 @@
-export interface BaseObj {
+interface AnyObj {
     [propName: string]: any
 }

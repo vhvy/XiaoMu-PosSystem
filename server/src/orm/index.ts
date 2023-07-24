@@ -21,6 +21,8 @@ const instance = new Sequelize({
     hooks: {
         beforeDefine(columns, model) {
             model.tableName = config.tablePrefix + model.tableName;
+            model.createdAt = "created_at";
+            model.updatedAt = "updated_at";
         }
     }
 });

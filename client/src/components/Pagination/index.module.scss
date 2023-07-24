@@ -1,0 +1,63 @@
+.pagination_container {
+    padding-block: 16px;
+    column-gap: 8px;
+}
+
+.page_button {
+    min-width: 32px;
+    padding-inline: 5px;
+}
+
+@mixin hide {
+    visibility: hidden;
+    opacity: 0;
+}
+
+@mixin visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.page_shift_button {
+    width: 32px;
+    height: 32px;
+    color: #ccc;
+
+    &:hover {
+        .page_shift_default_icon {
+            @include hide();
+        }
+
+        .page_shift_double_icon {
+            @include visible();
+        }
+    }
+}
+
+.page_shift_default_icon {
+    @include visible();
+}
+
+.page_shift_default_icon,
+.page_shift_double_icon {
+    transition: all ease 0.3s;
+}
+
+.page_shift_double_icon {
+    @include hide();
+
+    color: #1677ff;
+    &.left {
+        transform: rotate(90deg);
+    }
+
+    &.right {
+        transform: rotate(-90deg);
+    }
+}
+
+.page_limit_select {
+    select {
+        border-radius: 0;
+    }
+}

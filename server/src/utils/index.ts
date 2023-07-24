@@ -1,6 +1,4 @@
-import { BaseObj } from "@/types/base";
-
-export const getPageParams = (query: BaseObj) => {
+export const getPageParams = (query: AnyObj) => {
     let { page, limit, ...args } = query;
     page = Number(page) || 1;
     limit = Number(limit) || 20;

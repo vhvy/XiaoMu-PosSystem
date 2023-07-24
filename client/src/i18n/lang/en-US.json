@@ -6,6 +6,13 @@
         "cancelBtnText": "Cancel",
         "promptTitle": "Prompt"
     },
+    "Pagination": {
+        "prevPageTip": "Previous Page",
+        "nextPageTip": "Next Page",
+        "previous$Pages": "Previous $0 Pages",
+        "next$Pages": "Next $0 Pages",
+        "limit$Option": "$0 / page"
+    },
     "Login": {
         "loginTitle": "Sign in",
         "accountPlaceholder": "Account",

@@ -6,6 +6,13 @@ interface Locale {
         cancelBtnText: string,
         promptTitle: string
     },
+    Pagination: {
+        prevPageTip: string,
+        nextPageTip: string,
+        previous$Pages: string,
+        next$Pages: string,
+        limit$Option: string
+    },
     Login: {
         loginTitle: string,
         accountPlaceholder: string,

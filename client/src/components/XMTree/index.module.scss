@@ -1,0 +1,33 @@
+.xm_tree {
+    user-select: none;
+    min-width: fit-content;
+    --tree-item-height: 32px;
+    --tree-item-base-padding: 24px;
+}
+
+.xm_tree_item {
+    padding-left: calc(var(--level) * var(--tree-item-base-padding));
+    height: 0;
+    opacity: 0;
+    transition: all ease 0.3s;
+
+    &:global(.active) {
+        height: var(--tree-item-height);
+        opacity: 1;
+    }
+}
+
+.xm_tree_item_caret {
+    transition: transform ease 0.3s;
+    transform: rotate(0deg);
+    &:global(.expand) {
+        transform: rotate(90deg);
+    }
+}
+
+.xm_tree_item_checkbox {
+    transition: background-color ease 0.3s;
+    &:hover {
+        background-color: aliceblue;
+    }
+}

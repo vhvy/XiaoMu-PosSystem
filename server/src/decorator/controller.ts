@@ -31,8 +31,8 @@ export const controller = (prefix: string): ClassDecorator => {
                         createValidate(validatorList, method)
                     );
                 }
-                
-                if (path && method) {
+
+                if (path !== undefined && method) {
                     const handler = target.prototype[name];
                     const fullPath = config.globalPrefix + prefix + path;
                     router[method](fullPath, ...combineMiddlewareList, handler);

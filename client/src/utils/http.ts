@@ -1,4 +1,8 @@
 import config from "@/config";
+import storage from "@/utils/storage";
+import StorageKeys from "@/constants/storage";
+import store from "@/store";
+import { clearLoginInfo } from "@/store/module/app";
 
 enum HTTP_METHOD {
     GET = "GET",
@@ -39,9 +43,8 @@ const request = async <R>(
     }
 
     const headers = new Headers();
-
     if (httpConfig.requireAuth) {
-        const token = "Bearer ";
+        const token = "Bearer " + storage.getItem(StorageKeys.TOKEN);
 
         headers.set("Authorization", token);
     }
@@ -76,6 +79,9 @@ const request = async <R>(
         if (response.status === 200) {
             return result;
         } else {
+            if (response.status === 401) {
+                store.dispatch(clearLoginInfo());
+            }
             return Promise.reject(result);
         }
 
