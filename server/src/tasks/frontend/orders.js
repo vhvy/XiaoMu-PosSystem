@@ -143,11 +143,11 @@ class OrdersTask {
             if (!isAdmin) {
                 // 如果不是管理员，需要验证售价是否正确
 
-                const [{ sale_price: _sale_price }] = await FrontCommodityTask.parseCommodityList([item]);
+                const [{ sale_price: _sale_price }] = await FrontCommodityTask.parseCommodityList([result]);
                 // 获得商品促销价格
 
                 if (sale_price !== _sale_price) return {
-                    static: false,
+                    status: false,
                     data: `条码为${barcode}的商品价格不正确!`
                 }
             }
